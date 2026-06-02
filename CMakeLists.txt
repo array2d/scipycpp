@@ -1,5 +1,18 @@
 cmake_minimum_required(VERSION 3.16)
-project(scipycpp VERSION 1.0.0 LANGUAGES CXX)
+
+# Auto-detect scipy version from the Python environment
+execute_process(
+    COMMAND python3 -c "import scipy; print(scipy.__version__)"
+    OUTPUT_VARIABLE SCIPY_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE _scipy_ver_result
+)
+if(_scipy_ver_result OR SCIPY_VERSION STREQUAL "")
+    message(FATAL_ERROR "Cannot detect scipy version. Is 'scipy' installed (pip install scipy)?")
+endif()
+message(STATUS "scipy version detected: ${SCIPY_VERSION}")
+
+project(scipycpp VERSION ${SCIPY_VERSION} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
