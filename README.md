@@ -31,6 +31,25 @@ scipy::linalg::solve(A, x, b, 2);
 
 // FFT (pocketfft-backed — same as numpy/scipy)
 scipy::fft::fft(signal, spectrum, 4);
+
+// Spatial — KDTree with distances
+scipy::spatial::KDTree<double> tree(points, n_pts, dim);
+double dist; size_t idx;
+tree.query(query_point, dist, idx);   // returns distance AND index
+
+// Spatial — cross-set distance matrix (cdist)
+scipy::spatial::distance::cdist(XA, mA, XB, mB, dim, dm);
+
+// ndimage — 1D Gaussian filter
+std::vector<double> out(n);
+scipy::ndimage::gaussian_filter1d(src, out.data(), n, sigma);
+
+// Signal — median filter
+scipy::signal::medfilt(src, dst.data(), n, kernel_size);
+
+// Transform — Rotation (from_matrix + as_euler)
+auto rot = scipy::spatial::transform::Rotation<double>::from_matrix(R);
+auto euler = rot.as_euler_vec("xyz");  // returns [rx, ry, rz]
 ```
 
 ### Dependencies
@@ -59,9 +78,11 @@ target_link_libraries(myapp PRIVATE scipycpp::scipycpp)
 | `integrate` | numpcpp + pure C++ | quad, simpson, trapezoid |
 | `optimize` | pure C++ | minimize_scalar (Brent), root_scalar |
 | `interpolate` | pure C++ | interp1d, CubicSpline |
-| `signal` | numpcpp | convolve, correlate |
+| `signal` | numpcpp | convolve, correlate, **medfilt** |
 | `stats` | **numpycpp SVML** | norm.pdf/cdf/ppf (bit-exact) |
-| `spatial` | pure C++ | euclidean, cosine, manhattan, KDTree |
+| `spatial` | pure C++ | euclidean, cosine, manhattan, KDTree, **cdist** |
+| `ndimage` | pure C++ | **gaussian_filter1d** |
+| `transform` | pure C++ | **Rotation** (from_matrix, as_euler) |
 | `special` | C++17 std | erf, gamma, beta, digamma, logsumexp |
 | `linalg` | **Eigen3** | solve, inv, det, eigvalsh, cholesky, svd |
 | `fft` | **pocketfft** | fft, ifft, rfft, irfft |

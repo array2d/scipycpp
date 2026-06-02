@@ -37,7 +37,8 @@ inline T trapezoid(const T* y, const T* x, size_t n, T dx = T(1)) {
 
 template<typename T>
 inline T trapezoid(const T* y, size_t n, T dx = T(1)) {
-    return trapezoid(y, nullptr, n, dx);
+    const T* xp = nullptr;
+    return trapezoid(y, xp, n, dx);
 }
 
 // ============================================================================
@@ -70,7 +71,8 @@ inline T simpson(const T* y, const T* x, size_t n, T dx = T(1)) {
 // Overload with dx only (no x array)
 template<typename T>
 inline T simpson(const T* y, size_t n, T dx = T(1)) {
-    return simpson(y, (const T*)nullptr, n, dx);
+    const T* xp = nullptr;
+    return simpson(y, xp, n, dx);
 }
 
 // ============================================================================

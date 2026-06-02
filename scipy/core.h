@@ -15,3 +15,5 @@
 #include "special.h"
 #include "linalg.h"
 #include "fft.h"
+#include "ndimage.h"
+#include "transform.h"

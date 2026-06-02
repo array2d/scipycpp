@@ -77,14 +77,25 @@ set(CPACK_DEBIAN_PACKAGE_MAINTAINER        "array2d")
 set(CPACK_DEBIAN_PACKAGE_SECTION           "libdevel")
 set(CPACK_DEBIAN_PACKAGE_PRIORITY          "optional")
 set(CPACK_DEBIAN_FILE_NAME                 "scipycpp-dev-${CPACK_PACKAGE_VERSION}-Linux.deb")
-set(CPACK_PACKAGING_INSTALL_PREFIX         "/usr")
+
+# Install prefix for packaging: use ~/debs as share-global is unavailable
+if(DEFINED ENV{HOME})
+    set(CPACK_PACKAGING_INSTALL_PREFIX "$ENV{HOME}/debs")
+else()
+    set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
+endif()
+
+# Output DEB to ~/debs directory
+set(CPACK_OUTPUT_FILE_PREFIX "$ENV{HOME}/debs")
 
 # Recommend the required dependencies
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "numpycpp-dev, libeigen3-dev, pocketfft-dev")
 
 include(CPack)
-add_custom_target(deb COMMAND cpack -G DEB
-    COMMENT "Packaging scipycpp-dev-${CPACK_PACKAGE_VERSION}-Linux.deb")
+add_custom_target(deb
+    COMMAND ${CMAKE_COMMAND} -E make_directory $ENV{HOME}/debs
+    COMMAND cpack -G DEB --config CPackConfig.cmake
+    COMMENT "Packaging scipycpp-dev-${CPACK_PACKAGE_VERSION}-Linux.deb → ~/debs/")
 
 message(STATUS "scipycpp v${PROJECT_VERSION}  (header-only C++ library)")
 message(STATUS "  Dependencies: numpcpp + Eigen3 + pocketfft")
