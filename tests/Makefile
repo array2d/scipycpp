@@ -11,6 +11,7 @@ INCLUDES  = -I.. -I../pycpp -I../scipy \
             -I/usr/include/eigen3 \
             -I/usr/include/numpycpp \
             -I/usr/include/pocketfft \
+            -I$(HOME)/debs/include \
             $(shell python3 -m pybind11 --includes)
 LDFLAGS   = -shared -ldl
 

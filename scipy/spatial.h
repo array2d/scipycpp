@@ -173,52 +173,84 @@ inline void cdist(const T* XA, size_t mA,
 }  // namespace distance
 
 // ============================================================================
-// Simple KDTree (brute-force, small datasets; for large data use nanoflann)
+// KDTree — backed by scipy's own ckdtree C++ code (O(log n) true kd-tree)
 // ============================================================================
+// Uses ckdtree-dev package (extracted from scipy.spatial.ckdtree v1.8.0).
+
+#include <ckdtree/ckdtree.hpp>
 
 template<typename T>
 struct KDTree {
-    const T* pts; size_t n; int dim;
+    ckdtree_ns::ckdtree* tree;
+    std::vector<double>  data_double;  // ckdtree works with double internally
+    int dim;
 
     KDTree(const T* points, size_t n_pts, int dim_)
-        : pts(points), n(n_pts), dim(dim_) {}
+        : tree(nullptr), dim(dim_)
+    {
+        // Convert to double (ckdtree uses double)
+        data_double.resize(n_pts * dim_);
+        for (size_t i = 0; i < n_pts * dim_; ++i)
+            data_double[i] = static_cast<double>(points[i]);
+        tree = ckdtree_build(data_double.data(),
+                             static_cast<intptr_t>(n_pts),
+                             static_cast<intptr_t>(dim_),
+                             16 /* leafsize */);
+    }
 
-    /// Python: tree.query(q, k=1) → returns (distances, indices) tuple
-    /// C++:   tree.query(q, dist, idx) — sets dist and idx to nearest values.
-    ///        tree.query(q, dists_out, indices_out, k) — for k-nearest.
+    ~KDTree() { if (tree) ckdtree_free(tree); }
+
+    // Non-copyable (owns ckdtree pointer)
+    KDTree(const KDTree&) = delete;
+    KDTree& operator=(const KDTree&) = delete;
+    KDTree(KDTree&& other) noexcept : tree(other.tree), data_double(std::move(other.data_double)), dim(other.dim)
+    { other.tree = nullptr; }
+    KDTree& operator=(KDTree&& other) noexcept {
+        if (this != &other) {
+            if (tree) ckdtree_free(tree);
+            tree = other.tree; other.tree = nullptr;
+            data_double = std::move(other.data_double);
+            dim = other.dim;
+        }
+        return *this;
+    }
+
+    /// Query k=1 → (dist, idx)
     void query(const T* q, T& dist, size_t& idx) const {
-        if (n == 0) { dist = T(0); idx = 0; return; }
-        idx = 0;
-        dist = distance::euclidean(q, pts, static_cast<size_t>(dim));
-        for (size_t i = 1; i < n; ++i) {
-            T d = distance::euclidean(q, pts + i * dim, static_cast<size_t>(dim));
-            if (d < dist) { dist = d; idx = i; }
-        }
+        query_k(q, &dist, &idx, 1);
     }
 
-    /// Python: tree.query(q, k=k) → (distances, indices)
-    /// C++:   tree.query(q, dists_out, indices_out, k)
+    /// Query k nearest → outputs to dists_out and indices_out
     void query(const T* q, T* dists_out, size_t* indices_out, int k) const {
-        std::vector<std::pair<T, size_t>> pairs; pairs.reserve(n);
-        for (size_t i = 0; i < n; ++i)
-            pairs.push_back({distance::euclidean(q, pts + i * dim, static_cast<size_t>(dim)), i});
-        int m = std::min(k, (int)n);
-        std::partial_sort(pairs.begin(), pairs.begin() + m, pairs.end());
-        for (int i = 0; i < m; ++i) {
-            dists_out[i]   = pairs[i].first;
-            indices_out[i] = pairs[i].second;
+        query_k(q, dists_out, indices_out, k);
+    }
+
+private:
+    void query_k(const T* q, T* dists_out, size_t* indices_out, int k) const {
+        std::vector<double> q64(dim);
+        for (int d = 0; d < dim; ++d) q64[d] = static_cast<double>(q[d]);
+
+        std::vector<double>   dd(k);
+        std::vector<intptr_t> ii(k);
+        std::vector<intptr_t> kvals(k);
+        for (int i = 0; i < k; ++i) kvals[i] = i + 1;  // ckdtree needs k=[1,2,...,k]
+        intptr_t ik = static_cast<intptr_t>(k);
+        ckdtree_query_knn(tree, dd.data(), ii.data(), q64.data(), 1,
+                          kvals.data(), ik, ik, 0.0, 2.0, INFINITY);
+        for (int i = 0; i < k; ++i) {
+            dists_out[i]   = static_cast<T>(dd[i]);  // ckdtree already returns actual distances
+            indices_out[i] = static_cast<size_t>(ii[i]);
         }
     }
 
-    /// Legacy: index-only query (backward compatible)
+public:
+    /// Legacy helpers
     size_t query_index(const T* q) const {
         T d; size_t i; query(q, d, i); return i;
     }
-
-    /// Legacy: indices-only k-nearest (backward compatible)
     std::vector<size_t> query_k_indices(const T* q, int k) const {
-        std::vector<size_t> result(std::min(k, (int)n));
-        std::vector<T> dists(std::min(k, (int)n));
+        std::vector<size_t> result(k);
+        std::vector<T> dists(k);
         query(q, dists.data(), result.data(), k);
         return result;
     }

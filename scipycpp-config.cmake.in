@@ -4,6 +4,7 @@ include(CMakeFindDependencyMacro)
 find_dependency(numpycpp REQUIRED)
 find_dependency(Eigen3 REQUIRED)
 find_dependency(pocketfft REQUIRED)
+find_dependency(ckdtree REQUIRED)
 
 add_library(scipycpp INTERFACE IMPORTED)
 set_target_properties(scipycpp PROPERTIES
@@ -15,6 +16,7 @@ target_link_libraries(scipycpp INTERFACE
     pocketfft::pocketfft
     Eigen3::Eigen
     numpycpp::numpycpp
+    ckdtree::ckdtree
 )
 add_library(scipycpp::scipycpp ALIAS scipycpp)
 

@@ -79,7 +79,7 @@ struct KDTreeWrap {
         int    dim   = static_cast<int>(buf.shape[1]);
         const T* ptr = static_cast<const T*>(buf.ptr);
         data.assign(ptr, ptr + n_pts * dim);
-        tree = scipy::spatial::KDTree<T>(data.data(), n_pts, dim);
+        tree = std::move(scipy::spatial::KDTree<T>(data.data(), n_pts, dim));
     }
 
     /// Python: tree.query(q, k=1) → returns (distances, indices)

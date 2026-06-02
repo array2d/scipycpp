@@ -26,11 +26,12 @@ target_include_directories(scipycpp INTERFACE
 )
 target_compile_features(scipycpp INTERFACE cxx_std_17)
 
-# Transitive dependencies: scipycpp → pocketfft, Eigen3, numpcpp
+# Transitive dependencies: scipycpp → pocketfft, Eigen3, numpcpp, ckdtree
 target_link_libraries(scipycpp INTERFACE
     pocketfft::pocketfft
     Eigen3::Eigen
     numpycpp::numpycpp
+    ckdtree::ckdtree
 )
 
 # ---- Install — header-only C++ library --------------------------------------
@@ -89,7 +90,7 @@ endif()
 set(CPACK_OUTPUT_FILE_PREFIX "$ENV{HOME}/debs")
 
 # Recommend the required dependencies
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "numpycpp-dev, libeigen3-dev, pocketfft-dev")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "numpycpp-dev, libeigen3-dev, pocketfft-dev, ckdtree-dev")
 
 include(CPack)
 add_custom_target(deb
@@ -98,6 +99,7 @@ add_custom_target(deb
     COMMENT "Packaging scipycpp-dev-${CPACK_PACKAGE_VERSION}-Linux.deb → ~/debs/")
 
 message(STATUS "scipycpp v${PROJECT_VERSION}  (header-only C++ library)")
-message(STATUS "  Dependencies: numpcpp + Eigen3 + pocketfft")
+message(STATUS "  Dependencies: numpcpp + Eigen3 + pocketfft + ckdtree")
+message(STATUS "  KDTree: backed by scipy's own ckdtree (O(log n) true kd-tree)")
 message(STATUS "  DEB:  make deb  →  scipycpp-dev-${CPACK_PACKAGE_VERSION}-Linux.deb")
 message(STATUS "  Test: cd tests/ && make  →  build + run alignment tests")
