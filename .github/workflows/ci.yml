@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push: { branches: [master], tags: ['v*'] }
+  pull_request: { branches: [master] }
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip python3-dev libeigen3-dev
+          pip3 install pybind11 numpy scipy pytest
+      - name: Build test module
+        run: make -C tests
+      - name: Run tests
+        run: make -C tests test
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build .deb
+        run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && make deb
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/scipycpp-dev-*.deb
+          generate_release_notes: true
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }

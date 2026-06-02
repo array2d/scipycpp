@@ -1,0 +1,22 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(numpycpp REQUIRED)
+find_dependency(Eigen3 REQUIRED)
+find_dependency(pocketfft REQUIRED)
+
+add_library(scipycpp INTERFACE IMPORTED)
+set_target_properties(scipycpp PROPERTIES
+    IMPORTED_GLOBAL TRUE
+    INTERFACE_COMPILE_FEATURES "cxx_std_17"
+    INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include/scipycpp"
+)
+target_link_libraries(scipycpp INTERFACE
+    pocketfft::pocketfft
+    Eigen3::Eigen
+    numpycpp::numpycpp
+)
+add_library(scipycpp::scipycpp ALIAS scipycpp)
+
+set(scipycpp_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/include/scipycpp")
+check_required_components(scipycpp)

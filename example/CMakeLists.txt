@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.16)
+project(scipycpp_example LANGUAGES CXX)
+find_package(scipycpp REQUIRED)
+find_package(numpycpp REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(pocketfft REQUIRED)
+add_executable(example main.cpp)
+target_link_libraries(example PRIVATE scipycpp::scipycpp numpycpp::numpycpp Eigen3::Eigen pocketfft::pocketfft)
