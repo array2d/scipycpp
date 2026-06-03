@@ -9,9 +9,88 @@ NOTE: All scipy APIs return float64 regardless of input dtype.
 C++ mirrors this behavior.
 """
 
-import os, importlib, numpy as np, pytest
+import os, sys, atexit, importlib, warnings, numpy as np, pytest
 
 BATCH = 100
+
+# ============================================================================
+# ULP computation & reporting
+# ============================================================================
+
+_ulp_report = []  # global collector for final summary
+
+def _ulp_dist(a, b):
+    """ULP distance between two float64 values (same-sign only)."""
+    if (a < 0) != (b < 0):
+        return int(np.float64(a).view(np.uint64)) + int(np.float64(b).view(np.uint64))
+    diff = int(np.float64(a).view(np.uint64)) - int(np.float64(b).view(np.uint64))
+    return abs(diff)
+
+def _ulp_stats(cpp, py):
+    """Compute (n_diff, max_ulp, max_idx, hist_str) for two float64 arrays."""
+    assert cpp.shape == py.shape
+    diff_mask = (cpp != py)
+    n_diff = int(np.sum(diff_mask))
+    if n_diff == 0:
+        return (0, 0, -1, "0 ULP")
+    ii = np.flatnonzero(diff_mask.ravel())
+    ulps = np.array([_ulp_dist(cpp.flat[i], py.flat[i]) for i in ii], dtype=np.int64)
+    max_ulp = int(np.max(ulps))
+    max_idx = int(ii[int(np.argmax(ulps))])
+    uniq, cnt = np.unique(ulps, return_counts=True)
+    hist = ", ".join(f"{c}×{u}ULP" for u, c in zip(uniq, cnt))
+    return (n_diff, max_ulp, max_idx, hist)
+
+def assert_bit_aligned(cpp_r, py_r, label=""):
+    cpp = np.asarray(cpp_r, dtype=np.float64)
+    py  = np.asarray(py_r, dtype=np.float64)
+    assert cpp.shape == py.shape, f"{label}: shape mismatch {cpp.shape} vs {py.shape}"
+    n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
+    if n_diff == 0:
+        _ulp_report.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+        return
+    _ulp_report.append(f"  ✗ FAIL {label}: {n_diff}/{cpp.size} differ, max={max_ulp} ULP [{hist}]")
+    _ulp_report.append(f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  scipy={py.flat[max_idx]:.18e}")
+    raise AssertionError(
+        f"{label}: BIT-LEVEL MISMATCH {n_diff}/{cpp.size} differ, max={max_ulp} ULP")
+
+def assert_ulp_close(cpp_r, py_r, label="", max_ulp_tol=3):
+    """Tolerate up to max_ulp_tol ULP. Always report actual ULP stats."""
+    cpp = np.asarray(cpp_r, dtype=np.float64)
+    py  = np.asarray(py_r, dtype=np.float64)
+    assert cpp.shape == py.shape, f"{label}: shape mismatch {cpp.shape} vs {py.shape}"
+    n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
+    if n_diff == 0:
+        _ulp_report.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+        return
+    ok = max_ulp <= max_ulp_tol
+    tag = "✓" if ok else "✗ FAIL"
+    _ulp_report.append(f"  {tag} {label}: {n_diff}/{cpp.size} differ, max={max_ulp} ULP (tol={max_ulp_tol}) [{hist}]")
+    _ulp_report.append(f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  scipy={py.flat[max_idx]:.18e}")
+    if not ok:
+        raise AssertionError(
+            f"{label}: ULP MISMATCH max={max_ulp} > tol={max_ulp_tol}")
+
+
+def _print_ulp_report():
+    if not _ulp_report:
+        return
+    # Count: bit-identical = 0 ULP, tolerated = within limit, failures = over limit
+    n_bit   = sum(1 for l in _ulp_report if "0 ULP (bit-identical)" in l)
+    n_tolerated = sum(1 for l in _ulp_report if l.startswith("  ✓") and "0 ULP" not in l)
+    n_fail  = sum(1 for l in _ulp_report if "FAIL" in l)
+    print("\n" + "="*72, file=sys.stderr, flush=True)
+    summary = f"  ULP ALIGNMENT REPORT: {n_bit} bit-identical"
+    if n_tolerated: summary += f", {n_tolerated} within 1-3 ULP tolerance"
+    if n_fail:      summary += f", {n_fail} FAILURES"
+    print(summary, file=sys.stderr)
+    print("="*72, file=sys.stderr, flush=True)
+    for line in _ulp_report:
+        print(line, file=sys.stderr, flush=True)
+    print("="*72, file=sys.stderr, flush=True)
+
+atexit.register(_print_ulp_report)
+
 
 # ============================================================================
 # fixtures
@@ -39,20 +118,6 @@ def random_uniform(shape, low, high, dtype=np.float64, seed=0):
     rng = np.random.RandomState(seed)
     return rng.uniform(low, high, size=shape).astype(dtype)
 
-def assert_bit_aligned(cpp_r, py_r, label=""):
-    cpp = np.asarray(cpp_r, dtype=np.float64)
-    py  = np.asarray(py_r, dtype=np.float64)
-    assert cpp.shape == py.shape, f"{label}: shape mismatch {cpp.shape} vs {py.shape}"
-    if np.array_equal(cpp, py):
-        return
-    diff_mask = cpp != py
-    n_diff = int(np.sum(diff_mask))
-    indices = np.flatnonzero(diff_mask.ravel())[:5]
-    msg = f"{label}: BIT-LEVEL MISMATCH {n_diff}/{cpp.size} elements differ"
-    for idx in indices:
-        msg += f"\n  [{idx}] C++={cpp.flat[idx]:.18e} vs scipy={py.flat[idx]:.18e}"
-    raise AssertionError(msg)
-
 
 # ============================================================================
 # scipy references
@@ -71,26 +136,11 @@ from scipy.spatial.transform import Rotation as sp_Rotation
 # BIT-LEVEL: norm.pdf / norm.cdf / norm.ppf
 #
 # norm.pdf uses numpy::exp() → std::exp(). Since numpcpp v1.21.2 dropped
-# the npy_exp dlsym trick, std::exp may differ from scipy's npy_exp by
-# 1-3 ULP. Use assert_ulp_close (atol=5e-15) for pdf; cdf/ppf use Cephes
+# std::exp may differ from scipy's npy_exp by 1-3 ULP.
+# Use assert_ulp_close (max_ulp_tol=3) for pdf; cdf/ppf use Cephes
 # with direct std:: calls (same code path as scipy's internal Cephes) so
 # assert_bit_aligned still holds.
 # ============================================================================
-
-def assert_ulp_close(cpp_r, py_r, label="", atol=5e-15):
-    """Tolerance ~3 ULP for float64, matching numpcpp's acceptable range."""
-    cpp = np.asarray(cpp_r, dtype=np.float64)
-    py  = np.asarray(py_r, dtype=np.float64)
-    assert cpp.shape == py.shape, f"{label}: shape mismatch {cpp.shape} vs {py.shape}"
-    if np.allclose(cpp, py, atol=atol):
-        return
-    diff = np.abs(cpp - py)
-    n_diff = int(np.sum(diff > atol))
-    max_diff = np.max(diff)
-    msg = f"{label}: ULP MISMATCH {n_diff}/{cpp.size} exceed atol={atol}, max={max_diff:.2e}"
-    for idx in np.flatnonzero(diff > atol)[:5]:
-        msg += f"\n  [{idx}] C++={cpp.flat[idx]:.18e} vs scipy={py.flat[idx]:.18e}"
-    raise AssertionError(msg)
 
 
 class TestNormPdf:
@@ -219,20 +269,23 @@ class TestIntegrate:
 # ============================================================================
 
 def assert_linalg_close(cpp_r, py_r, label="", atol=1e-14):
-    """Tolerance-based comparison for linalg operations where Eigen3 may differ
-    from LAPACK at the last ULP."""
+    """Tolerance-based comparison for linalg operations (Eigen3 vs LAPACK).
+    Always reports ULP stats; raises only if max_ulp exceeds tolerance
+    for float64 values (where atol=1e-14 ≈ 50 ULP)."""
     cpp = np.asarray(cpp_r, dtype=np.float64)
     py  = np.asarray(py_r, dtype=np.float64)
     assert cpp.shape == py.shape, f"{label}: shape mismatch {cpp.shape} vs {py.shape}"
-    if np.allclose(cpp, py, atol=atol):
-        return
-    diff = np.abs(cpp - py)
-    n_diff = int(np.sum(diff > atol))
-    max_diff = np.max(diff)
-    msg = f"{label}: linalg MISMATCH {n_diff}/{cpp.size} elements exceed atol={atol}, max_diff={max_diff:.2e}"
-    for idx in np.flatnonzero(diff > atol)[:5]:
-        msg += f"\n  [{idx}] C++={cpp.flat[idx]:.18e} vs np={py.flat[idx]:.18e}"
-    raise AssertionError(msg)
+    n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
+    ok_abs = np.allclose(cpp, py, atol=atol)
+    tag = "✓" if ok_abs else "✗ FAIL"
+    if n_diff == 0:
+        _ulp_report.append(f"  {tag} {label}: 0 ULP (bit-identical)")
+    else:
+        _ulp_report.append(f"  {tag} {label}: {n_diff}/{cpp.size} differ, max={max_ulp} ULP [{hist}]")
+        _ulp_report.append(f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  np={py.flat[max_idx]:.18e}")
+    if not ok_abs:
+        raise AssertionError(
+            f"{label}: linalg MISMATCH, max ULP={max_ulp} exceeds atol={atol}")
 
 
 class TestLinalg:
