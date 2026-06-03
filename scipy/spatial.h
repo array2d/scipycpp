@@ -11,6 +11,7 @@
 #include <utility>
 #include <limits>
 #include "numpy/core.h"
+#include "ckdtree/ckdtree.hpp"
 
 namespace scipy {
 namespace spatial {
@@ -176,9 +177,7 @@ inline void cdist(const T* XA, size_t mA,
 // ============================================================================
 // KDTree — backed by scipy's own ckdtree C++ code (O(log n) true kd-tree)
 // ============================================================================
-// Uses ckdtree-dev package (extracted from scipy.spatial.ckdtree v1.8.0).
-
-#include "ckdtree/ckdtree.hpp"
+// Uses bundled ckdtree (extracted from scipy.spatial.ckdtree v1.8.0).
 
 template<typename T>
 struct KDTree {
