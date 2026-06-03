@@ -1,6 +1,11 @@
+# Build scipycpp Python test module.
+# Requires: pybind11, Eigen3, numpcpp, pocketfft, ckdtree.
+#
+# Alignment: BIT-LEVEL — using numpcpp's exact cmake flags.
+
 CXX      ?= g++
 CXXFLAGS ?= -std=c++17 -O2 -fPIC -fopenmp -ffp-contract=off \
-	-ffloat-store -mavx512f -mfma \
+	-ffloat-store -msse4.1 -mavx512f \
 	-fno-builtin-exp -fno-builtin-log -fno-builtin-sin \
 	-fno-builtin-cos -fno-builtin-tan -fno-builtin-pow \
 	-fno-builtin-sqrt -fno-builtin-atan2 -fno-builtin-log2 \

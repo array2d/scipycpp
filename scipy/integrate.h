@@ -46,24 +46,47 @@ inline T trapezoid(const T* y, size_t n, T dx = T(1)) {
 // ============================================================================
 
 /// scipy.integrate.simpson(y, x=None, dx=1.0, axis=-1, even='avg')
+///
+/// Bit-exact alignment with scipy's _basic_simpson + even='avg' default:
+///   - Odd N:  sum_{i=0}^{N/2-1} (y[2i] + 4*y[2i+1] + y[2i+2]) * dx/3
+///   - Even N: average of two Simpson variants (first N-2 + trapezoidal last,
+///              and trapezoidal first + last N-2), matching scipy's default.
+/// Summation order is per-element sequential, matching scipy's np.sum on
+/// the intermediate array (numpy's add.reduce for these sizes uses sequential).
 template<typename T>
 inline T simpson(const T* y, const T* x, size_t n, T dx = T(1)) {
     if (n < 2) return T(0);
     if (n == 2) { T h = x ? (x[1] - x[0]) : dx; return h * (y[0] + y[1]) * T(0.5); }
     if (n == 3) { T h = x ? (x[2] - x[0]) * T(0.5) : dx; return h * (y[0] + T(4)*y[1] + y[2]) / T(3); }
 
-    T e = T(0), o = T(0);
+    T h = x ? (x[1] - x[0]) : dx;
+    T third = T(1) / T(3);
+
     if (n % 2 == 0) {
-        for (size_t i = 2; i + 3 < n; i += 2) e += y[i];
-        for (size_t i = 1; i + 3 < n; i += 2) o += y[i];
-        T h = x ? (x[1] - x[0]) : dx;
-        T r = h / T(3) * (y[0] + y[n - 4] + T(4)*o + T(2)*e);
-        return r + h * T(3) / T(8) * (y[n-4] + T(3)*y[n-3] + T(3)*y[n-2] + y[n-1]);
+        // === even N: scipy default even='avg' ===
+        // Variant 1: Simpson on first N-2 intervals (indices 0..N-2),
+        //            trapezoidal on last interval (indices N-2..N-1)
+        T val  = T(0.5) * h * (y[n-1] + y[n-2]);  // trapezoidal on last
+        T sum1 = T(0);
+        for (size_t i = 0; i + 2 < n - 1; i += 2)   // i: 0,2,4,...,n-4
+            sum1 += y[i] + T(4)*y[i+1] + y[i+2];
+        T res1 = h * third * sum1;
+
+        // Variant 2: Simpson on last N-2 intervals (indices 1..N-1),
+        //            trapezoidal on first interval (indices 0..1)
+        val    += T(0.5) * h * (y[1] + y[0]);       // trapezoidal on first
+        T sum2 = T(0);
+        for (size_t i = 1; i + 2 < n; i += 2)       // i: 1,3,5,...,n-3
+            sum2 += y[i] + T(4)*y[i+1] + y[i+2];
+        T res2 = h * third * sum2;
+
+        return (val + res1 + res2) * T(0.5);
     } else {
-        for (size_t i = 2; i < n - 1; i += 2) e += y[i];
-        for (size_t i = 1; i < n - 1; i += 2) o += y[i];
-        T h = x ? (x[1] - x[0]) : dx;
-        return h / T(3) * (y[0] + y[n - 1] + T(4)*o + T(2)*e);
+        // === odd N: pure Simpson on all intervals ===
+        T sum = T(0);
+        for (size_t i = 0; i + 2 < n; i += 2)       // i: 0,2,4,...,n-3
+            sum += y[i] + T(4)*y[i+1] + y[i+2];
+        return h * third * sum;
     }
 }
 

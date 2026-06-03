@@ -95,12 +95,9 @@ struct KDTreeWrap {
         if (k == 1) {
             T d; size_t idx;
             tree.query(q, d, idx);
-
-            py::array_t<T>            py_d({1});
-            py::array_t<py::ssize_t>  py_i({1});
-            *static_cast<T*>(py_d.request().ptr)          = d;
-            *static_cast<py::ssize_t*>(py_i.request().ptr) = static_cast<py::ssize_t>(idx);
-            return py::make_tuple(py_d, py_i);
+            // scipy returns scalars for k=1, not 1-element arrays
+            return py::make_tuple(py::float_(static_cast<double>(d)),
+                                  py::int_(static_cast<py::ssize_t>(idx)));
         } else {
             std::vector<T> dists(k);
             std::vector<size_t> indices(k);

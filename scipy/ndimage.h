@@ -7,6 +7,8 @@
 #include <cmath>
 #include <vector>
 #include <cstddef>
+#include "numpy/core.h"
+#include "npy_bridge.h"  // direct npy_* access, bypasses SVML
 
 namespace scipy {
 namespace ndimage {
@@ -39,75 +41,170 @@ inline void gaussian_filter1d(const T* src, T* dst, size_t n,
     if (half < 1) half = 1;
     int ks = 2 * half + 1;
 
-    // Build Gaussian kernel
-    T two_s2 = T(2) * sigma * sigma;
+    // Build Gaussian kernel — must match scipy's exact algorithm:
+    //   x = arange(-radius, radius+1)
+    //   phi_x = numpy.exp(-0.5 / sigma2 * x**2)
+    //   phi_x = phi_x / phi_x.sum()
+    // Use numpy::exp (core.h → SVML) to match scipy's numpy.exp output.
+    T s2_inv_half = T(-0.5) / (sigma * sigma);
     std::vector<T> kernel(ks);
-    T ksum = T(0);
+    std::vector<T> args(ks);
     for (int i = 0; i < ks; ++i) {
         T x = T(i - half);
-        kernel[i] = std::exp(-(x * x) / two_s2);
-        ksum += kernel[i];
+        args[i] = s2_inv_half * (x * x);
     }
+    numpy::exp(args.data(), kernel.data(), ks);
+    // Sum in index order (matching numpy's phi_x.sum() sequential order)
+    T ksum = T(0);
+    for (int i = 0; i < ks; ++i) ksum += kernel[i];
     for (int i = 0; i < ks; ++i) kernel[i] /= ksum;
 
-    // Convolve with boundary mode
-    for (size_t i = 0; i < n; ++i) {
-        T sum = T(0);
-        for (int j = -half; j <= half; ++j) {
-            ptrdiff_t idx = static_cast<ptrdiff_t>(i) + j;
-            T val;
+    // ====================================================================
+    // Pre-filled line buffer (matching scipy's NI_InitLineBuffer).
+    // Buffer size = n + 2*half; center = original data; edges = extended.
+    // The inner loop reads from the buffer without boundary checks,
+    // matching scipy's NI_Correlate1D exactly.
+    // ====================================================================
+    size_t buf_size = n + 2 * static_cast<size_t>(half);
+    std::vector<T> buf(buf_size);
+    T* buf_ptr = buf.data();
 
-            if (idx >= 0 && static_cast<size_t>(idx) < n) {
-                val = src[static_cast<size_t>(idx)];
-            } else {
-                // Apply boundary mode
-                switch (mode) {
-                    case 0:  // reflect (d c b a | a b c d | d c b a)
-                    default: {
-                        if (idx < 0) {
-                            ptrdiff_t r = -idx - 1;
-                            if (static_cast<size_t>(r) >= n) r = n - 1;
-                            val = src[static_cast<size_t>(r)];
-                        } else {
-                            size_t r = n - 1 - (static_cast<size_t>(idx) - n);
-                            if (r >= n) r = 0;
-                            val = src[r];
-                        }
-                        break;
-                    }
-                    case 1:  // constant
-                        val = cval;
-                        break;
-                    case 2: {  // nearest
-                        if (idx < 0) val = src[0];
-                        else         val = src[n - 1];
-                        break;
-                    }
-                    case 3: {  // mirror (d c b a | a b c d | c b a)
-                        if (idx < 0) {
-                            ptrdiff_t r = -idx;
-                            if (static_cast<size_t>(r) >= n) r = static_cast<ptrdiff_t>(n) - 1;
-                            val = src[static_cast<size_t>(r)];
-                        } else {
-                            ptrdiff_t r = static_cast<ptrdiff_t>(n) - 2 - (static_cast<size_t>(idx) - n);
-                            if (r < 0) r = 0;
-                            val = src[static_cast<size_t>(r)];
-                        }
-                        break;
-                    }
-                    case 4: {  // wrap
-                        if (idx < 0) {
-                            ptrdiff_t r = static_cast<ptrdiff_t>(n) + idx;
-                            while (r < 0) r += static_cast<ptrdiff_t>(n);
-                            val = src[static_cast<size_t>(r)];
-                        } else {
-                            val = src[(static_cast<size_t>(idx)) % n];
-                        }
-                        break;
-                    }
-                }
+    // Fill center with original data
+    std::copy(src, src + n, buf_ptr + half);
+
+    // Boundary value function for filling edges.
+    // Uses ptrdiff_t throughout (no unsigned underflow).
+    // Formulas match scipy's NI_InitLineBuffer.
+    auto bnd = [&](ptrdiff_t idx) -> T {
+        if (idx >= 0 && static_cast<size_t>(idx) < n)
+            return src[static_cast<size_t>(idx)];
+        switch (mode) {
+            case 0:  // reflect (d c b a | a b c d | d c b a)
+            default: {
+                // period = 2*n, boundary elements appear twice
+                ptrdiff_t p = static_cast<ptrdiff_t>(2 * n);
+                ptrdiff_t r = idx % p;
+                if (r < 0) r += p;
+                if (static_cast<size_t>(r) >= n)
+                    r = p - 1 - r;
+                return src[static_cast<size_t>(r)];
             }
-            sum += val * kernel[j + half];
+            case 1:  // constant
+                return cval;
+            case 2:  // nearest
+                return (idx < 0) ? src[0] : src[n - 1];
+            case 3: {  // mirror (d c b | a b c d | c b a)
+                // period = 2*n - 2, first/last elements appear once
+                ptrdiff_t p = static_cast<ptrdiff_t>(2 * n - 2);
+                ptrdiff_t r = idx % p;
+                if (r < 0) r += p;
+                if (static_cast<size_t>(r) >= n)
+                    r = p - r;
+                return src[static_cast<size_t>(r)];
+            }
+            case 4: {  // wrap
+                ptrdiff_t r = idx % static_cast<ptrdiff_t>(n);
+                if (r < 0) r += static_cast<ptrdiff_t>(n);
+                return src[static_cast<size_t>(r)];
+            }
+        }
+    };
+
+    // Fill left edge: buf[half-1] = bnd(-1), buf[half-2] = bnd(-2), ...
+    for (int j = 0; j < half; ++j)
+        buf_ptr[half - 1 - j] = bnd(-j - 1);
+
+    // Fill right edge: buf[half+n] = bnd(n), buf[half+n+1] = bnd(n+1), ...
+    for (int j = 0; j < half; ++j)
+        buf_ptr[half + n + j] = bnd(static_cast<ptrdiff_t>(n) + j);
+
+    // ====================================================================
+    // Convolution with symmetric correlation (matching scipy's fast path).
+    // output[i] = buf[half+i] * kernel[half]
+    //           + sum_{j=1}^{half} (buf[half+i-j] + buf[half+i+j]) * kernel[half-j]
+    // ====================================================================
+    for (size_t i = 0; i < n; ++i) {
+        T sum = buf_ptr[half + i] * kernel[half];
+        for (int j = half; j >= 1; --j) {
+            sum += (buf_ptr[half + i - j] + buf_ptr[half + i + j]) * kernel[half - j];
+        }
+        dst[i] = sum;
+    }
+}
+
+// ============================================================================
+// gaussian_filter_correlate — convolution with pre-computed kernel
+// ============================================================================
+// Same convolution as gaussian_filter1d, but kernel is pre-computed
+// externally (e.g., by Python numpy to guarantee bit-level alignment).
+//
+// Parameters:
+//   src    — input array, size n
+//   dst    — output array, size n
+//   n      — array length
+//   kernel — pre-computed normalized Gaussian kernel, size 2*half+1
+//   half   — kernel half-width (number of elements on each side of center)
+//   mode   — boundary mode: 0=reflect, 1=constant, 2=nearest, 3=mirror, 4=wrap
+//   cval   — constant fill value for constant mode
+template<typename T>
+inline void gaussian_filter_correlate(const T* src, T* dst, size_t n,
+                                       const T* kernel, int half,
+                                       int mode = 0,
+                                       T cval = T(0)) {
+    if (n == 0) return;
+    if (half < 0) half = 0;
+
+    size_t buf_size = n + 2 * static_cast<size_t>(half);
+    std::vector<T> buf(buf_size);
+    T* buf_ptr = buf.data();
+
+    // Fill center with original data
+    std::copy(src, src + n, buf_ptr + half);
+
+    // Boundary value function (same as gaussian_filter1d)
+    auto bnd = [&](ptrdiff_t idx) -> T {
+        if (idx >= 0 && static_cast<size_t>(idx) < n)
+            return src[static_cast<size_t>(idx)];
+        switch (mode) {
+            case 0:  // reflect
+            default: {
+                ptrdiff_t p = static_cast<ptrdiff_t>(2 * n);
+                ptrdiff_t r = idx % p;
+                if (r < 0) r += p;
+                if (static_cast<size_t>(r) >= n)
+                    r = p - 1 - r;
+                return src[static_cast<size_t>(r)];
+            }
+            case 1:  // constant
+                return cval;
+            case 2:  // nearest
+                return (idx < 0) ? src[0] : src[n - 1];
+            case 3: {  // mirror
+                ptrdiff_t p = static_cast<ptrdiff_t>(2 * n - 2);
+                ptrdiff_t r = idx % p;
+                if (r < 0) r += p;
+                if (static_cast<size_t>(r) >= n)
+                    r = p - r;
+                return src[static_cast<size_t>(r)];
+            }
+            case 4:  // wrap
+                ptrdiff_t r = idx % static_cast<ptrdiff_t>(n);
+                if (r < 0) r += static_cast<ptrdiff_t>(n);
+                return src[static_cast<size_t>(r)];
+        }
+    };
+
+    // Fill edges
+    for (int j = 0; j < half; ++j)
+        buf_ptr[half - 1 - j] = bnd(-j - 1);
+    for (int j = 0; j < half; ++j)
+        buf_ptr[half + n + j] = bnd(static_cast<ptrdiff_t>(n) + j);
+
+    // Convolution (matching scipy NI_Correlate1D symmetric correlation)
+    for (size_t i = 0; i < n; ++i) {
+        T sum = buf_ptr[half + i] * kernel[half];
+        for (int j = half; j >= 1; --j) {
+            sum += (buf_ptr[half + i - j] + buf_ptr[half + i + j]) * kernel[half - j];
         }
         dst[i] = sum;
     }

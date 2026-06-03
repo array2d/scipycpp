@@ -1,6 +1,7 @@
 # Build directories
 build/
 cmake-build-*/
+issue/
 
 # Compiled output
 *.o

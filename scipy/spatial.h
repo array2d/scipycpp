@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <utility>
 #include <limits>
+#include "numpy/core.h"
 
 namespace scipy {
 namespace spatial {

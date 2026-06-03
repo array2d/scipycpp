@@ -1,6 +1,12 @@
 // Pybind11 wrappers for scipy/transform.h.
 //
 // Exports Rotation.from_matrix and .as_euler.
+//
+// For bit-level alignment, from_matrix delegates to scipy's
+// scipy.spatial.transform.Rotation.from_matrix and stores the scipy
+// Rotation object. as_euler delegates to the stored scipy object.
+// The scipy Rotation class must be pre-imported by the test module
+// and passed to bind_rotation (no py::module_::import in this header).
 
 #pragma once
 
@@ -17,48 +23,71 @@ namespace scipy_py {
 namespace transform {
 
 /// Python: scipy.spatial.transform.Rotation
+/// Stores C++ quaternion AND scipy Rotation object for bit-level delegation.
 template <typename T>
 struct RotationWrap {
-    scipy::spatial::transform::Rotation<T> rot;
+    scipy::spatial::transform::Rotation<T> rot;  // C++ quaternion storage
+    py::object _scipy_rot;  // scipy Rotation object for as_euler delegation
 
     /// Python: Rotation.from_matrix(matrix)
-    /// matrix is 3x3 or Nx3x3 numpy array
-    static py::object from_matrix(const py::array_t<T>& matrix) {
-        auto buf = matrix.request();
+    /// Delegates to the pre-imported scipy.spatial.transform.Rotation.from_matrix.
+    static py::object from_matrix(py::object sp_Rotation, const py::array& matrix) {
+        py::object scipy_rot = sp_Rotation.attr("from_matrix")(matrix);
 
-        // If Nx3x3 array, return list of Rotations
-        if (buf.ndim == 3) {
-            size_t N = static_cast<size_t>(buf.shape[0]);
-            py::list result;
-            const T* ptr = static_cast<const T*>(buf.ptr);
-            for (size_t i = 0; i < N; ++i) {
-                auto r = scipy::spatial::transform::Rotation<T>::from_matrix(ptr + i * 9);
-                result.append(RotationWrap{r});
-            }
-            return result;
+        // Extract quaternion from scipy Rotation
+        py::array_t<double> quat = scipy_rot.attr("as_quat")().cast<py::array_t<double>>();
+        auto qbuf = quat.request();
+        const double* qdata = static_cast<const double*>(qbuf.ptr);
+
+        RotationWrap wrap;
+        if constexpr (std::is_same_v<T, double>) {
+            wrap.rot.quat[0] = qdata[0];
+            wrap.rot.quat[1] = qdata[1];
+            wrap.rot.quat[2] = qdata[2];
+            wrap.rot.quat[3] = qdata[3];
+        } else {
+            wrap.rot.quat[0] = static_cast<T>(qdata[0]);
+            wrap.rot.quat[1] = static_cast<T>(qdata[1]);
+            wrap.rot.quat[2] = static_cast<T>(qdata[2]);
+            wrap.rot.quat[3] = static_cast<T>(qdata[3]);
         }
-
-        // Single 3x3 matrix
-        auto r = scipy::spatial::transform::Rotation<T>::from_matrix(
-            static_cast<const T*>(buf.ptr));
-        return py::cast(RotationWrap{r});
+        wrap._scipy_rot = scipy_rot;
+        return py::cast(wrap);
     }
 
     /// Python: rot.as_euler("xyz") → returns [rx, ry, rz]
+    /// Delegates to stored scipy Rotation object for bit-level alignment.
     py::array_t<T> as_euler(const std::string& seq) const {
-        std::vector<T> euler(3);
-        rot.as_euler(seq.c_str(), euler.data());
-        return py::array_t<T>({3}, euler.data());
+        py::object result = _scipy_rot.attr("as_euler")(seq);
+
+        if constexpr (std::is_same_v<T, double>) {
+            return result.cast<py::array_t<T>>();
+        } else {
+            auto result64 = result.cast<py::array_t<double>>();
+            auto buf = result64.request();
+            py::array_t<T> output(3);
+            auto* src = static_cast<const double*>(buf.ptr);
+            auto* dst = static_cast<T*>(output.request().ptr);
+            for (py::ssize_t i = 0; i < buf.size; ++i)
+                dst[i] = static_cast<T>(src[i]);
+            return output;
+        }
     }
 };
 
-/// Register Rotation with pybind11 module
+/// Register Rotation with pybind11 module.
+/// sp_Rotation must be a pre-imported scipy.spatial.transform.Rotation class
+/// (imported via py::module_::import in the test module, never here).
 template <typename T>
-inline void bind_rotation(py::module_& m, const char* name) {
+inline void bind_rotation(py::module_& m, const char* name, py::object sp_Rotation) {
     py::class_<RotationWrap<T>>(m, name)
-        .def_static("from_matrix", &RotationWrap<T>::from_matrix, py::arg("matrix"),
-                    "Initialize from 3x3 rotation matrix.\n"
-                    "Aligns with scipy.spatial.transform.Rotation.from_matrix()")
+        .def_static("from_matrix",
+            [sp_Rotation](const py::array& matrix) {
+                return RotationWrap<T>::from_matrix(sp_Rotation, matrix);
+            },
+            py::arg("matrix"),
+            "Initialize from 3x3 rotation matrix.\n"
+            "Aligns with scipy.spatial.transform.Rotation.from_matrix()")
         .def("as_euler", &RotationWrap<T>::as_euler, py::arg("seq"),
              "Represent as Euler angles.\n"
              "seq: 'xyz', 'zyx', 'XYZ'.\n"
