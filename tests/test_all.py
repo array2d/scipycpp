@@ -21,7 +21,29 @@ def _s(label, dtype=None):
 # ULP computation & reporting
 # ============================================================================
 
-_ulp_report = []  # global collector for final summary
+_ulp_report = []  # human-readable lines for stderr
+_ulp_records = []  # structured rows for CSV export
+
+def _ulp_record(label, n_total, n_diff, max_ulp, tol, hist, status):
+    """Collect one row for CSV ULP report."""
+    # Parse module/dtype from label like "pdf batch=100 [float64]"
+    # Extract module (first word before space/digit) and dtype [...] suffix
+    import re as _re
+    parts = label.split(" [", 1)
+    test_name = parts[0]
+    dtype_tag = parts[1].rstrip("]") if len(parts) > 1 else "—"
+    module = test_name.split()[0] if test_name else "—"
+    _ulp_records.append({
+        "module": module,
+        "test": test_name,
+        "dtype": dtype_tag,
+        "n_total": n_total,
+        "n_diff": n_diff,
+        "max_ulp": max_ulp,
+        "tol": tol,
+        "histogram": hist.replace(", ", " "),
+        "status": status,
+    })
 
 def _ulp_dist(a, b):
     """ULP distance between two float64 values (same-sign only)."""
@@ -52,9 +74,11 @@ def assert_bit_aligned(cpp_r, py_r, label=""):
     n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
     if n_diff == 0:
         _ulp_report.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+        _ulp_record(label, int(cpp.size), 0, 0, 0, "—", "bit-identical")
         return
     _ulp_report.append(f"  ✗ FAIL {label}: {n_diff}/{cpp.size} differ, max={max_ulp} ULP [{hist}]")
     _ulp_report.append(f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  scipy={py.flat[max_idx]:.18e}")
+    _ulp_record(label, int(cpp.size), n_diff, max_ulp, 0, hist, "FAIL (bit-aligned required)")
     raise AssertionError(
         f"{label}: BIT-LEVEL MISMATCH {n_diff}/{cpp.size} differ, max={max_ulp} ULP")
 
@@ -66,11 +90,14 @@ def assert_ulp_close(cpp_r, py_r, label="", max_ulp_tol=3):
     n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
     if n_diff == 0:
         _ulp_report.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+        _ulp_record(label, int(cpp.size), 0, 0, max_ulp_tol, "—", "bit-identical")
         return
     ok = max_ulp <= max_ulp_tol
     tag = "✓" if ok else "✗ FAIL"
+    status = f"within {max_ulp_tol} ULP" if ok else "FAIL (exceeds tolerance)"
     _ulp_report.append(f"  {tag} {label}: {n_diff}/{cpp.size} differ, max={max_ulp} ULP (tol={max_ulp_tol}) [{hist}]")
     _ulp_report.append(f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  scipy={py.flat[max_idx]:.18e}")
+    _ulp_record(label, int(cpp.size), n_diff, max_ulp, max_ulp_tol, hist, status)
     if not ok:
         raise AssertionError(
             f"{label}: ULP MISMATCH max={max_ulp} > tol={max_ulp_tol}")
@@ -92,6 +119,16 @@ def _print_ulp_report():
     for line in _ulp_report:
         print(line, file=sys.stderr, flush=True)
     print("="*72, file=sys.stderr, flush=True)
+
+    # Export CSV to doc/ulp_report.csv
+    if _ulp_records:
+        csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "doc", "ulp_report.csv")
+        os.makedirs(os.path.dirname(csv_path), exist_ok=True)
+        with open(csv_path, "w") as f:
+            f.write("module,test,dtype,n_total,n_diff,max_ulp,tol,histogram,status\n")
+            for r in _ulp_records:
+                f.write(f"{r['module']},{r['test']},{r['dtype']},{r['n_total']},{r['n_diff']},{r['max_ulp']},{r['tol']},{r['histogram']},{r['status']}\n")
+        print(f"  CSV exported → {csv_path}", file=sys.stderr, flush=True)
 
 atexit.register(_print_ulp_report)
 
@@ -282,11 +319,15 @@ def assert_linalg_close(cpp_r, py_r, label="", atol=1e-14):
     n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
     ok_abs = np.allclose(cpp, py, atol=atol)
     tag = "✓" if ok_abs else "✗ FAIL"
+    tol_label = f"atol={atol}"
     if n_diff == 0:
         _ulp_report.append(f"  {tag} {label}: 0 ULP (bit-identical)")
+        _ulp_record(label, int(cpp.size), 0, 0, tol_label, "—", "bit-identical")
     else:
         _ulp_report.append(f"  {tag} {label}: {n_diff}/{cpp.size} differ, max={max_ulp} ULP [{hist}]")
         _ulp_report.append(f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  np={py.flat[max_idx]:.18e}")
+        status = f"within {tol_label}" if ok_abs else "FAIL (exceeds tolerance)"
+        _ulp_record(label, int(cpp.size), n_diff, max_ulp, tol_label, hist, status)
     if not ok_abs:
         raise AssertionError(
             f"{label}: linalg MISMATCH, max ULP={max_ulp} exceeds atol={atol}")
