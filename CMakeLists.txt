@@ -26,18 +26,17 @@ target_include_directories(scipycpp INTERFACE
 )
 target_compile_features(scipycpp INTERFACE cxx_std_17)
 
-# Transitive dependencies: scipycpp → pocketfft, Eigen3, numpcpp, ckdtree
+# Transitive dependencies: scipycpp → pocketfft, Eigen3, numpcpp
 target_link_libraries(scipycpp INTERFACE
     pocketfft::pocketfft
     Eigen3::Eigen
     numpycpp::numpycpp
-    ckdtree::ckdtree
 )
 
 # ---- Install — header-only C++ library --------------------------------------
 install(DIRECTORY scipy
     DESTINATION include/scipycpp
-    FILES_MATCHING PATTERN "*.h"
+    FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
 )
 install(DIRECTORY pycpp
     DESTINATION include/scipycpp
@@ -79,27 +78,18 @@ set(CPACK_DEBIAN_PACKAGE_SECTION           "libdevel")
 set(CPACK_DEBIAN_PACKAGE_PRIORITY          "optional")
 set(CPACK_DEBIAN_FILE_NAME                 "scipycpp-dev-${CPACK_PACKAGE_VERSION}-Linux.deb")
 
-# Install prefix for packaging: use ~/debs as share-global is unavailable
-if(DEFINED ENV{HOME})
-    set(CPACK_PACKAGING_INSTALL_PREFIX "$ENV{HOME}/debs")
-else()
-    set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
-endif()
-
-# Output DEB to ~/debs directory
-set(CPACK_OUTPUT_FILE_PREFIX "$ENV{HOME}/debs")
+set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 
 # Recommend the required dependencies
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "numpycpp-dev, libeigen3-dev, pocketfft-dev, ckdtree-dev")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "numpycpp-dev, libeigen3-dev, pocketfft-dev")
 
 include(CPack)
 add_custom_target(deb
-    COMMAND ${CMAKE_COMMAND} -E make_directory $ENV{HOME}/debs
     COMMAND cpack -G DEB --config CPackConfig.cmake
-    COMMENT "Packaging scipycpp-dev-${CPACK_PACKAGE_VERSION}-Linux.deb → ~/debs/")
+    COMMENT "Packaging scipycpp-dev-${CPACK_PACKAGE_VERSION}-Linux.deb")
 
 message(STATUS "scipycpp v${PROJECT_VERSION}  (header-only C++ library)")
-message(STATUS "  Dependencies: numpcpp + Eigen3 + pocketfft + ckdtree")
-message(STATUS "  KDTree: backed by scipy's own ckdtree (O(log n) true kd-tree)")
+message(STATUS "  Dependencies: numpcpp + Eigen3 + pocketfft")
+message(STATUS "  KDTree: bundled ckdtree (O(log n) true kd-tree)")
 message(STATUS "  DEB:  make deb  →  scipycpp-dev-${CPACK_PACKAGE_VERSION}-Linux.deb")
 message(STATUS "  Test: cd tests/ && make  →  build + run alignment tests")

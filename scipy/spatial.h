@@ -178,7 +178,7 @@ inline void cdist(const T* XA, size_t mA,
 // ============================================================================
 // Uses ckdtree-dev package (extracted from scipy.spatial.ckdtree v1.8.0).
 
-#include <ckdtree/ckdtree.hpp>
+#include "ckdtree/ckdtree.hpp"
 
 template<typename T>
 struct KDTree {

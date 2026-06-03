@@ -1,4 +1,1567 @@
 module,test,dtype,n_total,n_diff,max_ulp,tol,histogram,status
+pdf,pdf batch=100,float64,100,29,2,3,25×1ULP 4×2ULP,within 3 ULP
+pdf,pdf batch=100,float32,100,31,2,3,26×1ULP 5×2ULP,within 3 ULP
+pdf,pdf(0.0),float64,1,0,0,3,—,bit-identical
+pdf,pdf(1.0),float64,1,0,0,3,—,bit-identical
+pdf,pdf(-1.0),float64,1,0,0,3,—,bit-identical
+pdf,pdf(2.0),float64,1,1,2,3,1×2ULP,within 3 ULP
+pdf,pdf(-2.0),float64,1,1,2,3,1×2ULP,within 3 ULP
+pdf,pdf(3.0),float64,1,1,1,3,1×1ULP,within 3 ULP
+pdf,pdf(-3.0),float64,1,1,1,3,1×1ULP,within 3 ULP
+pdf,pdf(5.0),float64,1,1,1,3,1×1ULP,within 3 ULP
+pdf,pdf(-5.0),float64,1,1,1,3,1×1ULP,within 3 ULP
+pdf,pdf(0.0),float32,1,0,0,3,—,bit-identical
+pdf,pdf(1.0),float32,1,0,0,3,—,bit-identical
+pdf,pdf(-1.0),float32,1,0,0,3,—,bit-identical
+pdf,pdf(2.0),float32,1,1,2,3,1×2ULP,within 3 ULP
+pdf,pdf(-2.0),float32,1,1,2,3,1×2ULP,within 3 ULP
+pdf,pdf(3.0),float32,1,1,1,3,1×1ULP,within 3 ULP
+pdf,pdf(-3.0),float32,1,1,1,3,1×1ULP,within 3 ULP
+pdf,pdf(5.0),float32,1,1,1,3,1×1ULP,within 3 ULP
+pdf,pdf(-5.0),float32,1,1,1,3,1×1ULP,within 3 ULP
+pdf,pdf extreme,float64,8,0,0,3,—,bit-identical
+pdf,pdf extreme,float32,8,0,0,3,—,bit-identical
+pdf,"pdf(loc=0.0,scale=1.0)",float64,100,31,2,3,28×1ULP 3×2ULP,within 3 ULP
+pdf,"pdf(loc=1.0,scale=1.0)",float64,100,32,2,3,25×1ULP 7×2ULP,within 3 ULP
+pdf,"pdf(loc=-2.0,scale=1.0)",float64,100,17,2,3,16×1ULP 1×2ULP,within 3 ULP
+pdf,"pdf(loc=0.0,scale=2.0)",float64,100,37,2,3,36×1ULP 1×2ULP,within 3 ULP
+pdf,"pdf(loc=0.0,scale=0.5)",float64,100,19,2,3,16×1ULP 3×2ULP,within 3 ULP
+pdf,"pdf(loc=3.0,scale=4.0)",float64,100,20,2,3,17×1ULP 3×2ULP,within 3 ULP
+pdf,"pdf(loc=-1.5,scale=0.3)",float64,100,16,2,3,8×1ULP 8×2ULP,within 3 ULP
+pdf,"pdf(loc=5.0,scale=10.0)",float64,100,12,1,3,12×1ULP,within 3 ULP
+pdf,"pdf(loc=0.0,scale=1.0)",float32,100,29,1,3,29×1ULP,within 3 ULP
+pdf,"pdf(loc=1.0,scale=1.0)",float32,100,23,2,3,19×1ULP 4×2ULP,within 3 ULP
+pdf,"pdf(loc=-2.0,scale=1.0)",float32,100,19,2,3,17×1ULP 2×2ULP,within 3 ULP
+pdf,"pdf(loc=0.0,scale=2.0)",float32,100,26,2,3,25×1ULP 1×2ULP,within 3 ULP
+pdf,"pdf(loc=0.0,scale=0.5)",float32,100,24,2,3,20×1ULP 4×2ULP,within 3 ULP
+pdf,"pdf(loc=3.0,scale=4.0)",float32,100,21,2,3,19×1ULP 2×2ULP,within 3 ULP
+pdf,"pdf(loc=-1.5,scale=0.3)",float32,100,19,2,3,15×1ULP 4×2ULP,within 3 ULP
+pdf,"pdf(loc=5.0,scale=10.0)",float32,100,12,1,3,12×1ULP,within 3 ULP
+pdf,"pdf(loc=-10.0,scale=0.01)",float64,100,0,0,3,—,bit-identical
+pdf,"pdf(loc=10.0,scale=0.01)",float64,100,0,0,3,—,bit-identical
+pdf,"pdf(loc=-10.0,scale=0.01)",float32,100,0,0,3,—,bit-identical
+pdf,"pdf(loc=10.0,scale=0.01)",float32,100,0,0,3,—,bit-identical
+cdf,cdf batch=100,float64,100,0,0,0,—,bit-identical
+cdf,cdf batch=100,float32,100,0,0,0,—,bit-identical
+cdf,cdf(0.0),float64,1,0,0,0,—,bit-identical
+cdf,cdf(1.0),float64,1,0,0,0,—,bit-identical
+cdf,cdf(-1.0),float64,1,0,0,0,—,bit-identical
+cdf,cdf(2.0),float64,1,0,0,0,—,bit-identical
+cdf,cdf(-2.0),float64,1,0,0,0,—,bit-identical
+cdf,cdf(3.0),float64,1,0,0,0,—,bit-identical
+cdf,cdf(-3.0),float64,1,0,0,0,—,bit-identical
+cdf,cdf(0.0),float32,1,0,0,0,—,bit-identical
+cdf,cdf(1.0),float32,1,0,0,0,—,bit-identical
+cdf,cdf(-1.0),float32,1,0,0,0,—,bit-identical
+cdf,cdf(2.0),float32,1,0,0,0,—,bit-identical
+cdf,cdf(-2.0),float32,1,0,0,0,—,bit-identical
+cdf,cdf(3.0),float32,1,0,0,0,—,bit-identical
+cdf,cdf(-3.0),float32,1,0,0,0,—,bit-identical
+cdf,"cdf(loc=0.0,scale=1.0)",float64,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=1.0,scale=1.0)",float64,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=-2.0,scale=1.0)",float64,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=0.0,scale=2.0)",float64,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=0.0,scale=0.5)",float64,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=3.0,scale=4.0)",float64,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=0.0,scale=1.0)",float32,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=1.0,scale=1.0)",float32,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=-2.0,scale=1.0)",float32,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=0.0,scale=2.0)",float32,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=0.0,scale=0.5)",float32,100,0,0,0,—,bit-identical
+cdf,"cdf(loc=3.0,scale=4.0)",float32,100,0,0,0,—,bit-identical
+ppf,ppf batch=100,float64,100,0,0,0,—,bit-identical
+ppf,ppf batch=100,float32,100,0,0,0,—,bit-identical
+ppf,ppf(0.5),float64,1,0,0,0,—,bit-identical
+ppf,ppf(0.025),float64,1,0,0,0,—,bit-identical
+ppf,ppf(0.975),float64,1,0,0,0,—,bit-identical
+ppf,ppf(0.001),float64,1,0,0,0,—,bit-identical
+ppf,ppf(0.999),float64,1,0,0,0,—,bit-identical
+ppf,ppf(0.5),float32,1,0,0,0,—,bit-identical
+ppf,ppf(0.025),float32,1,0,0,0,—,bit-identical
+ppf,ppf(0.975),float32,1,0,0,0,—,bit-identical
+ppf,ppf(0.001),float32,1,0,0,0,—,bit-identical
+ppf,ppf(0.999),float32,1,0,0,0,—,bit-identical
+ppf,"ppf(loc=0.0,scale=1.0)",float64,100,0,0,0,—,bit-identical
+ppf,"ppf(loc=1.0,scale=1.0)",float64,100,0,0,0,—,bit-identical
+ppf,"ppf(loc=-2.0,scale=1.0)",float64,100,0,0,0,—,bit-identical
+ppf,"ppf(loc=0.0,scale=2.0)",float64,100,0,0,0,—,bit-identical
+ppf,"ppf(loc=0.0,scale=0.5)",float64,100,0,0,0,—,bit-identical
+ppf,"ppf(loc=0.0,scale=1.0)",float32,100,0,0,0,—,bit-identical
+ppf,"ppf(loc=1.0,scale=1.0)",float32,100,0,0,0,—,bit-identical
+ppf,"ppf(loc=-2.0,scale=1.0)",float32,100,0,0,0,—,bit-identical
+ppf,"ppf(loc=0.0,scale=2.0)",float32,100,0,0,0,—,bit-identical
+ppf,"ppf(loc=0.0,scale=0.5)",float32,100,0,0,0,—,bit-identical
+trapezoid,trapezoid batch=100,float64,1,0,0,0,—,bit-identical
+trapezoid,trapezoid batch=100,float32,1,0,0,0,—,bit-identical
+simpson,simpson batch=101,float64,1,0,0,0,—,bit-identical
+simpson,simpson batch=101,float32,1,0,0,0,—,bit-identical
+trapezoid,trapezoid known,float64,1,0,0,0,—,bit-identical
+trapezoid,trapezoid known,float32,1,0,0,0,—,bit-identical
+simpson,simpson known,—,1,0,0,0,—,bit-identical
+solve,solve 2x2,float64,2,0,0,0,—,bit-identical
+solve,solve 2x2,float32,2,0,0,0,—,bit-identical
+solve,solve identity,float64,3,0,0,0,—,bit-identical
+solve,solve identity,float32,3,0,0,0,—,bit-identical
+solve,solve batch[0] n=5,float64,5,5,16,atol=1e-14,2×1ULP 2×2ULP 1×16ULP,within atol=1e-14
+solve,solve batch[1] n=7,float64,7,7,7,atol=1e-14,1×3ULP 1×4ULP 1×5ULP 3×6ULP 1×7ULP,within atol=1e-14
+solve,solve batch[2] n=6,float64,6,4,6,atol=1e-14,1×2ULP 2×3ULP 1×6ULP,within atol=1e-14
+solve,solve batch[3] n=5,float64,5,5,15,atol=1e-14,1×1ULP 2×2ULP 1×8ULP 1×15ULP,within atol=1e-14
+solve,solve batch[4] n=4,float64,4,3,7,atol=1e-14,2×2ULP 1×7ULP,within atol=1e-14
+solve,solve batch[5] n=4,float64,4,3,5,atol=1e-14,1×1ULP 1×2ULP 1×5ULP,within atol=1e-14
+solve,solve batch[6] n=5,float64,5,5,5,atol=1e-14,1×3ULP 3×4ULP 1×5ULP,within atol=1e-14
+solve,solve batch[7] n=6,float64,6,6,15,atol=1e-14,2×10ULP 2×13ULP 1×14ULP 1×15ULP,within atol=1e-14
+solve,solve batch[8] n=7,float64,7,6,10,atol=1e-14,2×1ULP 2×2ULP 1×3ULP 1×10ULP,within atol=1e-14
+solve,solve batch[9] n=4,float64,4,3,2,atol=1e-14,2×1ULP 1×2ULP,within atol=1e-14
+solve,solve batch[10] n=4,float64,4,2,1,atol=1e-14,2×1ULP,within atol=1e-14
+solve,solve batch[11] n=4,float64,4,4,40,atol=1e-14,1×26ULP 1×28ULP 1×29ULP 1×40ULP,within atol=1e-14
+solve,solve batch[12] n=5,float64,5,5,9,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×5ULP 1×9ULP,within atol=1e-14
+solve,solve batch[13] n=6,float64,6,4,39,atol=1e-14,1×1ULP 2×2ULP 1×39ULP,within atol=1e-14
+solve,solve batch[14] n=5,float64,5,4,22,atol=1e-14,1×2ULP 2×3ULP 1×22ULP,within atol=1e-14
+solve,solve batch[15] n=6,float64,6,5,514,atol=1e-14,4×1ULP 1×514ULP,within atol=1e-14
+solve,solve batch[16] n=6,float64,6,6,7,atol=1e-14,4×3ULP 1×4ULP 1×7ULP,within atol=1e-14
+solve,solve batch[17] n=5,float64,5,5,36,atol=1e-14,1×1ULP 1×2ULP 1×7ULP 1×24ULP 1×36ULP,within atol=1e-14
+solve,solve batch[18] n=4,float64,4,2,1,atol=1e-14,2×1ULP,within atol=1e-14
+solve,solve batch[19] n=7,float64,7,4,4,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×4ULP,within atol=1e-14
+solve,solve batch[20] n=7,float64,7,7,53,atol=1e-14,4×1ULP 1×4ULP 1×11ULP 1×53ULP,within atol=1e-14
+solve,solve batch[21] n=4,float64,4,4,2,atol=1e-14,2×1ULP 2×2ULP,within atol=1e-14
+solve,solve batch[22] n=5,float64,5,3,29,atol=1e-14,1×2ULP 1×6ULP 1×29ULP,within atol=1e-14
+solve,solve batch[23] n=6,float64,6,4,11,atol=1e-14,1×2ULP 1×4ULP 1×8ULP 1×11ULP,within atol=1e-14
+solve,solve batch[24] n=6,float64,6,5,7,atol=1e-14,2×1ULP 2×2ULP 1×7ULP,within atol=1e-14
+solve,solve batch[25] n=8,float64,8,8,20,atol=1e-14,4×2ULP 1×3ULP 1×4ULP 1×9ULP 1×20ULP,within atol=1e-14
+solve,solve batch[26] n=8,float64,8,6,4,atol=1e-14,1×1ULP 3×2ULP 2×4ULP,within atol=1e-14
+solve,solve batch[27] n=8,float64,8,8,5,atol=1e-14,3×1ULP 2×2ULP 1×3ULP 1×4ULP 1×5ULP,within atol=1e-14
+solve,solve batch[28] n=8,float64,8,5,7,atol=1e-14,3×1ULP 1×4ULP 1×7ULP,within atol=1e-14
+solve,solve batch[29] n=8,float64,8,8,38,atol=1e-14,1×1ULP 2×2ULP 1×3ULP 1×5ULP 1×7ULP 1×10ULP 1×38ULP,within atol=1e-14
+solve,solve batch[30] n=6,float64,6,5,3,atol=1e-14,3×1ULP 1×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[31] n=6,float64,6,5,3,atol=1e-14,1×1ULP 2×2ULP 2×3ULP,within atol=1e-14
+solve,solve batch[32] n=4,float64,4,2,1,atol=1e-14,2×1ULP,within atol=1e-14
+solve,solve batch[33] n=8,float64,8,7,10,atol=1e-14,1×2ULP 2×3ULP 2×4ULP 1×5ULP 1×10ULP,within atol=1e-14
+solve,solve batch[34] n=5,float64,5,3,28,atol=1e-14,1×2ULP 1×5ULP 1×28ULP,within atol=1e-14
+solve,solve batch[35] n=8,float64,8,8,40,atol=1e-14,1×4ULP 2×5ULP 2×6ULP 1×10ULP 1×17ULP 1×40ULP,within atol=1e-14
+solve,solve batch[36] n=7,float64,7,7,7,atol=1e-14,1×2ULP 1×3ULP 3×4ULP 1×6ULP 1×7ULP,within atol=1e-14
+solve,solve batch[37] n=8,float64,8,7,18,atol=1e-14,2×1ULP 1×2ULP 1×3ULP 1×4ULP 1×5ULP 1×18ULP,within atol=1e-14
+solve,solve batch[38] n=7,float64,7,7,174,atol=1e-14,1×6ULP 1×11ULP 1×13ULP 1×14ULP 1×15ULP 1×25ULP 1×174ULP,within atol=1e-14
+solve,solve batch[39] n=5,float64,5,5,9,atol=1e-14,2×4ULP 1×5ULP 1×6ULP 1×9ULP,within atol=1e-14
+solve,solve batch[40] n=7,float64,7,6,4,atol=1e-14,1×1ULP 2×2ULP 1×3ULP 2×4ULP,within atol=1e-14
+solve,solve batch[41] n=5,float64,5,4,5,atol=1e-14,1×1ULP 1×2ULP 1×4ULP 1×5ULP,within atol=1e-14
+solve,solve batch[42] n=8,float64,8,6,5,atol=1e-14,2×1ULP 2×2ULP 1×3ULP 1×5ULP,within atol=1e-14
+solve,solve batch[43] n=6,float64,6,6,10,atol=1e-14,1×2ULP 1×3ULP 2×4ULP 1×5ULP 1×10ULP,within atol=1e-14
+solve,solve batch[44] n=6,float64,6,5,5,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×4ULP 1×5ULP,within atol=1e-14
+solve,solve batch[45] n=7,float64,7,6,17,atol=1e-14,1×1ULP 2×2ULP 1×4ULP 1×8ULP 1×17ULP,within atol=1e-14
+solve,solve batch[46] n=4,float64,4,3,5,atol=1e-14,2×1ULP 1×5ULP,within atol=1e-14
+solve,solve batch[47] n=8,float64,8,7,16,atol=1e-14,2×2ULP 1×3ULP 1×4ULP 2×5ULP 1×16ULP,within atol=1e-14
+solve,solve batch[48] n=5,float64,5,5,3,atol=1e-14,1×1ULP 2×2ULP 2×3ULP,within atol=1e-14
+solve,solve batch[49] n=8,float64,8,8,34,atol=1e-14,1×1ULP 3×2ULP 1×3ULP 1×5ULP 1×7ULP 1×34ULP,within atol=1e-14
+solve,solve batch[50] n=8,float64,8,7,6,atol=1e-14,2×1ULP 1×2ULP 2×3ULP 1×4ULP 1×6ULP,within atol=1e-14
+solve,solve batch[51] n=4,float64,4,2,10,atol=1e-14,1×1ULP 1×10ULP,within atol=1e-14
+solve,solve batch[52] n=8,float64,8,7,13,atol=1e-14,1×3ULP 2×8ULP 1×9ULP 1×10ULP 2×13ULP,within atol=1e-14
+solve,solve batch[53] n=5,float64,5,5,10,atol=1e-14,1×4ULP 1×6ULP 1×7ULP 1×9ULP 1×10ULP,within atol=1e-14
+solve,solve batch[54] n=4,float64,4,4,4,atol=1e-14,2×1ULP 2×4ULP,within atol=1e-14
+solve,solve batch[55] n=8,float64,8,8,393,atol=1e-14,1×1ULP 1×3ULP 2×8ULP 1×12ULP 1×15ULP 1×48ULP 1×393ULP,within atol=1e-14
+solve,solve batch[56] n=7,float64,7,6,5,atol=1e-14,2×1ULP 2×2ULP 1×4ULP 1×5ULP,within atol=1e-14
+solve,solve batch[57] n=6,float64,6,6,13,atol=1e-14,1×3ULP 1×7ULP 1×8ULP 1×10ULP 2×13ULP,within atol=1e-14
+solve,solve batch[58] n=4,float64,4,2,2,atol=1e-14,1×1ULP 1×2ULP,within atol=1e-14
+solve,solve batch[59] n=8,float64,8,8,16,atol=1e-14,1×2ULP 2×3ULP 2×8ULP 1×9ULP 1×15ULP 1×16ULP,within atol=1e-14
+solve,solve batch[60] n=7,float64,7,7,23,atol=1e-14,1×1ULP 2×2ULP 2×3ULP 1×4ULP 1×23ULP,within atol=1e-14
+solve,solve batch[61] n=7,float64,7,6,11,atol=1e-14,2×1ULP 1×3ULP 1×5ULP 1×6ULP 1×11ULP,within atol=1e-14
+solve,solve batch[62] n=4,float64,4,4,40,atol=1e-14,1×2ULP 1×3ULP 1×8ULP 1×40ULP,within atol=1e-14
+solve,solve batch[63] n=8,float64,8,8,46,atol=1e-14,3×1ULP 1×2ULP 1×5ULP 1×9ULP 1×10ULP 1×46ULP,within atol=1e-14
+solve,solve batch[64] n=4,float64,4,4,12,atol=1e-14,1×2ULP 1×3ULP 1×7ULP 1×12ULP,within atol=1e-14
+solve,solve batch[65] n=7,float64,7,6,21,atol=1e-14,2×2ULP 1×4ULP 1×10ULP 1×11ULP 1×21ULP,within atol=1e-14
+solve,solve batch[66] n=4,float64,4,4,5,atol=1e-14,1×1ULP 2×2ULP 1×5ULP,within atol=1e-14
+solve,solve batch[67] n=5,float64,5,5,4,atol=1e-14,3×1ULP 1×2ULP 1×4ULP,within atol=1e-14
+solve,solve batch[68] n=7,float64,7,5,19,atol=1e-14,1×1ULP 2×2ULP 1×11ULP 1×19ULP,within atol=1e-14
+solve,solve batch[69] n=8,float64,8,7,3,atol=1e-14,1×1ULP 5×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[70] n=7,float64,7,7,26,atol=1e-14,3×1ULP 1×2ULP 1×7ULP 1×8ULP 1×26ULP,within atol=1e-14
+solve,solve batch[71] n=5,float64,5,4,3,atol=1e-14,2×1ULP 1×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[72] n=4,float64,4,2,2,atol=1e-14,1×1ULP 1×2ULP,within atol=1e-14
+solve,solve batch[73] n=6,float64,6,6,12,atol=1e-14,2×1ULP 1×2ULP 1×4ULP 1×6ULP 1×12ULP,within atol=1e-14
+solve,solve batch[74] n=6,float64,6,4,2,atol=1e-14,1×1ULP 3×2ULP,within atol=1e-14
+solve,solve batch[75] n=4,float64,4,2,2,atol=1e-14,2×2ULP,within atol=1e-14
+solve,solve batch[76] n=5,float64,5,3,112,atol=1e-14,1×1ULP 1×24ULP 1×112ULP,within atol=1e-14
+solve,solve batch[77] n=4,float64,4,4,5,atol=1e-14,3×1ULP 1×5ULP,within atol=1e-14
+solve,solve batch[78] n=7,float64,7,7,35,atol=1e-14,1×12ULP 1×19ULP 1×21ULP 1×23ULP 1×27ULP 1×30ULP 1×35ULP,within atol=1e-14
+solve,solve batch[79] n=5,float64,5,5,11,atol=1e-14,1×2ULP 1×3ULP 1×4ULP 1×7ULP 1×11ULP,within atol=1e-14
+solve,solve batch[80] n=8,float64,8,8,44,atol=1e-14,1×26ULP 1×27ULP 2×30ULP 1×32ULP 1×39ULP 1×43ULP 1×44ULP,within atol=1e-14
+solve,solve batch[81] n=4,float64,4,2,10,atol=1e-14,1×1ULP 1×10ULP,within atol=1e-14
+solve,solve batch[82] n=4,float64,4,4,3,atol=1e-14,1×1ULP 1×2ULP 2×3ULP,within atol=1e-14
+solve,solve batch[83] n=5,float64,5,5,4,atol=1e-14,1×2ULP 1×3ULP 3×4ULP,within atol=1e-14
+solve,solve batch[84] n=8,float64,8,6,14,atol=1e-14,1×2ULP 2×3ULP 1×4ULP 1×5ULP 1×14ULP,within atol=1e-14
+solve,solve batch[85] n=4,float64,4,3,3,atol=1e-14,2×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[86] n=8,float64,8,8,310,atol=1e-14,1×1ULP 2×2ULP 2×3ULP 1×4ULP 1×8ULP 1×310ULP,within atol=1e-14
+solve,solve batch[87] n=7,float64,7,6,6,atol=1e-14,4×1ULP 1×3ULP 1×6ULP,within atol=1e-14
+solve,solve batch[88] n=5,float64,5,0,0,atol=1e-14,—,bit-identical
+solve,solve batch[89] n=5,float64,5,4,8,atol=1e-14,3×1ULP 1×8ULP,within atol=1e-14
+solve,solve batch[90] n=8,float64,8,8,11,atol=1e-14,3×1ULP 1×2ULP 1×3ULP 1×8ULP 1×9ULP 1×11ULP,within atol=1e-14
+solve,solve batch[91] n=8,float64,8,6,4,atol=1e-14,2×1ULP 2×2ULP 1×3ULP 1×4ULP,within atol=1e-14
+solve,solve batch[92] n=6,float64,6,5,8,atol=1e-14,1×1ULP 1×2ULP 1×4ULP 1×5ULP 1×8ULP,within atol=1e-14
+solve,solve batch[93] n=6,float64,6,4,3,atol=1e-14,1×1ULP 2×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[94] n=6,float64,6,6,3,atol=1e-14,2×1ULP 3×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[95] n=5,float64,5,5,3,atol=1e-14,2×1ULP 2×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[96] n=6,float64,6,6,129,atol=1e-14,1×66ULP 1×73ULP 1×78ULP 1×114ULP 1×116ULP 1×129ULP,within atol=1e-14
+solve,solve batch[97] n=4,float64,4,4,8,atol=1e-14,1×3ULP 2×4ULP 1×8ULP,within atol=1e-14
+solve,solve batch[98] n=6,float64,6,6,8,atol=1e-14,2×1ULP 2×3ULP 2×8ULP,within atol=1e-14
+solve,solve batch[99] n=6,float64,6,6,82,atol=1e-14,1×54ULP 1×55ULP 2×57ULP 1×59ULP 1×82ULP,within atol=1e-14
+solve,solve batch[0] n=5,float32,5,3,34,atol=1e-14,2×1ULP 1×34ULP,within atol=1e-14
+solve,solve batch[1] n=7,float32,7,7,32,atol=1e-14,1×17ULP 1×21ULP 1×23ULP 1×28ULP 2×29ULP 1×32ULP,within atol=1e-14
+solve,solve batch[2] n=6,float32,6,3,13,atol=1e-14,1×2ULP 1×4ULP 1×13ULP,within atol=1e-14
+solve,solve batch[3] n=5,float32,5,5,29,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×8ULP 1×29ULP,within atol=1e-14
+solve,solve batch[4] n=4,float32,4,1,2,atol=1e-14,1×2ULP,within atol=1e-14
+solve,solve batch[5] n=4,float32,4,2,3,atol=1e-14,1×1ULP 1×3ULP,within atol=1e-14
+solve,solve batch[6] n=5,float32,5,5,2,atol=1e-14,1×1ULP 4×2ULP,within atol=1e-14
+solve,solve batch[7] n=6,float32,6,6,11,atol=1e-14,1×5ULP 2×6ULP 2×7ULP 1×11ULP,within atol=1e-14
+solve,solve batch[8] n=7,float32,7,7,11,atol=1e-14,2×1ULP 3×2ULP 1×3ULP 1×11ULP,within atol=1e-14
+solve,solve batch[9] n=4,float32,4,0,0,atol=1e-14,—,bit-identical
+solve,solve batch[10] n=4,float32,4,2,1,atol=1e-14,2×1ULP,within atol=1e-14
+solve,solve batch[11] n=4,float32,4,4,22,atol=1e-14,1×15ULP 1×16ULP 1×17ULP 1×22ULP,within atol=1e-14
+solve,solve batch[12] n=5,float32,5,5,11,atol=1e-14,2×1ULP 1×3ULP 1×6ULP 1×11ULP,within atol=1e-14
+solve,solve batch[13] n=6,float32,6,2,16,atol=1e-14,1×1ULP 1×16ULP,within atol=1e-14
+solve,solve batch[14] n=5,float32,5,3,10,atol=1e-14,2×1ULP 1×10ULP,within atol=1e-14
+solve,solve batch[15] n=6,float32,6,4,457,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×457ULP,within atol=1e-14
+solve,solve batch[16] n=6,float32,6,5,6,atol=1e-14,2×2ULP 2×4ULP 1×6ULP,within atol=1e-14
+solve,solve batch[17] n=5,float32,5,5,13,atol=1e-14,1×1ULP 1×2ULP 2×3ULP 1×13ULP,within atol=1e-14
+solve,solve batch[18] n=4,float32,4,0,0,atol=1e-14,—,bit-identical
+solve,solve batch[19] n=7,float32,7,5,22,atol=1e-14,2×2ULP 1×9ULP 1×10ULP 1×22ULP,within atol=1e-14
+solve,solve batch[20] n=7,float32,7,7,3,atol=1e-14,3×1ULP 3×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[21] n=4,float32,4,1,1,atol=1e-14,1×1ULP,within atol=1e-14
+solve,solve batch[22] n=5,float32,5,4,2,atol=1e-14,2×1ULP 2×2ULP,within atol=1e-14
+solve,solve batch[23] n=6,float32,6,6,33,atol=1e-14,3×1ULP 1×2ULP 1×6ULP 1×33ULP,within atol=1e-14
+solve,solve batch[24] n=6,float32,6,6,3,atol=1e-14,3×1ULP 2×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[25] n=8,float32,8,8,15,atol=1e-14,2×1ULP 1×3ULP 1×5ULP 1×7ULP 1×9ULP 1×10ULP 1×15ULP,within atol=1e-14
+solve,solve batch[26] n=8,float32,8,8,18,atol=1e-14,2×1ULP 1×2ULP 1×4ULP 1×5ULP 1×6ULP 1×7ULP 1×18ULP,within atol=1e-14
+solve,solve batch[27] n=8,float32,8,8,10,atol=1e-14,3×2ULP 1×3ULP 2×4ULP 1×5ULP 1×10ULP,within atol=1e-14
+solve,solve batch[28] n=8,float32,8,6,12,atol=1e-14,3×1ULP 1×2ULP 1×3ULP 1×12ULP,within atol=1e-14
+solve,solve batch[29] n=8,float32,8,4,131,atol=1e-14,1×1ULP 1×6ULP 1×11ULP 1×131ULP,within atol=1e-14
+solve,solve batch[30] n=6,float32,6,3,3,atol=1e-14,2×1ULP 1×3ULP,within atol=1e-14
+solve,solve batch[31] n=6,float32,6,4,3,atol=1e-14,1×1ULP 1×2ULP 2×3ULP,within atol=1e-14
+solve,solve batch[32] n=4,float32,4,4,2,atol=1e-14,3×1ULP 1×2ULP,within atol=1e-14
+solve,solve batch[33] n=8,float32,8,7,4,atol=1e-14,3×1ULP 2×2ULP 2×4ULP,within atol=1e-14
+solve,solve batch[34] n=5,float32,5,4,11,atol=1e-14,2×2ULP 1×4ULP 1×11ULP,within atol=1e-14
+solve,solve batch[35] n=8,float32,8,7,13,atol=1e-14,1×1ULP 3×2ULP 1×3ULP 1×4ULP 1×13ULP,within atol=1e-14
+solve,solve batch[36] n=7,float32,7,7,9,atol=1e-14,2×3ULP 2×5ULP 1×6ULP 1×7ULP 1×9ULP,within atol=1e-14
+solve,solve batch[37] n=8,float32,8,6,5,atol=1e-14,5×1ULP 1×5ULP,within atol=1e-14
+solve,solve batch[38] n=7,float32,7,7,642,atol=1e-14,1×4ULP 1×5ULP 1×6ULP 1×9ULP 1×21ULP 1×51ULP 1×642ULP,within atol=1e-14
+solve,solve batch[39] n=5,float32,5,5,33,atol=1e-14,2×11ULP 1×15ULP 1×24ULP 1×33ULP,within atol=1e-14
+solve,solve batch[40] n=7,float32,7,6,5,atol=1e-14,3×1ULP 2×2ULP 1×5ULP,within atol=1e-14
+solve,solve batch[41] n=5,float32,5,5,10,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 2×10ULP,within atol=1e-14
+solve,solve batch[42] n=8,float32,8,6,5,atol=1e-14,2×1ULP 1×2ULP 1×3ULP 1×4ULP 1×5ULP,within atol=1e-14
+solve,solve batch[43] n=6,float32,6,6,42,atol=1e-14,1×1ULP 2×2ULP 1×4ULP 1×5ULP 1×42ULP,within atol=1e-14
+solve,solve batch[44] n=6,float32,6,5,2,atol=1e-14,2×1ULP 3×2ULP,within atol=1e-14
+solve,solve batch[45] n=7,float32,7,6,8,atol=1e-14,2×1ULP 3×3ULP 1×8ULP,within atol=1e-14
+solve,solve batch[46] n=4,float32,4,3,4,atol=1e-14,1×1ULP 1×2ULP 1×4ULP,within atol=1e-14
+solve,solve batch[47] n=8,float32,8,6,94,atol=1e-14,1×1ULP 1×4ULP 1×9ULP 1×12ULP 1×14ULP 1×94ULP,within atol=1e-14
+solve,solve batch[48] n=5,float32,5,5,6,atol=1e-14,1×1ULP 2×2ULP 1×4ULP 1×6ULP,within atol=1e-14
+solve,solve batch[49] n=8,float32,8,6,8,atol=1e-14,2×1ULP 2×2ULP 1×4ULP 1×8ULP,within atol=1e-14
+solve,solve batch[50] n=8,float32,8,7,35,atol=1e-14,1×1ULP 2×2ULP 2×4ULP 1×6ULP 1×35ULP,within atol=1e-14
+solve,solve batch[51] n=4,float32,4,3,10,atol=1e-14,1×1ULP 1×3ULP 1×10ULP,within atol=1e-14
+solve,solve batch[52] n=8,float32,8,7,16,atol=1e-14,2×2ULP 1×5ULP 1×7ULP 1×9ULP 1×13ULP 1×16ULP,within atol=1e-14
+solve,solve batch[53] n=5,float32,5,5,5,atol=1e-14,1×1ULP 2×2ULP 2×5ULP,within atol=1e-14
+solve,solve batch[54] n=4,float32,4,2,3,atol=1e-14,1×1ULP 1×3ULP,within atol=1e-14
+solve,solve batch[55] n=8,float32,8,8,337,atol=1e-14,1×1ULP 2×3ULP 1×4ULP 1×11ULP 1×21ULP 1×25ULP 1×337ULP,within atol=1e-14
+solve,solve batch[56] n=7,float32,7,6,10,atol=1e-14,4×1ULP 1×8ULP 1×10ULP,within atol=1e-14
+solve,solve batch[57] n=6,float32,6,6,185,atol=1e-14,1×3ULP 1×5ULP 1×6ULP 1×9ULP 1×25ULP 1×185ULP,within atol=1e-14
+solve,solve batch[58] n=4,float32,4,1,3,atol=1e-14,1×3ULP,within atol=1e-14
+solve,solve batch[59] n=8,float32,8,7,11,atol=1e-14,1×1ULP 4×2ULP 1×8ULP 1×11ULP,within atol=1e-14
+solve,solve batch[60] n=7,float32,7,6,6,atol=1e-14,4×1ULP 1×4ULP 1×6ULP,within atol=1e-14
+solve,solve batch[61] n=7,float32,7,6,6,atol=1e-14,3×1ULP 2×3ULP 1×6ULP,within atol=1e-14
+solve,solve batch[62] n=4,float32,4,3,16,atol=1e-14,1×1ULP 1×2ULP 1×16ULP,within atol=1e-14
+solve,solve batch[63] n=8,float32,8,5,10,atol=1e-14,1×1ULP 1×5ULP 1×6ULP 1×9ULP 1×10ULP,within atol=1e-14
+solve,solve batch[64] n=4,float32,4,4,10,atol=1e-14,2×1ULP 1×3ULP 1×10ULP,within atol=1e-14
+solve,solve batch[65] n=7,float32,7,7,9,atol=1e-14,2×1ULP 1×2ULP 1×4ULP 1×6ULP 2×9ULP,within atol=1e-14
+solve,solve batch[66] n=4,float32,4,4,5,atol=1e-14,2×1ULP 1×2ULP 1×5ULP,within atol=1e-14
+solve,solve batch[67] n=5,float32,5,2,2,atol=1e-14,1×1ULP 1×2ULP,within atol=1e-14
+solve,solve batch[68] n=7,float32,7,7,33,atol=1e-14,1×1ULP 1×4ULP 1×5ULP 1×6ULP 2×8ULP 1×33ULP,within atol=1e-14
+solve,solve batch[69] n=8,float32,8,7,5,atol=1e-14,4×1ULP 1×2ULP 1×3ULP 1×5ULP,within atol=1e-14
+solve,solve batch[70] n=7,float32,7,5,6,atol=1e-14,1×1ULP 1×2ULP 2×3ULP 1×6ULP,within atol=1e-14
+solve,solve batch[71] n=5,float32,5,4,6,atol=1e-14,1×1ULP 2×3ULP 1×6ULP,within atol=1e-14
+solve,solve batch[72] n=4,float32,4,4,3,atol=1e-14,2×1ULP 1×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[73] n=6,float32,6,6,3,atol=1e-14,2×1ULP 3×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[74] n=6,float32,6,6,27,atol=1e-14,1×1ULP 2×2ULP 1×4ULP 1×13ULP 1×27ULP,within atol=1e-14
+solve,solve batch[75] n=4,float32,4,3,3,atol=1e-14,2×1ULP 1×3ULP,within atol=1e-14
+solve,solve batch[76] n=5,float32,5,5,85,atol=1e-14,2×3ULP 1×5ULP 1×13ULP 1×85ULP,within atol=1e-14
+solve,solve batch[77] n=4,float32,4,4,7,atol=1e-14,2×1ULP 1×2ULP 1×7ULP,within atol=1e-14
+solve,solve batch[78] n=7,float32,7,7,20,atol=1e-14,1×7ULP 1×10ULP 1×11ULP 1×13ULP 1×15ULP 1×18ULP 1×20ULP,within atol=1e-14
+solve,solve batch[79] n=5,float32,5,5,8,atol=1e-14,2×5ULP 3×8ULP,within atol=1e-14
+solve,solve batch[80] n=8,float32,8,8,92,atol=1e-14,1×44ULP 1×55ULP 1×59ULP 1×74ULP 1×83ULP 1×84ULP 1×87ULP 1×92ULP,within atol=1e-14
+solve,solve batch[81] n=4,float32,4,3,7,atol=1e-14,2×1ULP 1×7ULP,within atol=1e-14
+solve,solve batch[82] n=4,float32,4,3,1,atol=1e-14,3×1ULP,within atol=1e-14
+solve,solve batch[83] n=5,float32,5,5,11,atol=1e-14,3×7ULP 1×10ULP 1×11ULP,within atol=1e-14
+solve,solve batch[84] n=8,float32,8,8,51,atol=1e-14,1×7ULP 2×9ULP 1×11ULP 2×12ULP 1×18ULP 1×51ULP,within atol=1e-14
+solve,solve batch[85] n=4,float32,4,3,2,atol=1e-14,1×1ULP 2×2ULP,within atol=1e-14
+solve,solve batch[86] n=8,float32,8,7,59,atol=1e-14,3×1ULP 2×5ULP 1×14ULP 1×59ULP,within atol=1e-14
+solve,solve batch[87] n=7,float32,7,4,2,atol=1e-14,3×1ULP 1×2ULP,within atol=1e-14
+solve,solve batch[88] n=5,float32,5,4,3,atol=1e-14,1×1ULP 2×2ULP 1×3ULP,within atol=1e-14
+solve,solve batch[89] n=5,float32,5,4,5,atol=1e-14,2×1ULP 1×3ULP 1×5ULP,within atol=1e-14
+solve,solve batch[90] n=8,float32,8,8,37,atol=1e-14,1×6ULP 2×22ULP 1×23ULP 2×26ULP 1×27ULP 1×37ULP,within atol=1e-14
+solve,solve batch[91] n=8,float32,8,5,4,atol=1e-14,1×1ULP 1×2ULP 2×3ULP 1×4ULP,within atol=1e-14
+solve,solve batch[92] n=6,float32,6,6,12,atol=1e-14,1×1ULP 3×3ULP 1×10ULP 1×12ULP,within atol=1e-14
+solve,solve batch[93] n=6,float32,6,4,2,atol=1e-14,3×1ULP 1×2ULP,within atol=1e-14
+solve,solve batch[94] n=6,float32,6,1,1,atol=1e-14,1×1ULP,within atol=1e-14
+solve,solve batch[95] n=5,float32,5,3,2,atol=1e-14,1×1ULP 2×2ULP,within atol=1e-14
+solve,solve batch[96] n=6,float32,6,6,220,atol=1e-14,1×115ULP 1×126ULP 1×138ULP 1×196ULP 1×203ULP 1×220ULP,within atol=1e-14
+solve,solve batch[97] n=4,float32,4,4,2,atol=1e-14,2×1ULP 2×2ULP,within atol=1e-14
+solve,solve batch[98] n=6,float32,6,5,2,atol=1e-14,1×1ULP 4×2ULP,within atol=1e-14
+solve,solve batch[99] n=6,float32,6,6,103,atol=1e-14,1×45ULP 1×69ULP 1×71ULP 1×73ULP 1×75ULP 1×103ULP,within atol=1e-14
+solve,solve large n=10,float64,10,9,11,atol=1e-14,2×1ULP 3×2ULP 1×3ULP 1×4ULP 1×9ULP 1×11ULP,within atol=1e-14
+solve,solve large n=20,float64,20,20,5609,atol=1e-14,1×1ULP 2×2ULP 1×3ULP 1×5ULP 1×7ULP 2×9ULP 2×10ULP 1×11ULP 1×12ULP 2×13ULP 1×16ULP 1×17ULP 1×19ULP 1×21ULP 1×53ULP 1×5609ULP,within atol=1e-14
+solve,solve large n=10,float32,10,7,18,atol=1e-14,3×1ULP 2×2ULP 1×3ULP 1×18ULP,within atol=1e-14
+solve,solve large n=20,float32,20,19,5611,atol=1e-14,1×1ULP 1×3ULP 1×4ULP 1×5ULP 1×6ULP 2×8ULP 2×9ULP 2×11ULP 1×13ULP 1×33ULP 1×47ULP 1×52ULP 2×56ULP 1×69ULP 1×5611ULP,within atol=1e-14
+solve,solve ill-cond seed=5555,float64,5,5,22840,atol=1e-10,1×12949ULP 1×14326ULP 1×15519ULP 1×17929ULP 1×22840ULP,within atol=1e-10
+solve,solve ill-cond seed=6666,float64,5,5,31715,atol=1e-10,1×21263ULP 1×21798ULP 1×22274ULP 1×30392ULP 1×31715ULP,within atol=1e-10
+solve,solve ill-cond seed=7777,float64,5,5,27112,atol=1e-10,1×8030ULP 1×11005ULP 1×12614ULP 1×23601ULP 1×27112ULP,within atol=1e-10
+solve,solve ill-cond seed=5555,float32,5,5,88991,atol=1e-10,1×58110ULP 1×66649ULP 1×68499ULP 1×73367ULP 1×88991ULP,within atol=1e-10
+solve,solve ill-cond seed=6666,float32,5,5,49197,atol=1e-10,1×29540ULP 1×30196ULP 1×30378ULP 1×42653ULP 1×49197ULP,within atol=1e-10
+solve,solve ill-cond seed=7777,float32,5,5,4802,atol=1e-10,1×349ULP 1×385ULP 1×625ULP 1×1554ULP 1×4802ULP,within atol=1e-10
+cdist,cdist euclidean,float64,8000,0,0,0,—,bit-identical
+cdist,cdist cityblock,float64,8000,0,0,0,—,bit-identical
+cdist,cdist chebyshev,float64,8000,0,0,0,—,bit-identical
+cdist,cdist euclidean,float32,8000,0,0,0,—,bit-identical
+cdist,cdist cityblock,float32,8000,0,0,0,—,bit-identical
+cdist,cdist chebyshev,float32,8000,0,0,0,—,bit-identical
+cdist,cdist small,float64,6,0,0,0,—,bit-identical
+cdist,cdist small,float32,6,0,0,0,—,bit-identical
+KDTree,KDTree dist,float64,1,0,0,0,—,bit-identical
+KDTree,KDTree dist,float32,1,0,0,0,—,bit-identical
+KDTree,KDTree k=3 dist,float64,3,0,0,0,—,bit-identical
+KDTree,KDTree k=3 dist,float32,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=0.5,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=1.0,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=2.0,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=3.0,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=0.5,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=1.0,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=2.0,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=3.0,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=reflect,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=constant,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=nearest,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=mirror,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=wrap,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=reflect,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=constant,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=nearest,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=mirror,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d mode=wrap,float32,100,0,0,0,—,bit-identical
+medfilt,medfilt k=3,float64,100,0,0,0,—,bit-identical
+medfilt,medfilt k=5,float64,100,0,0,0,—,bit-identical
+medfilt,medfilt k=7,float64,100,0,0,0,—,bit-identical
+medfilt,medfilt k=9,float64,100,0,0,0,—,bit-identical
+medfilt,medfilt k=3,float32,100,0,0,0,—,bit-identical
+medfilt,medfilt k=5,float32,100,0,0,0,—,bit-identical
+medfilt,medfilt k=7,float32,100,0,0,0,—,bit-identical
+medfilt,medfilt k=9,float32,100,0,0,0,—,bit-identical
+Rotation,Rotation identity,float64,3,0,0,0,—,bit-identical
+Rotation,Rotation identity,float32,3,0,0,0,—,bit-identical
+Rotation,Rotation x-45deg,float64,3,0,0,0,—,bit-identical
+Rotation,Rotation x-45deg,float32,3,0,0,0,—,bit-identical
+Rotation,Rotation y-30deg,float64,3,0,0,0,—,bit-identical
+Rotation,Rotation y-30deg,float32,3,0,0,0,—,bit-identical
+Rotation,Rotation z-60deg,float64,3,0,0,0,—,bit-identical
+Rotation,Rotation z-60deg,float32,3,0,0,0,—,bit-identical
+Rotation,"Rotation xyz(20,30,45)",float64,3,0,0,0,—,bit-identical
+Rotation,"Rotation xyz(20,30,45)",float32,3,0,0,0,—,bit-identical
+Rotation,"Rotation zyx(10,-20,40)",float64,3,0,0,0,—,bit-identical
+Rotation,"Rotation zyx(10,-20,40)",float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[0],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[1],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[2],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[3],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[4],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[5],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[6],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[7],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[8],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[9],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[10],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[11],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[12],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[13],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[14],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[15],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[16],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[17],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[18],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[19],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[20],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[21],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[22],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[23],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[24],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[25],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[26],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[27],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[28],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[29],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[30],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[31],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[32],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[33],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[34],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[35],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[36],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[37],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[38],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[39],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[40],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[41],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[42],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[43],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[44],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[45],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[46],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[47],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[48],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[49],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[50],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[51],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[52],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[53],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[54],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[55],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[56],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[57],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[58],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[59],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[60],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[61],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[62],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[63],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[64],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[65],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[66],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[67],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[68],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[69],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[70],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[71],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[72],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[73],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[74],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[75],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[76],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[77],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[78],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[79],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[80],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[81],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[82],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[83],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[84],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[85],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[86],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[87],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[88],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[89],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[90],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[91],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[92],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[93],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[94],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[95],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[96],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[97],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[98],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[99],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[0],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[1],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[2],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[3],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[4],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[5],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[6],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[7],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[8],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[9],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[10],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[11],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[12],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[13],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[14],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[15],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[16],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[17],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[18],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[19],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[20],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[21],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[22],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[23],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[24],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[25],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[26],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[27],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[28],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[29],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[30],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[31],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[32],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[33],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[34],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[35],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[36],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[37],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[38],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[39],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[40],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[41],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[42],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[43],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[44],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[45],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[46],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[47],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[48],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[49],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[50],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[51],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[52],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[53],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[54],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[55],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[56],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[57],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[58],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[59],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[60],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[61],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[62],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[63],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[64],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[65],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[66],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[67],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[68],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[69],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[70],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[71],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[72],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[73],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[74],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[75],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[76],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[77],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[78],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[79],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[80],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[81],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[82],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[83],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[84],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[85],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[86],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[87],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[88],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[89],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[90],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[91],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[92],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[93],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[94],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[95],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[96],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[97],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[98],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[99],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[0],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[1],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[2],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[3],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[4],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[5],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[6],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[7],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[8],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[9],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[10],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[11],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[12],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[13],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[14],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[15],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[16],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[17],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[18],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[19],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[20],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[21],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[22],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[23],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[24],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[25],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[26],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[27],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[28],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[29],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[30],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[31],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[32],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[33],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[34],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[35],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[36],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[37],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[38],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[39],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[40],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[41],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[42],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[43],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[44],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[45],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[46],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[47],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[48],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[49],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[50],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[51],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[52],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[53],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[54],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[55],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[56],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[57],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[58],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[59],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[60],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[61],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[62],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[63],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[64],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[65],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[66],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[67],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[68],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[69],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[70],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[71],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[72],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[73],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[74],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[75],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[76],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[77],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[78],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[79],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[80],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[81],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[82],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[83],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[84],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[85],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[86],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[87],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[88],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[89],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[90],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[91],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[92],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[93],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[94],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[95],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[96],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[97],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[98],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[99],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[0],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[1],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[2],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[3],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[4],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[5],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[6],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[7],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[8],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[9],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[10],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[11],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[12],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[13],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[14],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[15],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[16],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[17],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[18],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[19],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[20],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[21],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[22],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[23],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[24],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[25],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[26],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[27],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[28],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[29],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[30],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[31],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[32],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[33],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[34],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[35],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[36],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[37],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[38],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[39],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[40],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[41],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[42],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[43],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[44],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[45],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[46],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[47],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[48],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[49],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[50],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[51],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[52],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[53],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[54],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[55],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[56],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[57],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[58],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[59],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[60],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[61],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[62],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[63],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[64],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[65],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[66],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[67],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[68],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[69],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[70],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[71],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[72],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[73],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[74],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[75],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[76],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[77],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[78],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[79],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[80],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[81],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[82],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[83],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[84],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[85],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[86],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[87],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[88],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[89],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[90],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[91],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[92],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[93],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[94],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[95],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[96],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[97],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[98],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[99],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[0],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[1],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[2],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[3],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[4],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[5],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[6],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[7],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[8],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[9],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[10],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[11],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[12],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[13],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[14],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[15],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[16],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[17],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[18],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[19],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[20],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[21],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[22],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[23],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[24],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[25],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[26],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[27],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[28],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[29],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[30],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[31],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[32],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[33],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[34],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[35],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[36],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[37],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[38],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[39],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[40],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[41],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[42],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[43],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[44],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[45],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[46],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[47],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[48],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[49],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[50],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[51],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[52],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[53],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[54],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[55],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[56],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[57],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[58],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[59],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[60],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[61],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[62],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[63],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[64],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[65],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[66],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[67],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[68],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[69],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[70],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[71],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[72],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[73],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[74],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[75],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[76],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[77],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[78],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[79],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[80],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[81],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[82],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[83],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[84],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[85],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[86],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[87],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[88],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[89],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[90],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[91],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[92],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[93],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[94],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[95],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[96],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[97],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[98],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[99],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[0],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[1],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[2],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[3],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[4],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[5],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[6],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[7],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[8],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[9],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[10],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[11],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[12],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[13],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[14],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[15],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[16],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[17],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[18],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[19],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[20],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[21],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[22],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[23],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[24],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[25],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[26],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[27],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[28],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[29],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[30],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[31],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[32],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[33],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[34],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[35],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[36],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[37],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[38],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[39],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[40],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[41],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[42],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[43],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[44],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[45],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[46],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[47],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[48],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[49],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[50],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[51],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[52],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[53],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[54],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[55],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[56],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[57],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[58],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[59],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[60],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[61],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[62],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[63],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[64],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[65],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[66],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[67],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[68],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[69],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[70],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[71],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[72],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[73],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[74],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[75],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[76],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[77],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[78],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[79],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[80],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[81],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[82],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[83],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[84],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[85],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[86],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[87],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[88],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[89],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[90],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[91],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[92],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[93],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[94],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[95],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[96],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[97],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[98],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[99],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[0],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[1],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[2],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[3],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[4],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[5],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[6],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[7],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[8],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[9],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[10],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[11],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[12],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[13],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[14],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[15],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[16],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[17],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[18],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[19],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[20],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[21],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[22],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[23],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[24],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[25],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[26],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[27],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[28],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[29],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[30],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[31],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[32],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[33],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[34],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[35],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[36],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[37],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[38],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[39],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[40],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[41],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[42],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[43],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[44],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[45],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[46],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[47],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[48],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[49],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[50],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[51],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[52],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[53],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[54],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[55],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[56],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[57],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[58],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[59],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[60],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[61],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[62],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[63],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[64],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[65],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[66],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[67],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[68],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[69],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[70],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[71],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[72],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[73],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[74],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[75],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[76],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[77],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[78],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[79],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[80],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[81],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[82],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[83],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[84],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[85],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[86],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[87],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[88],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[89],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[90],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[91],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[92],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[93],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[94],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[95],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[96],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[97],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[98],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xyz random[99],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[0],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[1],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[2],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[3],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[4],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[5],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[6],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[7],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[8],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[9],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[10],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[11],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[12],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[13],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[14],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[15],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[16],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[17],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[18],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[19],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[20],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[21],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[22],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[23],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[24],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[25],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[26],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[27],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[28],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[29],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[30],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[31],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[32],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[33],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[34],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[35],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[36],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[37],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[38],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[39],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[40],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[41],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[42],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[43],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[44],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[45],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[46],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[47],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[48],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[49],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[50],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[51],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[52],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[53],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[54],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[55],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[56],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[57],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[58],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[59],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[60],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[61],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[62],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[63],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[64],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[65],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[66],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[67],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[68],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[69],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[70],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[71],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[72],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[73],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[74],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[75],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[76],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[77],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[78],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[79],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[80],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[81],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[82],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[83],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[84],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[85],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[86],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[87],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[88],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[89],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[90],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[91],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[92],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[93],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[94],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[95],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[96],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[97],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[98],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation xzy random[99],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[0],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[1],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[2],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[3],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[4],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[5],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[6],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[7],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[8],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[9],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[10],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[11],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[12],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[13],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[14],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[15],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[16],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[17],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[18],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[19],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[20],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[21],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[22],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[23],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[24],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[25],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[26],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[27],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[28],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[29],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[30],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[31],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[32],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[33],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[34],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[35],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[36],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[37],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[38],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[39],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[40],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[41],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[42],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[43],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[44],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[45],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[46],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[47],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[48],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[49],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[50],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[51],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[52],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[53],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[54],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[55],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[56],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[57],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[58],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[59],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[60],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[61],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[62],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[63],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[64],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[65],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[66],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[67],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[68],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[69],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[70],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[71],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[72],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[73],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[74],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[75],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[76],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[77],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[78],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[79],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[80],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[81],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[82],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[83],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[84],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[85],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[86],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[87],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[88],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[89],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[90],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[91],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[92],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[93],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[94],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[95],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[96],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[97],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[98],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yxz random[99],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[0],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[1],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[2],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[3],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[4],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[5],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[6],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[7],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[8],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[9],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[10],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[11],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[12],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[13],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[14],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[15],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[16],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[17],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[18],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[19],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[20],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[21],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[22],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[23],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[24],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[25],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[26],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[27],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[28],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[29],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[30],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[31],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[32],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[33],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[34],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[35],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[36],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[37],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[38],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[39],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[40],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[41],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[42],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[43],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[44],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[45],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[46],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[47],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[48],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[49],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[50],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[51],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[52],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[53],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[54],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[55],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[56],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[57],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[58],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[59],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[60],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[61],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[62],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[63],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[64],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[65],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[66],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[67],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[68],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[69],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[70],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[71],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[72],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[73],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[74],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[75],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[76],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[77],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[78],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[79],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[80],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[81],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[82],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[83],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[84],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[85],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[86],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[87],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[88],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[89],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[90],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[91],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[92],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[93],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[94],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[95],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[96],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[97],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[98],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation yzx random[99],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[0],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[1],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[2],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[3],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[4],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[5],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[6],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[7],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[8],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[9],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[10],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[11],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[12],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[13],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[14],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[15],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[16],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[17],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[18],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[19],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[20],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[21],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[22],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[23],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[24],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[25],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[26],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[27],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[28],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[29],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[30],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[31],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[32],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[33],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[34],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[35],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[36],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[37],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[38],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[39],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[40],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[41],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[42],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[43],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[44],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[45],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[46],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[47],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[48],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[49],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[50],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[51],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[52],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[53],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[54],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[55],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[56],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[57],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[58],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[59],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[60],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[61],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[62],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[63],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[64],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[65],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[66],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[67],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[68],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[69],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[70],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[71],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[72],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[73],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[74],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[75],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[76],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[77],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[78],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[79],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[80],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[81],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[82],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[83],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[84],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[85],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[86],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[87],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[88],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[89],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[90],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[91],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[92],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[93],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[94],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[95],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[96],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[97],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[98],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zxy random[99],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[0],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[1],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[2],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[3],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[4],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[5],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[6],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[7],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[8],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[9],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[10],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[11],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[12],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[13],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[14],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[15],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[16],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[17],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[18],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[19],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[20],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[21],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[22],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[23],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[24],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[25],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[26],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[27],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[28],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[29],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[30],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[31],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[32],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[33],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[34],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[35],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[36],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[37],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[38],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[39],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[40],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[41],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[42],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[43],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[44],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[45],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[46],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[47],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[48],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[49],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[50],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[51],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[52],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[53],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[54],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[55],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[56],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[57],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[58],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[59],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[60],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[61],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[62],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[63],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[64],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[65],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[66],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[67],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[68],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[69],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[70],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[71],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[72],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[73],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[74],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[75],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[76],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[77],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[78],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[79],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[80],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[81],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[82],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[83],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[84],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[85],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[86],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[87],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[88],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[89],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[90],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[91],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[92],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[93],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[94],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[95],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[96],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[97],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[98],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation zyx random[99],float32,3,0,0,0,—,bit-identical
 Rotation,Rotation gimbal beta=1.5708[0],float64,3,0,0,0,—,bit-identical
 Rotation,Rotation gimbal beta=1.5708[1],float64,3,0,0,0,—,bit-identical
 Rotation,Rotation gimbal beta=1.5708[2],float64,3,0,0,0,—,bit-identical
@@ -159,3 +1722,403 @@ Rotation,Rotation gimbal beta=-1.5708[16],float32,3,0,0,0,—,bit-identical
 Rotation,Rotation gimbal beta=-1.5708[17],float32,3,0,0,0,—,bit-identical
 Rotation,Rotation gimbal beta=-1.5708[18],float32,3,0,0,0,—,bit-identical
 Rotation,Rotation gimbal beta=-1.5708[19],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[0],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[1],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[2],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[3],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[4],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[5],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[6],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[7],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[8],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[9],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[10],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[11],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[12],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[13],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[14],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[15],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[16],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[17],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[18],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[19],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[20],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[21],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[22],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[23],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[24],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[25],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[26],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[27],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[28],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[29],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[30],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[31],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[32],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[33],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[34],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[35],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[36],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[37],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[38],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[39],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[40],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[41],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[42],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[43],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[44],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[45],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[46],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[47],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[48],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[49],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[50],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[51],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[52],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[53],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[54],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[55],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[56],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[57],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[58],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[59],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[60],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[61],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[62],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[63],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[64],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[65],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[66],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[67],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[68],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[69],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[70],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[71],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[72],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[73],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[74],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[75],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[76],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[77],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[78],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[79],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[80],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[81],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[82],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[83],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[84],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[85],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[86],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[87],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[88],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[89],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[90],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[91],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[92],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[93],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[94],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[95],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[96],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[97],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[98],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[99],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[0],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[1],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[2],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[3],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[4],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[5],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[6],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[7],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[8],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[9],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[10],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[11],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[12],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[13],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[14],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[15],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[16],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[17],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[18],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[19],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[20],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[21],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[22],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[23],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[24],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[25],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[26],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[27],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[28],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[29],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[30],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[31],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[32],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[33],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[34],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[35],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[36],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[37],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[38],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[39],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[40],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[41],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[42],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[43],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[44],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[45],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[46],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[47],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[48],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[49],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[50],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[51],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[52],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[53],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[54],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[55],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[56],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[57],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[58],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[59],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[60],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[61],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[62],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[63],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[64],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[65],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[66],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[67],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[68],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[69],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[70],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[71],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[72],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[73],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[74],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[75],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[76],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[77],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[78],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[79],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[80],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[81],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[82],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[83],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[84],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[85],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[86],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[87],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[88],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[89],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[90],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[91],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[92],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[93],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[94],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[95],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[96],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[97],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[98],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation random_matrix[99],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[0],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[1],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[2],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[3],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[4],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[5],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[6],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[7],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[8],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[9],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[10],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[11],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[12],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[13],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[14],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[15],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[16],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[17],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[18],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[19],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[20],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[21],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[22],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[23],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[24],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[25],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[26],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[27],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[28],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[29],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[30],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[31],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[32],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[33],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[34],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[35],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[36],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[37],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[38],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[39],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[40],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[41],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[42],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[43],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[44],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[45],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[46],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[47],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[48],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[49],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[50],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[51],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[52],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[53],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[54],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[55],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[56],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[57],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[58],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[59],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[60],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[61],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[62],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[63],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[64],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[65],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[66],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[67],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[68],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[69],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[70],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[71],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[72],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[73],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[74],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[75],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[76],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[77],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[78],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[79],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[80],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[81],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[82],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[83],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[84],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[85],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[86],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[87],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[88],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[89],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[90],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[91],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[92],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[93],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[94],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[95],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[96],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[97],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[98],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[99],float64,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[0],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[1],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[2],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[3],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[4],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[5],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[6],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[7],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[8],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[9],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[10],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[11],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[12],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[13],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[14],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[15],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[16],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[17],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[18],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[19],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[20],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[21],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[22],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[23],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[24],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[25],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[26],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[27],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[28],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[29],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[30],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[31],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[32],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[33],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[34],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[35],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[36],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[37],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[38],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[39],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[40],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[41],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[42],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[43],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[44],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[45],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[46],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[47],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[48],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[49],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[50],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[51],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[52],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[53],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[54],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[55],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[56],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[57],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[58],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[59],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[60],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[61],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[62],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[63],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[64],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[65],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[66],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[67],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[68],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[69],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[70],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[71],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[72],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[73],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[74],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[75],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[76],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[77],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[78],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[79],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[80],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[81],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[82],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[83],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[84],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[85],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[86],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[87],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[88],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[89],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[90],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[91],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[92],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[93],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[94],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[95],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[96],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[97],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[98],float32,3,0,0,0,—,bit-identical
+Rotation,Rotation XYZ intrinsic[99],float32,3,0,0,0,—,bit-identical

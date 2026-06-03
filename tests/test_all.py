@@ -27,12 +27,15 @@ _ulp_records = []  # structured rows for CSV export
 def _ulp_record(label, n_total, n_diff, max_ulp, tol, hist, status):
     """Collect one row for CSV ULP report."""
     # Parse module/dtype from label like "pdf batch=100 [float64]"
-    # Extract module (first word before space/digit) and dtype [...] suffix
+    # Extract module (base API name, stripping parameters) and dtype [...] suffix
     import re as _re
     parts = label.split(" [", 1)
     test_name = parts[0]
     dtype_tag = parts[1].rstrip("]") if len(parts) > 1 else "—"
-    module = test_name.split()[0] if test_name else "—"
+    # Strip parameters to get base module: "pdf(loc=0.0,scale=0.01)" → "pdf"
+    # Match alphabetic + optional _word prefix before '(' or ' '
+    m = _re.match(r'^([a-zA-Z_]\w*)', test_name) if test_name else None
+    module = m.group(1) if m else (test_name.split()[0] if test_name else "—")
     _ulp_records.append({
         "module": module,
         "test": test_name,
@@ -122,12 +125,15 @@ def _print_ulp_report():
 
     # Export CSV to doc/ulp_report.csv
     if _ulp_records:
+        import csv as _csv
         csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "doc", "ulp_report.csv")
         os.makedirs(os.path.dirname(csv_path), exist_ok=True)
-        with open(csv_path, "w") as f:
-            f.write("module,test,dtype,n_total,n_diff,max_ulp,tol,histogram,status\n")
+        fieldnames = ["module", "test", "dtype", "n_total", "n_diff", "max_ulp", "tol", "histogram", "status"]
+        with open(csv_path, "w", newline="") as f:
+            writer = _csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
             for r in _ulp_records:
-                f.write(f"{r['module']},{r['test']},{r['dtype']},{r['n_total']},{r['n_diff']},{r['max_ulp']},{r['tol']},{r['histogram']},{r['status']}\n")
+                writer.writerow(r)
         print(f"  CSV exported → {csv_path}", file=sys.stderr, flush=True)
 
 atexit.register(_print_ulp_report)

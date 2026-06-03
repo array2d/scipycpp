@@ -76,7 +76,7 @@ target_link_libraries(myapp PRIVATE scipycpp::scipycpp)
 | Module | Backend | Key APIs | ULP Status |
 |--------|---------|----------|:----------:|
 | `stats` (cdf/ppf) | Cephes + `std::*` | norm.cdf, norm.ppf | ✅ 0 ULP |
-| `stats` (pdf) | numpcpp `std::exp` | norm.pdf | ⚠️ ≤2 ULP |
+| `stats` (pdf) | numpcpp `std::exp` | norm.pdf | ⚠️ ≤2 ULP (15/21 per dtype) |
 | `integrate` | pure C++ arithmetic | trapezoid, simpson | ✅ 0 ULP |
 | `linalg` | **Eigen3** partialPivLu | solve | ⚠️ ≤atol=1e-14 |
 | `spatial` | pure C++ / scipy ckdtree | cdist, KDTree | ✅ 0 ULP |
@@ -91,10 +91,10 @@ Full per-test ULP report: [`doc/ulp_report.csv`](doc/ulp_report.csv)
 
 | API | float64 | float32 | Max ULP | Root Cause |
 |-----|:-------:|:-------:|:-------:|------------|
-| `norm.pdf` | 7/11 tests with 1-2 ULP | 7/11 tests with 1-2 ULP | ≤2 | `std::exp` vs `npy_exp` — both libm, different compiler flags |
-| `norm.cdf` | 0 ULP (all) | 0 ULP (all) | 0 | Cephes erfc: `std::exp` = libm = scipy's `#define exp npy_exp` |
-| `norm.ppf` | 0 ULP (all) | 0 ULP (all) | 0 | Cephes ndtri: `std::log/sqrt` = libm = scipy's ndtri path |
-| `linalg.solve` | 3/107 _bit-identical_ | 4/107 _bit-identical_ | ≤5e4 | Eigen3 partialPivLu vs LAPACK gesv: different LU pivots. Well-conditioned small matrices (2×2, identity) are exact. All within `atol=1e-14`. |
+| `norm.pdf` | 15/21 tests with 1-2 ULP | 15/21 tests with 1-2 ULP | ≤2 | `std::exp` vs `npy_exp` — both libm, different compiler flags |
+| `norm.cdf` | 0 ULP (all 14) | 0 ULP (all 14) | 0 | Cephes erfc: `std::exp` = libm = scipy's `#define exp npy_exp` |
+| `norm.ppf` | 0 ULP (all 11) | 0 ULP (all 11) | 0 | Cephes ndtri: `std::log/sqrt` = libm = scipy's ndtri path |
+| `linalg.solve` | 3/107 _bit-identical_ | 4/107 _bit-identical_ | ≤8.9e4 | Eigen3 partialPivLu vs LAPACK gesv: different LU pivots. Well-conditioned small matrices (2×2, identity) are exact. All within `atol=1e-14` (ill-conditioned: `atol=1e-10`). |
 | all others | 0 ULP | 0 ULP | 0 | Pure arithmetic / delegates to scipy / Python numpy kernel |
 
 ## Testing
