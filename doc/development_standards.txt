@@ -1,0 +1,35 @@
+# scipycpp Development Standards
+
+## 1. Bit-level Alignment
+- All C++ APIs must produce output identical to the corresponding scipy Python API
+- Acceptance criterion: np.array_equal(cpp_result, scipy_result) must be True
+- Zero differences for both float64 and float32 inputs (0 differences)
+- Tests cover 100-batch random data, from extremely small to extremely large values
+
+## 2. Dependency Restrictions
+- Production code (pycpp/ headers) MUST NOT call py::module_::import()
+- py::module_::import() is ONLY permitted in test code (tests/module.cpp)
+- No direct use of numpy's SVML internal functions; only indirect via numpy/core.h (numpycpp)
+- No calls to numpcpp's detail internal interfaces
+
+## 3. Floating-Point Precision
+- Both float64 and float32 inputs must be covered
+- scipy float32 inputs are internally promoted to float64 for computation; C++ implementations must match this behavior
+- C++ compilation must use floating-point flags matching scipy's (e.g., -ffp-contract=off -ffloat-store)
+
+## 4. Code Structure
+- scipy/ directory: pure C++ algorithm implementations (header-only), no Python dependencies
+- pycpp/ directory: pybind11 wrappers (production code), py::module_::import() prohibited
+- tests/ directory: test module and test cases, py::module_::import() allowed
+
+## 5. Test Requirements
+- Each API must cover at least: default parameters, boundary values, random batch (100 samples)
+- Covered API list:
+  - scipy.stats.norm — pdf / cdf / ppf
+  - scipy.integrate — trapezoid / simpson
+  - scipy.linalg — solve
+  - scipy.spatial.distance — cdist
+  - scipy.spatial — KDTree
+  - scipy.ndimage — gaussian_filter1d
+  - scipy.signal — medfilt
+  - scipy.spatial.transform — Rotation (from_matrix / as_euler)
