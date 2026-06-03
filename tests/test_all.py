@@ -13,6 +13,10 @@ import os, sys, atexit, importlib, warnings, numpy as np, pytest
 
 BATCH = 100
 
+def _s(label, dtype=None):
+    """Append [f64] or [f32] to label for ULP report clarity."""
+    return label if dtype is None else f"{label} [{np.dtype(dtype).name}]"
+
 # ============================================================================
 # ULP computation & reporting
 # ============================================================================
@@ -149,16 +153,16 @@ class TestNormPdf:
 
     def test_batch_default(self, cpp, dtype):
         a = random_batch((BATCH,), dtype=dtype, seed=1001)
-        assert_ulp_close(cpp.stats.norm.pdf(a), sp_norm.pdf(a), f"pdf batch={BATCH}")
+        assert_ulp_close(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s(f"pdf batch={BATCH}", dtype))
 
     @pytest.mark.parametrize("v", [0.0, 1.0, -1.0, 2.0, -2.0, 3.0, -3.0, 5.0, -5.0])
     def test_canonical(self, cpp, dtype, v):
         a = np.array([v], dtype=dtype)
-        assert_ulp_close(cpp.stats.norm.pdf(a), sp_norm.pdf(a), f"pdf({v})")
+        assert_ulp_close(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s(f"pdf({v})", dtype))
 
     def test_extreme(self, cpp, dtype):
         a = np.array([6.0, 8.0, 10.0, -6.0, -8.0, -10.0, 20.0, -20.0], dtype=dtype)
-        assert_ulp_close(cpp.stats.norm.pdf(a), sp_norm.pdf(a), "pdf extreme")
+        assert_ulp_close(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s("pdf extreme", dtype))
 
     @pytest.mark.parametrize("loc,scale", [
         (0.0,1.0),(1.0,1.0),(-2.0,1.0),(0.0,2.0),(0.0,0.5),(3.0,4.0),
@@ -168,14 +172,14 @@ class TestNormPdf:
         a = random_batch((BATCH,), dtype=dtype, seed=1002)
         assert_ulp_close(cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
                          sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
-                         f"pdf(loc={loc},scale={scale})")
+                         _s(f"pdf(loc={loc},scale={scale})", dtype))
 
     @pytest.mark.parametrize("loc,scale", [(-10.0,0.01), (10.0,0.01)])
     def test_tiny_scale(self, cpp, dtype, loc, scale):
         a = random_batch((BATCH,), dtype=dtype, seed=1003)
         assert_ulp_close(cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
                          sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
-                         f"pdf(loc={loc},scale={scale})")
+                         _s(f"pdf(loc={loc},scale={scale})", dtype))
 
 
 class TestNormCdf:
@@ -184,12 +188,12 @@ class TestNormCdf:
 
     def test_batch_default(self, cpp, dtype):
         a = random_batch((BATCH,), dtype=dtype, seed=1004)
-        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a), f"cdf batch={BATCH}")
+        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a), _s(f"cdf batch={BATCH}", dtype))
 
     @pytest.mark.parametrize("v", [0.0, 1.0, -1.0, 2.0, -2.0, 3.0, -3.0])
     def test_canonical(self, cpp, dtype, v):
         a = np.array([v], dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a), f"cdf({v})")
+        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a), _s(f"cdf({v})", dtype))
 
     @pytest.mark.parametrize("loc,scale", [
         (0.0,1.0),(1.0,1.0),(-2.0,1.0),(0.0,2.0),(0.0,0.5),(3.0,4.0),
@@ -198,7 +202,7 @@ class TestNormCdf:
         a = random_batch((BATCH,), dtype=dtype, seed=1005)
         assert_bit_aligned(cpp.stats.norm.cdf(a, dtype(loc), dtype(scale)),
                            sp_norm.cdf(a, loc=dtype(loc), scale=dtype(scale)),
-                           f"cdf(loc={loc},scale={scale})")
+                           _s(f"cdf(loc={loc},scale={scale})", dtype))
 
 
 class TestNormPpf:
@@ -208,12 +212,12 @@ class TestNormPpf:
 
     def test_batch_default(self, cpp, dtype):
         a = random_uniform((BATCH,), 0.001, 0.999, dtype=dtype, seed=1006)
-        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a), f"ppf batch={BATCH}")
+        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a), _s(f"ppf batch={BATCH}", dtype))
 
     @pytest.mark.parametrize("p", [0.5, 0.025, 0.975, 0.001, 0.999])
     def test_canonical(self, cpp, dtype, p):
         a = np.array([p], dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a), f"ppf({p})")
+        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a), _s(f"ppf({p})", dtype))
 
     @pytest.mark.parametrize("loc,scale", [
         (0.0,1.0),(1.0,1.0),(-2.0,1.0),(0.0,2.0),(0.0,0.5),
@@ -222,7 +226,7 @@ class TestNormPpf:
         a = random_uniform((BATCH,), 0.001, 0.999, dtype=dtype, seed=1007)
         assert_bit_aligned(cpp.stats.norm.ppf(a, dtype(loc), dtype(scale)),
                            sp_norm.ppf(a, loc=dtype(loc), scale=dtype(scale)),
-                           f"ppf(loc={loc},scale={scale})")
+                           _s(f"ppf(loc={loc},scale={scale})", dtype))
 
 
 # ============================================================================
@@ -237,19 +241,19 @@ class TestIntegrate:
         y = random_batch((BATCH,), dtype=dtype, seed=1008)
         assert_bit_aligned(
             np.float64(cpp.trapezoid(y)), np.float64(sp_integrate.trapezoid(y)),
-            f"trapezoid batch={BATCH}")
+            _s(f"trapezoid batch={BATCH}", dtype))
 
     def test_simpson_batch(self, cpp, dtype):
         y = random_batch((101,), dtype=dtype, seed=1009)
         assert_bit_aligned(
             np.float64(cpp.simpson(y)), np.float64(sp_integrate.simpson(y)),
-            f"simpson batch=101")
+            _s(f"simpson batch=101", dtype))
 
     def test_trapezoid_known(self, cpp, dtype):
         y = np.array([0.0, 1.0, 4.0, 9.0, 16.0], dtype=dtype)
         assert_bit_aligned(
             np.float64(cpp.trapezoid(y)), np.float64(sp_integrate.trapezoid(y)),
-            "trapezoid known")
+            _s("trapezoid known", dtype))
 
     def test_simpson_known(self, cpp):
         y = np.array([0.0, 1.0, 4.0, 9.0, 16.0], dtype=np.float64)
@@ -302,14 +306,14 @@ class TestLinalg:
         b = np.array([5.0, 6.0], dtype=dtype)
         assert_bit_aligned(
             np.asarray(cpp.linalg.solve(A, b)), self._np_solve(A, b),
-            "solve 2x2")
+            _s("solve 2x2", dtype))
 
     def test_solve_identity(self, cpp, dtype):
         A = np.eye(3, dtype=dtype)
         b = np.array([1.0, 2.0, 3.0], dtype=dtype)
         assert_bit_aligned(
             np.asarray(cpp.linalg.solve(A, b)), self._np_solve(A, b),
-            "solve identity")
+            _s("solve identity", dtype))
 
     def test_solve_batch(self, cpp, dtype):
         """100 random matrices (n=4..8) + random RHS vectors."""
@@ -319,7 +323,7 @@ class TestLinalg:
             A = (rng.randn(n, n) * 2.0 + 3.0 * np.eye(n)).astype(dtype)
             b = rng.randn(n).astype(dtype)
             cpp_r = np.asarray(cpp.linalg.solve(A, b), dtype=np.float64)
-            assert_linalg_close(cpp_r, self._np_solve(A, b), f"solve batch[{i}] n={n}")
+            assert_linalg_close(cpp_r, self._np_solve(A, b), _s(f"solve batch[{i}] n={n}", dtype))
 
     @pytest.mark.parametrize("n", [10, 20])
     def test_solve_large(self, cpp, dtype, n):
@@ -328,7 +332,7 @@ class TestLinalg:
         A = (rng.randn(n, n) * 1.5 + 4.0 * np.eye(n)).astype(dtype)
         b = rng.randn(n).astype(dtype)
         cpp_r = np.asarray(cpp.linalg.solve(A, b), dtype=np.float64)
-        assert_linalg_close(cpp_r, self._np_solve(A, b), f"solve large n={n}")
+        assert_linalg_close(cpp_r, self._np_solve(A, b), _s(f"solve large n={n}", dtype))
 
     @pytest.mark.parametrize("seed", [5555, 6666, 7777])
     def test_solve_ill_conditioned(self, cpp, dtype, seed):
@@ -342,7 +346,7 @@ class TestLinalg:
         b = rng.randn(n).astype(dtype)
         cpp_r = np.asarray(cpp.linalg.solve(A, b), dtype=np.float64)
         # For ill-conditioned matrices, relax tolerance (float32 promotion + LU)
-        assert_linalg_close(cpp_r, self._np_solve(A, b), f"solve ill-cond seed={seed}", atol=1e-10)
+        assert_linalg_close(cpp_r, self._np_solve(A, b), _s(f"solve ill-cond seed={seed}", dtype), atol=1e-10)
 
 
 # ============================================================================
@@ -360,7 +364,7 @@ class TestCdist:
         assert_bit_aligned(
             np.asarray(cpp.spatial.distance.cdist(XA, XB, metric)),
             sp_distance.cdist(XA, XB, metric),
-            f"cdist {metric}")
+            _s(f"cdist {metric}", dtype))
 
     def test_small(self, cpp, dtype):
         XA = np.array([[0., 0.], [1., 1.]], dtype=dtype)
@@ -368,7 +372,7 @@ class TestCdist:
         assert_bit_aligned(
             np.asarray(cpp.spatial.distance.cdist(XA, XB, "euclidean")),
             sp_distance.cdist(XA, XB, "euclidean"),
-            "cdist small")
+            _s("cdist small", dtype))
 
 
 # ============================================================================
@@ -390,7 +394,7 @@ class TestKDTree:
         q = random_batch((3,), dtype=dtype, seed=1016)
         d_cpp, i_cpp = self._tk(cpp, dtype)(pts).query(q, k=1)
         d_py, i_py = sp_cKDTree(pts).query(q, k=1)
-        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py), "KDTree dist")
+        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py), _s("KDTree dist", dtype))
         np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
 
     def test_query_k3_batch(self, cpp, dtype):
@@ -398,7 +402,7 @@ class TestKDTree:
         q = random_batch((3,), dtype=dtype, seed=1018)
         d_cpp, i_cpp = self._tk(cpp, dtype)(pts).query(q, k=3)
         d_py, i_py = sp_cKDTree(pts).query(q, k=3)
-        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py), "KDTree k=3 dist")
+        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py), _s("KDTree k=3 dist", dtype))
         np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
 
 
@@ -416,7 +420,7 @@ class TestGaussianFilter1d:
         assert_bit_aligned(
             np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=sigma)),
             sp_ndimage.gaussian_filter1d(a, sigma=sigma),
-            f"gaussian_filter1d sigma={sigma}")
+            _s(f"gaussian_filter1d sigma={sigma}", dtype))
 
     @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
     def test_modes(self, cpp, dtype, mode):
@@ -424,7 +428,7 @@ class TestGaussianFilter1d:
         assert_bit_aligned(
             np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5, mode=mode)),
             np.asarray(sp_ndimage.gaussian_filter1d(a, sigma=1.5, mode=mode), dtype=np.float64),
-            f"gaussian_filter1d mode={mode}")
+            _s(f"gaussian_filter1d mode={mode}", dtype))
 
 
 # ============================================================================
@@ -441,7 +445,7 @@ class TestMedfilt:
         assert_bit_aligned(
             np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
             np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-            f"medfilt k={k}")
+            _s(f"medfilt k={k}", dtype))
 
 
 # ============================================================================
@@ -476,27 +480,27 @@ class TestRotation:
     # --- identity / canonical angles ---
 
     def test_identity(self, cpp, dtype):
-        self._check(cpp, dtype, np.eye(3, dtype=dtype), "xyz", "Rotation identity")
+        self._check(cpp, dtype, np.eye(3, dtype=dtype), "xyz", _s("Rotation identity", dtype))
 
     def test_x_rotation(self, cpp, dtype):
         R = sp_Rotation.from_euler("xyz", [np.pi/4, 0, 0]).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "xyz", "Rotation x-45deg")
+        self._check(cpp, dtype, R.astype(dtype), "xyz", _s("Rotation x-45deg", dtype))
 
     def test_y_rotation(self, cpp, dtype):
         R = sp_Rotation.from_euler("xyz", [0, np.pi/6, 0]).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "xyz", "Rotation y-30deg")
+        self._check(cpp, dtype, R.astype(dtype), "xyz", _s("Rotation y-30deg", dtype))
 
     def test_z_rotation(self, cpp, dtype):
         R = sp_Rotation.from_euler("xyz", [0, 0, np.pi/3]).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "xyz", "Rotation z-60deg")
+        self._check(cpp, dtype, R.astype(dtype), "xyz", _s("Rotation z-60deg", dtype))
 
     def test_xyz_sequence(self, cpp, dtype):
         R = sp_Rotation.from_euler("xyz", np.deg2rad([20., 30., 45.])).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "xyz", "Rotation xyz(20,30,45)")
+        self._check(cpp, dtype, R.astype(dtype), "xyz", _s("Rotation xyz(20,30,45)", dtype))
 
     def test_zyx_sequence(self, cpp, dtype):
         R = sp_Rotation.from_euler("zyx", np.deg2rad([10., -20., 40.])).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "zyx", "Rotation zyx(10,-20,40)")
+        self._check(cpp, dtype, R.astype(dtype), "zyx", _s("Rotation zyx(10,-20,40)", dtype))
 
     # --- 100 random batches for each Tait-Bryan sequence (§5 requirement) ---
 
@@ -510,7 +514,7 @@ class TestRotation:
         for i in range(BATCH):
             a = rng.uniform(-np.pi/2 + 0.1, np.pi/2 - 0.1, 3)
             R = sp_Rotation.from_euler(seq, a).as_matrix().astype(dtype)
-            self._check(cpp, dtype, R, seq, f"Rotation {seq} random[{i}]")
+            self._check(cpp, dtype, R, seq, _s(f"Rotation {seq} random[{i}]", dtype))
 
     # --- gimbal lock boundary tests ---
 
@@ -524,7 +528,7 @@ class TestRotation:
             alpha = rng.uniform(-np.pi, np.pi)
             gamma = rng.uniform(-np.pi, np.pi)
             R = sp_Rotation.from_euler("xyz", [alpha, beta, gamma]).as_matrix().astype(dtype)
-            self._check(cpp, dtype, R, "xyz", f"Rotation gimbal beta={beta:.4f}[{i}]")
+            self._check(cpp, dtype, R, "xyz", _s(f"Rotation gimbal beta={beta:.4f}[{i}]", dtype))
 
     # --- random rotation matrix test ---
 
@@ -534,7 +538,7 @@ class TestRotation:
         rng = np.random.RandomState(31415)
         for i in range(BATCH):
             R = sp_Rotation.random(random_state=rng).as_matrix().astype(dtype)
-            self._check(cpp, dtype, R, "xyz", f"Rotation random_matrix[{i}]")
+            self._check(cpp, dtype, R, "xyz", _s(f"Rotation random_matrix[{i}]", dtype))
 
     # --- intrinsic 'XYZ' sequence ---
 
@@ -545,7 +549,7 @@ class TestRotation:
         for i in range(BATCH):
             a = rng.uniform(-np.pi/2 + 0.1, np.pi/2 - 0.1, 3)
             R = sp_Rotation.from_euler("XYZ", a).as_matrix().astype(dtype)
-            self._check(cpp, dtype, R, "XYZ", f"Rotation XYZ intrinsic[{i}]")
+            self._check(cpp, dtype, R, "XYZ", _s(f"Rotation XYZ intrinsic[{i}]", dtype))
 
 
 if __name__ == "__main__":
