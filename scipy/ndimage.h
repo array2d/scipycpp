@@ -8,7 +8,6 @@
 #include <vector>
 #include <cstddef>
 #include "numpy/core.h"
-#include "npy_bridge.h"  // direct npy_* access, bypasses SVML
 
 namespace scipy {
 namespace ndimage {

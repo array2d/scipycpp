@@ -11,7 +11,6 @@
 #include <string>
 #include <algorithm>
 #include "numpy/core.h"
-#include "npy_bridge.h"  // direct npy_* access, bypasses SVML
 
 namespace scipy {
 namespace spatial {

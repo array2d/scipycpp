@@ -16,7 +16,6 @@
 #include <limits>
 #include <vector>
 #include "numpy/core.h"
-#include "npy_bridge.h"  // direct npy_* access, bypasses SVML
 
 namespace scipy::stats {
 
@@ -173,7 +172,7 @@ inline T cephes_erfc(T a) {
         return (a < T(0)) ? T(2) : T(0);
     }
 
-    z = npy_bridge::exp(z);  // exp(-a^2) via npy_exp, bypasses SVML
+    z = std::exp(z);  // exp(-a^2) — std::exp is libm, same as scipy's npy_exp
 
     T p, q;
     if (x < T(8)) {
@@ -331,8 +330,8 @@ inline T cephes_ndtri(T y0) {
     }
 
     // Tail region: sqrt(-2 * log(y)) based approximation
-    T x = npy_bridge::sqrt(T(-2) * npy_bridge::log(y));
-    T x0 = x - npy_bridge::log(x) / x;
+    T x = std::sqrt(T(-2) * std::log(y));
+    T x0 = x - std::log(x) / x;
 
     T z = T(1) / x;
     T x1;
