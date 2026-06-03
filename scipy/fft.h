@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <pocketfft_hdronly.h>
+#include "pocketfft/pocketfft_hdronly.h"
 #include <vector>
 #include <complex>
 #include <cstddef>

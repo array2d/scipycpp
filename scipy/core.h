@@ -1,6 +1,7 @@
 // Native C++ scipy implementations — header-only, zero pybind11 dependency.
 //
-// Based on: numpcpp (numpy primitives), Eigen3 (linalg), pocketfft (FFT).
+// Based on: numpcpp (numpy primitives), Eigen3 (linalg).
+// Bundles: pocketfft (FFT), ckdtree (KDTree).
 //
 // This is the main entry point that includes all scipy submodules.
 

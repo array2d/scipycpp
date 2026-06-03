@@ -1,5 +1,5 @@
 # Build scipycpp Python test module.
-# Requires: pybind11, Eigen3, numpcpp, pocketfft, ckdtree.
+# Requires: pybind11, Eigen3, numpcpp.
 #
 # Alignment: BIT-LEVEL — using numpcpp's exact cmake flags.
 
@@ -15,7 +15,6 @@ CXXFLAGS ?= -std=c++17 -O2 -fPIC -fopenmp -ffp-contract=off \
 INCLUDES  = -I.. -I../pycpp -I../scipy \
             -I/usr/include/eigen3 \
             -I/usr/include/numpycpp \
-            -I/usr/include/pocketfft \
             $(shell python3 -m pybind11 --includes)
 LDFLAGS   = -shared -ldl
 

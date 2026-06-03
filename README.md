@@ -9,9 +9,10 @@
 **bit-level precision alignment** against Python scipy.
 
 Built on proven C++ libraries:
-- **[numpycpp](https://github.com/array2d/numpycpp)** — numpy primitives + SVML bridge
+- **[numpycpp](https://github.com/array2d/numpycpp)** — numpy primitives
 - **[Eigen3](https://eigen.tuxfamily.org/)** — linear algebra (solve, inv, det, eig, svd, cholesky)
-- **[pocketfft](https://github.com/mreineck/pocketfft)** — FFT (same library numpy/scipy use internally)
+- **pocketfft** (bundled) — FFT (same library numpy/scipy use internally)
+- **ckdtree** (bundled) — KDTree from scipy.spatial
 
 ## Quick Start
 
@@ -58,7 +59,6 @@ auto euler = rot.as_euler_vec("xyz");  // returns [rx, ry, rz]
 # Install dependencies
 sudo dpkg -i numpycpp-dev-*.deb
 sudo apt-get install libeigen3-dev
-sudo dpkg -i pocketfft-dev-*.deb
 
 # Install scipycpp
 mkdir build && cd build
