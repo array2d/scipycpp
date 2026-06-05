@@ -138,58 +138,29 @@ PYBIND11_MODULE(scipycpp, m) {
 
     // ====================================================================
     // integrate — trapezoid, simpson
+    //
+    // Thin wrappers that call the actual C++ implementations in
+    // scipy/integrate.h via integrate_py.h.  The C++ code uses sequential
+    // summation; scipy uses numpy.add.reduce (SIMD pairwise).  For typical
+    // scientific arrays these agree to 0 ULP; for degenerate uniform arrays
+    // of n~100 elements the difference is ≤6 ULP (documented in README).
     // ====================================================================
     m.def("trapezoid",
-        [](const py::array& y) -> double {
-            auto buf = y.request();
-            if (buf.format == py::format_descriptor<double>::format())
-                return scipy::integrate::trapezoid_py<double>(y.cast<py::array_t<double>>());
-            else
-                return static_cast<double>(
-                    scipy::integrate::trapezoid_py<float>(y.cast<py::array_t<float>>()));
+        [](py::array_t<double, py::array::c_style | py::array::forcecast> y) -> double {
+            return scipy::integrate::trapezoid_py<double>(y);
+        });
+    m.def("trapezoid",
+        [](py::array_t<float,  py::array::c_style | py::array::forcecast> y) -> float {
+            return scipy::integrate::trapezoid_py<float>(y);
         });
     m.def("simpson",
-        [](const py::array& y) -> double {
-            auto buf = y.request();
-            if (buf.format == py::format_descriptor<double>::format()) {
-                auto a = y.cast<py::array_t<double>>();
-                return scipy::integrate::simpson(a.data(), a.size());
-            } else {
-                // Float32: scipy computes y[::2]+4*y[1::2]+y[2::2] in float32,
-                // np.sum on the intermediate float32 array, then *= dx/3.0.
-                // We construct the intermediate array and use numpy.sum for
-                // bit-exact match (numpy's sum uses an optimized SIMD algorithm).
-                auto a = y.cast<py::array_t<float>>();
-                size_t n = static_cast<size_t>(a.size());
-                const float* fp = a.data();
-                const double third = 1.0 / 3.0;
-                py::object np_sum = py::module_::import("numpy").attr("sum");
-                if (n % 2 == 0) {
-                    // even='avg': two variants averaged
-                    double val = 0.5*(static_cast<double>(fp[n-1])+static_cast<double>(fp[n-2]))
-                               + 0.5*(static_cast<double>(fp[1])+static_cast<double>(fp[0]));
-                    size_t m1 = (n - 1) / 2;
-                    size_t m2 = (n - 1) / 2;
-                    py::array_t<float> tmp1(m1), tmp2(m2);
-                    float* t1 = tmp1.mutable_data();
-                    float* t2 = tmp2.mutable_data();
-                    for (size_t i = 0, j = 0; i + 2 < n - 1; i += 2, ++j)
-                        t1[j] = fp[i] + 4.0f*fp[i+1] + fp[i+2];
-                    for (size_t i = 1, j = 0; i + 2 < n; i += 2, ++j)
-                        t2[j] = fp[i] + 4.0f*fp[i+1] + fp[i+2];
-                    double s1 = np_sum(tmp1).cast<double>();
-                    double s2 = np_sum(tmp2).cast<double>();
-                    return (val + (s1 + s2) * third) * 0.5;
-                } else {
-                    size_t m = (n - 1) / 2;
-                    py::array_t<float> tmp(m);
-                    float* t = tmp.mutable_data();
-                    for (size_t i = 0, j = 0; i + 2 < n; i += 2, ++j)
-                        t[j] = fp[i] + 4.0f*fp[i+1] + fp[i+2];
-                    float sum_f32 = np_sum(tmp).cast<float>();
-                    return static_cast<double>(sum_f32) * third;
-                }
-            }
+        [](py::array_t<double, py::array::c_style | py::array::forcecast> y) -> double {
+            return scipy::integrate::simpson_py<double>(y);
+        });
+    m.def("simpson",
+        [](py::array_t<float,  py::array::c_style | py::array::forcecast> y) -> double {
+            // simpson always returns double (scipy always returns float64)
+            return scipy::integrate::simpson_py<float>(y);
         });
 
     // ====================================================================

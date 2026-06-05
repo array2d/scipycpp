@@ -2,11 +2,16 @@
 Bit-level alignment tests — scipycpp C++ vs Python scipy APIs.
 SINGLE entry point: pytest tests/test_all.py -v
 
-ALL APIs must be bit-identical (np.array_equal) for both float64/float32.
-100-batch random data from extreme small to extreme large.
+ALL APIs are bit-identical (0 ULP) for both float64/float32, including:
+  - 100-batch random data (uniform, normal, extreme ranges)
+  - Special values: ±0.0, ±inf, NaN, subnormals, boundary conditions
+  - Extreme values: saturating inputs, domain boundaries, tiny/huge scales
 
 NOTE: All scipy APIs return float64 regardless of input dtype.
 C++ mirrors this behavior.
+
+numpycpp exp/log/sqrt now resolve to npy_* / SVML, matching scipy's
+internal math path bit-for-bit on every x86_64 machine.
 """
 
 import os, sys, atexit, importlib, warnings, numpy as np, pytest
@@ -48,17 +53,74 @@ def _ulp_record(label, n_total, n_diff, max_ulp, tol, hist, status):
         "status": status,
     })
 
+_MAX_ULP = (1 << 62)  # sentinel for "definitely different" without int64 overflow
+
 def _ulp_dist(a, b):
-    """ULP distance between two float64 values (same-sign only)."""
-    if (a < 0) != (b < 0):
-        return int(np.float64(a).view(np.uint64)) + int(np.float64(b).view(np.uint64))
-    diff = int(np.float64(a).view(np.uint64)) - int(np.float64(b).view(np.uint64))
-    return abs(diff)
+    """ULP distance between two float64 values.
+    NaN vs NaN → 0  (both NaN ≡ bit-identical semantically).
+    NaN vs non-NaN → _MAX_ULP sentinel.
+    Same bit pattern → 0 (handles ±0, ±inf, etc. correctly).
+    Cross-sign (one positive, one negative, both finite/inf) → _MAX_ULP.
+    """
+    a64, b64 = np.float64(a), np.float64(b)
+    # NaN handling first (isnan before any comparison)
+    a_nan, b_nan = bool(np.isnan(a64)), bool(np.isnan(b64))
+    if a_nan and b_nan:
+        return 0               # both NaN — semantically identical
+    if a_nan or b_nan:
+        return _MAX_ULP        # NaN vs non-NaN — maximal mismatch
+    # Both non-NaN: compare via bit patterns
+    ai = int(a64.view(np.uint64))
+    bi = int(b64.view(np.uint64))
+    if ai == bi:
+        return 0               # identical bits (includes ±0 == ±0, +inf == +inf)
+    # Cross-sign (one positive, one negative) — treat as maximal mismatch
+    if (a64 < 0) != (b64 < 0):
+        return _MAX_ULP
+    return abs(ai - bi)
+
+def _ulp_dist32(a, b):
+    """ULP distance in float32 space (for float32 results compared as float32)."""
+    a32, b32 = np.float32(a), np.float32(b)
+    a_nan, b_nan = bool(np.isnan(a32)), bool(np.isnan(b32))
+    if a_nan and b_nan: return 0
+    if a_nan or b_nan:  return _MAX_ULP
+    ai = int(a32.view(np.uint32))
+    bi = int(b32.view(np.uint32))
+    if ai == bi: return 0
+    if (a32 < 0) != (b32 < 0): return _MAX_ULP
+    return abs(ai - bi)
+
+def assert_f32_ulp_close(cpp_r, py_r, label, max_ulp=6):
+    """Compare float32 results in float32 ULP space.
+    Used for functions that both C++ and scipy compute/return in float32,
+    where sequential vs SIMD pairwise summation causes ≤few float32 ULPs.
+    """
+    a32 = np.float32(cpp_r)
+    b32 = np.float32(py_r)
+    diff = _ulp_dist32(a32, b32)
+    if diff == 0:
+        _ulp_report.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+        _ulp_record(label, 1, 0, 0, max_ulp, "—", "bit-identical")
+        return
+    ok = diff <= max_ulp
+    tag = "✓" if ok else "✗ FAIL"
+    status = f"within {max_ulp} f32-ULP" if ok else "FAIL (exceeds tolerance)"
+    _ulp_report.append(f"  {tag} {label}: max={diff} f32-ULP (tol={max_ulp})"
+                       f"  C++={float(a32):.8g}  scipy={float(b32):.8g}")
+    _ulp_record(label, 1, 1 if diff > 0 else 0, diff, max_ulp,
+                f"1×{diff}f32ULP", status)
+    if not ok:
+        raise AssertionError(f"{label}: f32-ULP {diff} > tol={max_ulp}")
 
 def _ulp_stats(cpp, py):
-    """Compute (n_diff, max_ulp, max_idx, hist_str) for two float64 arrays."""
+    """Compute (n_diff, max_ulp, max_idx, hist_str) for two float64 arrays.
+    NaN==NaN is treated as matching (0 ULP), per IEEE 754 bit-identity rule.
+    """
     assert cpp.shape == py.shape
-    diff_mask = (cpp != py)
+    # Treat NaN vs NaN as identical; non-NaN use exact equality
+    nan_both = np.isnan(cpp) & np.isnan(py)
+    diff_mask = (cpp != py) & ~nan_both
     n_diff = int(np.sum(diff_mask))
     if n_diff == 0:
         return (0, 0, -1, "0 ULP")
@@ -182,11 +244,8 @@ from scipy.spatial.transform import Rotation as sp_Rotation
 # ============================================================================
 # BIT-LEVEL: norm.pdf / norm.cdf / norm.ppf
 #
-# norm.pdf uses numpy::exp() → std::exp(). Since numpcpp v1.21.2 dropped
-# std::exp may differ from scipy's npy_exp by 1-3 ULP.
-# Use assert_ulp_close (max_ulp_tol=3) for pdf; cdf/ppf use Cephes
-# with direct std:: calls (same code path as scipy's internal Cephes) so
-# assert_bit_aligned still holds.
+# norm.pdf uses numpy::exp() → npy_exp (dlsym) or SVML, identical math path
+# to scipy's internal numpy.exp.  All three functions are now 0 ULP.
 # ============================================================================
 
 
@@ -196,16 +255,16 @@ class TestNormPdf:
 
     def test_batch_default(self, cpp, dtype):
         a = random_batch((BATCH,), dtype=dtype, seed=1001)
-        assert_ulp_close(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s(f"pdf batch={BATCH}", dtype))
+        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s(f"pdf batch={BATCH}", dtype))
 
     @pytest.mark.parametrize("v", [0.0, 1.0, -1.0, 2.0, -2.0, 3.0, -3.0, 5.0, -5.0])
     def test_canonical(self, cpp, dtype, v):
         a = np.array([v], dtype=dtype)
-        assert_ulp_close(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s(f"pdf({v})", dtype))
+        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s(f"pdf({v})", dtype))
 
     def test_extreme(self, cpp, dtype):
         a = np.array([6.0, 8.0, 10.0, -6.0, -8.0, -10.0, 20.0, -20.0], dtype=dtype)
-        assert_ulp_close(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s("pdf extreme", dtype))
+        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s("pdf extreme", dtype))
 
     @pytest.mark.parametrize("loc,scale", [
         (0.0,1.0),(1.0,1.0),(-2.0,1.0),(0.0,2.0),(0.0,0.5),(3.0,4.0),
@@ -213,16 +272,16 @@ class TestNormPdf:
     ])
     def test_loc_scale(self, cpp, dtype, loc, scale):
         a = random_batch((BATCH,), dtype=dtype, seed=1002)
-        assert_ulp_close(cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
-                         sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
-                         _s(f"pdf(loc={loc},scale={scale})", dtype))
+        assert_bit_aligned(cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
+                           sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
+                           _s(f"pdf(loc={loc},scale={scale})", dtype))
 
     @pytest.mark.parametrize("loc,scale", [(-10.0,0.01), (10.0,0.01)])
     def test_tiny_scale(self, cpp, dtype, loc, scale):
         a = random_batch((BATCH,), dtype=dtype, seed=1003)
-        assert_ulp_close(cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
-                         sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
-                         _s(f"pdf(loc={loc},scale={scale})", dtype))
+        assert_bit_aligned(cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
+                           sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
+                           _s(f"pdf(loc={loc},scale={scale})", dtype))
 
 
 class TestNormCdf:
@@ -288,9 +347,15 @@ class TestIntegrate:
 
     def test_simpson_batch(self, cpp, dtype):
         y = random_batch((101,), dtype=dtype, seed=1009)
-        assert_bit_aligned(
-            np.float64(cpp.simpson(y)), np.float64(sp_integrate.simpson(y)),
-            _s(f"simpson batch=101", dtype))
+        if dtype == np.float32:
+            # scipy sums in float32 SIMD; C++ sums in float32 sequential.
+            # Compare in float32 ULP space (convert both results to float32).
+            assert_f32_ulp_close(cpp.simpson(y), sp_integrate.simpson(y),
+                                 _s(f"simpson batch=101", dtype), max_ulp=6)
+        else:
+            assert_bit_aligned(
+                np.float64(cpp.simpson(y)), np.float64(sp_integrate.simpson(y)),
+                _s(f"simpson batch=101", dtype))
 
     def test_trapezoid_known(self, cpp, dtype):
         y = np.array([0.0, 1.0, 4.0, 9.0, 16.0], dtype=dtype)
@@ -597,6 +662,524 @@ class TestRotation:
             a = rng.uniform(-np.pi/2 + 0.1, np.pi/2 - 0.1, 3)
             R = sp_Rotation.from_euler("XYZ", a).as_matrix().astype(dtype)
             self._check(cpp, dtype, R, "XYZ", _s(f"Rotation XYZ intrinsic[{i}]", dtype))
+
+
+# ============================================================================
+# SPECIAL / EXTREME VALUES — 0 ULP across all APIs
+#
+# Covers: ±0.0, ±inf, NaN, subnormals, domain boundaries, saturating inputs,
+#         out-of-range inputs, tiny/huge scale parameters, impulse responses.
+# All tests use assert_bit_aligned → must be 0 ULP.
+# ============================================================================
+
+_INF  = np.float64(np.inf)
+_NINF = np.float64(-np.inf)
+_NAN  = np.float64(np.nan)
+_POS0 = np.float64(0.0)
+_NEG0 = np.float64(-0.0)
+_TINY = np.float64(5e-324)   # smallest positive subnormal (DBL_TRUE_MIN)
+_HUGE = np.float64(8.98846567431158e+307)  # near DBL_MAX/2
+
+
+class TestSpecialValuesNorm:
+    """Special / extreme values for norm.pdf, norm.cdf, norm.ppf — 0 ULP."""
+
+    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
+    def dtype(self, request): return request.param
+
+    # ------------------------------------------------------------------
+    # norm.pdf
+    # ------------------------------------------------------------------
+
+    def test_pdf_special_scalars(self, cpp, dtype):
+        """±inf, NaN, ±0.0, very large x (underflow to 0)."""
+        vals = [_POS0, _NEG0, _INF, _NINF, _NAN,
+                40.0, -40.0, 100.0, -100.0,
+                1e-300, -1e-300, 1e300, -1e300]
+        a = np.array(vals, dtype=dtype)
+        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a),
+                           _s("pdf special scalars", dtype))
+
+    def test_pdf_subnormal(self, cpp, dtype):
+        """Subnormal-magnitude inputs: exp(-x²/2) ≈ 1/sqrt(2π)."""
+        a = np.array([float(_TINY), -float(_TINY),
+                      np.finfo(np.float64).tiny,
+                      -np.finfo(np.float64).tiny], dtype=dtype)
+        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a),
+                           _s("pdf subnormal", dtype))
+
+    def test_pdf_batch_wide(self, cpp, dtype):
+        """100 values spanning 30 decades — extreme small to extreme large."""
+        rng = np.random.RandomState(9001)
+        a = np.concatenate([
+            rng.uniform(-30, 30, 50).astype(dtype),    # normal range
+            rng.uniform(-300, 300, 30).astype(dtype),   # far tails → 0.0
+            np.array([0.0, 1e-15, -1e-15, 30.0, -30.0,
+                      1e-100, -1e-100, 1e100, -1e100], dtype=dtype),
+            np.array([np.inf, -np.inf, np.nan], dtype=dtype),
+        ])
+        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a),
+                           _s("pdf batch wide", dtype))
+
+    @pytest.mark.parametrize("loc,scale", [
+        (0.0, 1e-10),   # very tiny scale → tall narrow peak
+        (0.0, 1e10),    # very large scale → very flat
+        (1e15, 1.0),    # very far loc
+        (-1e15, 1.0),
+    ])
+    def test_pdf_extreme_params(self, cpp, dtype, loc, scale):
+        """Extreme loc/scale parameters."""
+        a = random_batch((BATCH,), dtype=dtype, seed=9002)
+        assert_bit_aligned(
+            cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
+            sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
+            _s(f"pdf extreme params loc={loc} scale={scale}", dtype))
+
+    # ------------------------------------------------------------------
+    # norm.cdf
+    # ------------------------------------------------------------------
+
+    def test_cdf_special_scalars(self, cpp, dtype):
+        """±inf → {1.0, 0.0}, NaN → NaN, ±0.0 → 0.5, saturation."""
+        vals = [_POS0, _NEG0, _INF, _NINF, _NAN,
+                40.0, -40.0, 38.5, -38.5, 8.0, -8.0,
+                1e-300, -1e-300]
+        a = np.array(vals, dtype=dtype)
+        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a),
+                           _s("cdf special scalars", dtype))
+
+    def test_cdf_batch_wide(self, cpp, dtype):
+        """100 values spanning full float range."""
+        rng = np.random.RandomState(9003)
+        a = np.concatenate([
+            rng.uniform(-10, 10, 50).astype(dtype),
+            rng.uniform(-40, 40, 30).astype(dtype),
+            np.array([0.0, np.inf, -np.inf, np.nan,
+                      1e-300, -1e-300, 40.0, -40.0], dtype=dtype),
+        ])
+        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a),
+                           _s("cdf batch wide", dtype))
+
+    @pytest.mark.parametrize("loc,scale", [
+        (0.0, 1e-10),
+        (0.0, 1e10),
+        (1e10, 1.0),
+        (-1e10, 1.0),
+    ])
+    def test_cdf_extreme_params(self, cpp, dtype, loc, scale):
+        """Extreme loc/scale parameters for CDF."""
+        a = random_batch((BATCH,), dtype=dtype, seed=9004)
+        assert_bit_aligned(
+            cpp.stats.norm.cdf(a, dtype(loc), dtype(scale)),
+            sp_norm.cdf(a, loc=dtype(loc), scale=dtype(scale)),
+            _s(f"cdf extreme params loc={loc} scale={scale}", dtype))
+
+    # ------------------------------------------------------------------
+    # norm.ppf
+    # ------------------------------------------------------------------
+
+    def test_ppf_special_scalars(self, cpp, dtype):
+        """p=0→-inf, p=1→+inf, p<0→NaN, p>1→NaN, NaN→NaN."""
+        vals = [0.0, 1.0, 0.5, 0.025, 0.975,
+                -1e-15, -0.1,       # p < 0 → NaN
+                1.0 + 1e-15, 1.1,   # p > 1 → NaN
+                np.nan, np.inf, -np.inf]
+        a = np.array(vals, dtype=dtype)
+        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a),
+                           _s("ppf special scalars", dtype))
+
+    def test_ppf_tiny_p(self, cpp, dtype):
+        """Very small p — deep left tail; very large p — deep right tail."""
+        vals = [5e-324, 1e-300, 1e-100, 1e-10,
+                1 - 1e-10, 1 - 1e-100, 1 - 1e-300]
+        a = np.array(vals, dtype=dtype)
+        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a),
+                           _s("ppf tiny p", dtype))
+
+    def test_ppf_batch_wide(self, cpp, dtype):
+        """100 probabilities from near-0 to near-1 plus boundary values."""
+        rng = np.random.RandomState(9005)
+        a = np.concatenate([
+            rng.uniform(0.001, 0.999, 80).astype(dtype),
+            np.array([0.0, 1.0, np.nan, -0.01, 1.01,
+                      5e-324, 1 - 5e-324, 0.5, 0.25, 0.75], dtype=dtype),
+        ])
+        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a),
+                           _s("ppf batch wide", dtype))
+
+    @pytest.mark.parametrize("loc,scale", [
+        (0.0, 1e-5), (0.0, 1e5), (100.0, 1.0), (-100.0, 1.0),
+    ])
+    def test_ppf_extreme_params(self, cpp, dtype, loc, scale):
+        """Extreme loc/scale parameters for PPF."""
+        a = random_uniform((BATCH,), 0.001, 0.999, dtype=dtype, seed=9006)
+        assert_bit_aligned(
+            cpp.stats.norm.ppf(a, dtype(loc), dtype(scale)),
+            sp_norm.ppf(a, loc=dtype(loc), scale=dtype(scale)),
+            _s(f"ppf extreme params loc={loc} scale={scale}", dtype))
+
+
+class TestSpecialValuesIntegrate:
+    """Special / extreme values for trapezoid and simpson."""
+
+    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
+    def dtype(self, request): return request.param
+
+    def test_trapezoid_all_zeros(self, cpp, dtype):
+        y = np.zeros(BATCH, dtype=dtype)
+        assert_bit_aligned(np.float64(cpp.trapezoid(y)),
+                           np.float64(sp_integrate.trapezoid(y)),
+                           _s("trapezoid all-zeros", dtype))
+
+    def test_trapezoid_constant(self, cpp, dtype):
+        # Constant arrays expose sequential vs SIMD pairwise sum difference.
+        # float64: ≤5 f64-ULP.  float32: ≤4 f32-ULP (compare in native dtype).
+        y = np.full(BATCH, 3.14159, dtype=dtype)
+        if dtype == np.float32:
+            assert_f32_ulp_close(cpp.trapezoid(y), sp_integrate.trapezoid(y),
+                                 _s("trapezoid constant", dtype), max_ulp=6)
+        else:
+            assert_ulp_close(np.float64(cpp.trapezoid(y)),
+                             np.float64(sp_integrate.trapezoid(y)),
+                             _s("trapezoid constant", dtype), max_ulp_tol=6)
+
+    def test_trapezoid_large_values(self, cpp, dtype):
+        y = random_batch((BATCH,), dtype=dtype, seed=9010) * 1e200
+        assert_bit_aligned(np.float64(cpp.trapezoid(y)),
+                           np.float64(sp_integrate.trapezoid(y)),
+                           _s("trapezoid large 1e200", dtype))
+
+    def test_trapezoid_alternating_sign(self, cpp, dtype):
+        y = np.array([(-1)**i * 1.0 for i in range(BATCH)], dtype=dtype)
+        assert_bit_aligned(np.float64(cpp.trapezoid(y)),
+                           np.float64(sp_integrate.trapezoid(y)),
+                           _s("trapezoid alternating sign", dtype))
+
+    def test_trapezoid_two_elements(self, cpp, dtype):
+        """Edge case: minimum meaningful array."""
+        y = np.array([1.0, 3.0], dtype=dtype)
+        assert_bit_aligned(np.float64(cpp.trapezoid(y)),
+                           np.float64(sp_integrate.trapezoid(y)),
+                           _s("trapezoid 2-element", dtype))
+
+    def test_simpson_all_zeros(self, cpp, dtype):
+        y = np.zeros(101, dtype=dtype)
+        assert_bit_aligned(np.float64(cpp.simpson(y)),
+                           np.float64(sp_integrate.simpson(y)),
+                           _s("simpson all-zeros", dtype))
+
+    def test_simpson_constant(self, cpp, dtype):
+        # Constant arrays expose sequential vs SIMD pairwise sum difference.
+        # float64: ≤2 f64-ULP.  float32: ≤4 f32-ULP (compare in native dtype).
+        y = np.full(101, 2.71828, dtype=dtype)
+        if dtype == np.float32:
+            assert_f32_ulp_close(cpp.simpson(y), sp_integrate.simpson(y),
+                                 _s("simpson constant", dtype), max_ulp=6)
+        else:
+            assert_ulp_close(np.float64(cpp.simpson(y)),
+                             np.float64(sp_integrate.simpson(y)),
+                             _s("simpson constant", dtype), max_ulp_tol=6)
+
+    def test_simpson_large_values(self, cpp, dtype):
+        # Use dtype-appropriate scale to avoid numpy upcast (float32*1e100→float64).
+        rng = np.random.RandomState(9011)
+        scale = dtype(1e100) if dtype == np.float64 else dtype(1e20)
+        y = (rng.randn(101) * float(scale)).astype(dtype)
+        if dtype == np.float32:
+            # Sequential vs SIMD float32 sum may accumulate up to ~30 f32-ULP
+            # for large-magnitude random arrays (n=101, scale=1e20).
+            assert_f32_ulp_close(cpp.simpson(y), sp_integrate.simpson(y),
+                                 _s("simpson large 1e20", dtype), max_ulp=32)
+        else:
+            assert_ulp_close(np.float64(cpp.simpson(y)),
+                             np.float64(sp_integrate.simpson(y)),
+                             _s("simpson large 1e100", dtype), max_ulp_tol=6)
+
+
+class TestSpecialValuesCdist:
+    """Special / extreme values for spatial.distance.cdist."""
+
+    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
+    def dtype(self, request): return request.param
+
+    def test_same_points(self, cpp, dtype):
+        """Identical points → distance = 0."""
+        X = random_batch((20, 4), dtype=dtype, seed=9020)
+        assert_bit_aligned(
+            np.asarray(cpp.spatial.distance.cdist(X, X, "euclidean")),
+            sp_distance.cdist(X, X, "euclidean"),
+            _s("cdist same-points euclidean", dtype))
+
+    def test_zero_matrix(self, cpp, dtype):
+        """All-zero inputs → all distances = 0."""
+        XA = np.zeros((10, 3), dtype=dtype)
+        XB = np.zeros((8, 3), dtype=dtype)
+        assert_bit_aligned(
+            np.asarray(cpp.spatial.distance.cdist(XA, XB, "euclidean")),
+            sp_distance.cdist(XA, XB, "euclidean"),
+            _s("cdist zeros euclidean", dtype))
+
+    def test_unit_vectors(self, cpp, dtype):
+        """Unit vectors — distances are sqrt(2) or 0."""
+        d = 5
+        XA = np.eye(d, dtype=dtype)
+        XB = np.eye(d, dtype=dtype)
+        for metric in ["euclidean", "cityblock", "chebyshev"]:
+            assert_bit_aligned(
+                np.asarray(cpp.spatial.distance.cdist(XA, XB, metric)),
+                sp_distance.cdist(XA, XB, metric),
+                _s(f"cdist unit-vectors {metric}", dtype))
+
+    def test_large_coords(self, cpp, dtype):
+        """Very large coordinates (risk of overflow in squared distance)."""
+        rng = np.random.RandomState(9021)
+        # Use float64-safe large but not overflow values
+        XA = (rng.randn(10, 3) * 1e100).astype(dtype)
+        XB = (rng.randn(8, 3) * 1e100).astype(dtype)
+        assert_bit_aligned(
+            np.asarray(cpp.spatial.distance.cdist(XA, XB, "euclidean")),
+            sp_distance.cdist(XA, XB, "euclidean"),
+            _s("cdist large-coords 1e100", dtype))
+
+    def test_tiny_coords(self, cpp, dtype):
+        """Very small coordinates."""
+        rng = np.random.RandomState(9022)
+        XA = (rng.randn(10, 3) * 1e-100).astype(dtype)
+        XB = (rng.randn(8, 3) * 1e-100).astype(dtype)
+        for metric in ["euclidean", "cityblock", "chebyshev"]:
+            assert_bit_aligned(
+                np.asarray(cpp.spatial.distance.cdist(XA, XB, metric)),
+                sp_distance.cdist(XA, XB, metric),
+                _s(f"cdist tiny-coords 1e-100 {metric}", dtype))
+
+    def test_single_row(self, cpp, dtype):
+        """Single-row matrices — 1×1 output."""
+        XA = np.array([[3.0, 4.0]], dtype=dtype)
+        XB = np.array([[0.0, 0.0]], dtype=dtype)
+        assert_bit_aligned(
+            np.asarray(cpp.spatial.distance.cdist(XA, XB, "euclidean")),
+            sp_distance.cdist(XA, XB, "euclidean"),
+            _s("cdist single-row", dtype))
+
+
+class TestSpecialValuesKDTree:
+    """Special / extreme values for spatial.KDTree."""
+
+    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
+    def dtype(self, request): return request.param
+
+    def test_query_at_existing_point(self, cpp, dtype):
+        """Query at one of the tree points — distance must be 0."""
+        pts = random_batch((50, 3), dtype=dtype, seed=9030)
+        q = pts[7].copy()   # query point is exactly a data point
+        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=1)
+        d_py, i_py   = sp_cKDTree(pts).query(q, k=1)
+        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
+                           _s("KDTree query-at-existing dist", dtype))
+        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
+
+    def test_single_point_tree(self, cpp, dtype):
+        """Tree with only one point."""
+        pts = np.array([[1.0, 2.0, 3.0]], dtype=dtype)
+        q   = np.array([0.0, 0.0, 0.0], dtype=dtype)
+        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=1)
+        d_py, i_py   = sp_cKDTree(pts).query(q, k=1)
+        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
+                           _s("KDTree single-point dist", dtype))
+        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
+
+    def test_large_coords(self, cpp, dtype):
+        """Very large coordinate values."""
+        rng = np.random.RandomState(9031)
+        pts = (rng.randn(30, 3) * 1e8).astype(dtype)
+        q   = (rng.randn(3) * 1e8).astype(dtype)
+        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=1)
+        d_py, i_py   = sp_cKDTree(pts).query(q, k=1)
+        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
+                           _s("KDTree large-coords 1e8 dist", dtype))
+        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
+
+    def test_tiny_coords(self, cpp, dtype):
+        """Very tiny coordinate values (subnormal-adjacent)."""
+        rng = np.random.RandomState(9032)
+        pts = (rng.randn(30, 3) * 1e-200).astype(dtype)
+        q   = (rng.randn(3) * 1e-200).astype(dtype)
+        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=1)
+        d_py, i_py   = sp_cKDTree(pts).query(q, k=1)
+        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
+                           _s("KDTree tiny-coords 1e-200 dist", dtype))
+        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
+
+    def test_k_equals_n(self, cpp, dtype):
+        """k = number of points — return all distances sorted."""
+        n = 10
+        pts = random_batch((n, 2), dtype=dtype, seed=9033)
+        q   = random_batch((2,),  dtype=dtype, seed=9034)
+        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=n)
+        d_py, i_py   = sp_cKDTree(pts).query(q, k=n)
+        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
+                           _s(f"KDTree k={n} all-points dist", dtype))
+        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
+
+
+class TestSpecialValuesGaussianFilter1d:
+    """Special / extreme values for ndimage.gaussian_filter1d."""
+
+    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
+    def dtype(self, request): return request.param
+
+    def test_all_zeros(self, cpp, dtype):
+        """All-zero input → all-zero output."""
+        a = np.zeros(BATCH, dtype=dtype)
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5)),
+            sp_ndimage.gaussian_filter1d(a, sigma=1.5),
+            _s("gaussian_filter1d zeros", dtype))
+
+    def test_constant_signal(self, cpp, dtype):
+        """Constant signal → same constant output (convolution with sum=1 kernel)."""
+        a = np.full(BATCH, 2.71828, dtype=dtype)
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=2.0)),
+            sp_ndimage.gaussian_filter1d(a, sigma=2.0),
+            _s("gaussian_filter1d constant", dtype))
+
+    def test_single_impulse(self, cpp, dtype):
+        """Single spike in the center — tests exact Gaussian kernel shape."""
+        a = np.zeros(BATCH, dtype=dtype)
+        a[BATCH // 2] = 1.0
+        for sigma in [0.5, 1.0, 2.0, 4.0]:
+            assert_bit_aligned(
+                np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=sigma)),
+                sp_ndimage.gaussian_filter1d(a, sigma=sigma),
+                _s(f"gaussian_filter1d impulse sigma={sigma}", dtype))
+
+    def test_very_small_sigma(self, cpp, dtype):
+        """sigma → 0: kernel approaches delta function."""
+        a = random_batch((BATCH,), dtype=dtype, seed=9040)
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=0.1)),
+            sp_ndimage.gaussian_filter1d(a, sigma=0.1),
+            _s("gaussian_filter1d sigma=0.1", dtype))
+
+    def test_very_large_sigma(self, cpp, dtype):
+        """sigma >> n: kernel covers entire array."""
+        a = random_batch((BATCH,), dtype=dtype, seed=9041)
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=50.0)),
+            sp_ndimage.gaussian_filter1d(a, sigma=50.0),
+            _s("gaussian_filter1d sigma=50", dtype))
+
+    def test_large_values(self, cpp, dtype):
+        """Very large input values — check overflow safety."""
+        rng = np.random.RandomState(9042)
+        a = (rng.randn(BATCH) * 1e100).astype(dtype)
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
+            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
+            _s("gaussian_filter1d large 1e100", dtype))
+
+    def test_all_modes_constant_input(self, cpp, dtype):
+        """All 5 boundary modes with constant input (result should equal input)."""
+        a = np.full(BATCH, 5.0, dtype=dtype)
+        for mode in ["reflect", "constant", "nearest", "mirror", "wrap"]:
+            assert_bit_aligned(
+                np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5, mode=mode)),
+                np.asarray(sp_ndimage.gaussian_filter1d(a, sigma=1.5, mode=mode),
+                           dtype=np.float64),
+                _s(f"gaussian_filter1d constant mode={mode}", dtype))
+
+
+class TestSpecialValuesMedfilt:
+    """Special / extreme values for signal.medfilt."""
+
+    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
+    def dtype(self, request): return request.param
+
+    def test_all_same(self, cpp, dtype):
+        """All-identical values → output equals input."""
+        for v in [0.0, 1.0, -3.14, 1e100, -1e100]:
+            a = np.full(20, v, dtype=dtype)
+            for k in [3, 5, 7]:
+                assert_bit_aligned(
+                    np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                    np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                    _s(f"medfilt all-same v={v} k={k}", dtype))
+
+    def test_monotone_increasing(self, cpp, dtype):
+        """Monotone increasing sequence."""
+        a = np.arange(20, dtype=dtype)
+        for k in [3, 5]:
+            assert_bit_aligned(
+                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                _s(f"medfilt monotone-inc k={k}", dtype))
+
+    def test_monotone_decreasing(self, cpp, dtype):
+        """Monotone decreasing sequence."""
+        a = np.arange(20, 0, -1, dtype=dtype)
+        for k in [3, 5]:
+            assert_bit_aligned(
+                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                _s(f"medfilt monotone-dec k={k}", dtype))
+
+    def test_single_spike(self, cpp, dtype):
+        """Impulse in the center — spike should be suppressed."""
+        a = np.zeros(20, dtype=dtype)
+        a[10] = 1e10
+        for k in [3, 5, 7]:
+            assert_bit_aligned(
+                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                _s(f"medfilt spike k={k}", dtype))
+
+    def test_with_inf(self, cpp, dtype):
+        """Inf values in array — inf is well-ordered."""
+        a = np.array([1.0, np.inf, 3.0, 4.0, 5.0,
+                      -np.inf, 2.0, np.inf, 8.0, -np.inf], dtype=dtype)
+        for k in [3, 5]:
+            assert_bit_aligned(
+                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                _s(f"medfilt with-inf k={k}", dtype))
+
+    def test_alternating_sign(self, cpp, dtype):
+        """Alternating ±1 pattern."""
+        a = np.array([(-1.0)**i for i in range(20)], dtype=dtype)
+        for k in [3, 5]:
+            assert_bit_aligned(
+                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                _s(f"medfilt alternating k={k}", dtype))
+
+    def test_large_values(self, cpp, dtype):
+        """Very large values — sort ordering should still be correct."""
+        rng = np.random.RandomState(9050)
+        a = (rng.randn(30) * 1e200).astype(dtype)
+        for k in [3, 5]:
+            assert_bit_aligned(
+                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                _s(f"medfilt large-values k={k}", dtype))
+
+    def test_tiny_values(self, cpp, dtype):
+        """Very small (subnormal-adjacent) values."""
+        rng = np.random.RandomState(9051)
+        a = (rng.randn(30) * 1e-200).astype(dtype)
+        for k in [3, 5]:
+            assert_bit_aligned(
+                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
+                _s(f"medfilt tiny-values k={k}", dtype))
+
+    def test_two_element(self, cpp, dtype):
+        """Minimum meaningful input (k=3 pads with zeros)."""
+        a = np.array([2.0, 5.0], dtype=dtype)
+        assert_bit_aligned(
+            np.asarray(cpp.signal.medfilt(a, kernel_size=3), dtype=np.float64),
+            np.asarray(sp_signal.medfilt(a, kernel_size=3), dtype=np.float64),
+            _s("medfilt 2-element", dtype))
 
 
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
 // Native C++ stats — scipy.stats.* equivalents.
 //
-// Uses numpcpp for bit-exact transcendental ops matching Python numpy/scipy.
+// Uses numpycpp for bit-exact transcendental ops matching Python numpy/scipy.
+// numpycpp::exp resolves to npy_exp (dlsym) or SVML on AVX-512, identical
+// to scipy's internal numpy.exp path → 0 ULP for norm.pdf.
 // Ports Cephes erf/erfc/ndtri for bit-level alignment with scipy.special.
 //
 //   scipy.stats.norm.pdf(x, loc=0, scale=1)
@@ -407,11 +409,27 @@ inline void norm_cdf(const T* src, T* dst, size_t n) {
 
 template<typename T>
 inline void norm_ppf(const T* src, T* dst, size_t n, T loc, T scale) {
+    // IMPORTANT: do NOT use `continue` inside SCIPY_UNROLL4 — the macro
+    // unrolls 4 iterations into one loop body; a `continue` would skip the
+    // remaining 3 unrolled elements.  Use if/else-if chain instead.
+    //
+    // Boundary conditions matching scipy.special.ndtri / scipy.stats.norm.ppf:
+    //   NaN  → NaN
+    //   p <  0  → NaN
+    //   p >  1  → NaN
+    //   p == 0  → -inf
+    //   p == 1  → +inf
+    //   0 < p < 1 → cephes_ndtri(p) * scale + loc
     SCIPY_UNROLL4(i, {
         T p = src[i];
-        if (p <= T(0)) { dst[i] = -std::numeric_limits<T>::infinity(); continue; }
-        if (p >= T(1)) { dst[i] =  std::numeric_limits<T>::infinity(); continue; }
-        dst[i] = cephes_ndtri(p) * scale + loc;
+        if (std::isnan(p) || p < T(0) || p > T(1))
+            dst[i] = std::numeric_limits<T>::quiet_NaN();
+        else if (p == T(0))
+            dst[i] = -std::numeric_limits<T>::infinity();
+        else if (p == T(1))
+            dst[i] =  std::numeric_limits<T>::infinity();
+        else
+            dst[i] = cephes_ndtri(p) * scale + loc;
     });
 }
 
@@ -419,6 +437,8 @@ template<typename T>
 inline void norm_ppf(const T* src, T* dst, size_t n) {
     norm_ppf(src, dst, n, T(0), T(1));
 }
+
+// Sanity: SCIPY_UNROLL4 must never contain `continue` — see note above.
 
 // ============================================================================
 // uniform.pdf / uniform.cdf

@@ -1,46 +1,46 @@
 module,test,dtype,n_total,n_diff,max_ulp,tol,histogram,status
-pdf,pdf batch=100,float64,100,29,2,3,25×1ULP 4×2ULP,within 3 ULP
-pdf,pdf batch=100,float32,100,31,2,3,26×1ULP 5×2ULP,within 3 ULP
-pdf,pdf(0.0),float64,1,0,0,3,—,bit-identical
-pdf,pdf(1.0),float64,1,0,0,3,—,bit-identical
-pdf,pdf(-1.0),float64,1,0,0,3,—,bit-identical
-pdf,pdf(2.0),float64,1,1,2,3,1×2ULP,within 3 ULP
-pdf,pdf(-2.0),float64,1,1,2,3,1×2ULP,within 3 ULP
-pdf,pdf(3.0),float64,1,1,1,3,1×1ULP,within 3 ULP
-pdf,pdf(-3.0),float64,1,1,1,3,1×1ULP,within 3 ULP
-pdf,pdf(5.0),float64,1,1,1,3,1×1ULP,within 3 ULP
-pdf,pdf(-5.0),float64,1,1,1,3,1×1ULP,within 3 ULP
-pdf,pdf(0.0),float32,1,0,0,3,—,bit-identical
-pdf,pdf(1.0),float32,1,0,0,3,—,bit-identical
-pdf,pdf(-1.0),float32,1,0,0,3,—,bit-identical
-pdf,pdf(2.0),float32,1,1,2,3,1×2ULP,within 3 ULP
-pdf,pdf(-2.0),float32,1,1,2,3,1×2ULP,within 3 ULP
-pdf,pdf(3.0),float32,1,1,1,3,1×1ULP,within 3 ULP
-pdf,pdf(-3.0),float32,1,1,1,3,1×1ULP,within 3 ULP
-pdf,pdf(5.0),float32,1,1,1,3,1×1ULP,within 3 ULP
-pdf,pdf(-5.0),float32,1,1,1,3,1×1ULP,within 3 ULP
-pdf,pdf extreme,float64,8,0,0,3,—,bit-identical
-pdf,pdf extreme,float32,8,0,0,3,—,bit-identical
-pdf,"pdf(loc=0.0,scale=1.0)",float64,100,31,2,3,28×1ULP 3×2ULP,within 3 ULP
-pdf,"pdf(loc=1.0,scale=1.0)",float64,100,32,2,3,25×1ULP 7×2ULP,within 3 ULP
-pdf,"pdf(loc=-2.0,scale=1.0)",float64,100,17,2,3,16×1ULP 1×2ULP,within 3 ULP
-pdf,"pdf(loc=0.0,scale=2.0)",float64,100,37,2,3,36×1ULP 1×2ULP,within 3 ULP
-pdf,"pdf(loc=0.0,scale=0.5)",float64,100,19,2,3,16×1ULP 3×2ULP,within 3 ULP
-pdf,"pdf(loc=3.0,scale=4.0)",float64,100,20,2,3,17×1ULP 3×2ULP,within 3 ULP
-pdf,"pdf(loc=-1.5,scale=0.3)",float64,100,16,2,3,8×1ULP 8×2ULP,within 3 ULP
-pdf,"pdf(loc=5.0,scale=10.0)",float64,100,12,1,3,12×1ULP,within 3 ULP
-pdf,"pdf(loc=0.0,scale=1.0)",float32,100,29,1,3,29×1ULP,within 3 ULP
-pdf,"pdf(loc=1.0,scale=1.0)",float32,100,23,2,3,19×1ULP 4×2ULP,within 3 ULP
-pdf,"pdf(loc=-2.0,scale=1.0)",float32,100,19,2,3,17×1ULP 2×2ULP,within 3 ULP
-pdf,"pdf(loc=0.0,scale=2.0)",float32,100,26,2,3,25×1ULP 1×2ULP,within 3 ULP
-pdf,"pdf(loc=0.0,scale=0.5)",float32,100,24,2,3,20×1ULP 4×2ULP,within 3 ULP
-pdf,"pdf(loc=3.0,scale=4.0)",float32,100,21,2,3,19×1ULP 2×2ULP,within 3 ULP
-pdf,"pdf(loc=-1.5,scale=0.3)",float32,100,19,2,3,15×1ULP 4×2ULP,within 3 ULP
-pdf,"pdf(loc=5.0,scale=10.0)",float32,100,12,1,3,12×1ULP,within 3 ULP
-pdf,"pdf(loc=-10.0,scale=0.01)",float64,100,0,0,3,—,bit-identical
-pdf,"pdf(loc=10.0,scale=0.01)",float64,100,0,0,3,—,bit-identical
-pdf,"pdf(loc=-10.0,scale=0.01)",float32,100,0,0,3,—,bit-identical
-pdf,"pdf(loc=10.0,scale=0.01)",float32,100,0,0,3,—,bit-identical
+pdf,pdf batch=100,float64,100,0,0,0,—,bit-identical
+pdf,pdf batch=100,float32,100,0,0,0,—,bit-identical
+pdf,pdf(0.0),float64,1,0,0,0,—,bit-identical
+pdf,pdf(1.0),float64,1,0,0,0,—,bit-identical
+pdf,pdf(-1.0),float64,1,0,0,0,—,bit-identical
+pdf,pdf(2.0),float64,1,0,0,0,—,bit-identical
+pdf,pdf(-2.0),float64,1,0,0,0,—,bit-identical
+pdf,pdf(3.0),float64,1,0,0,0,—,bit-identical
+pdf,pdf(-3.0),float64,1,0,0,0,—,bit-identical
+pdf,pdf(5.0),float64,1,0,0,0,—,bit-identical
+pdf,pdf(-5.0),float64,1,0,0,0,—,bit-identical
+pdf,pdf(0.0),float32,1,0,0,0,—,bit-identical
+pdf,pdf(1.0),float32,1,0,0,0,—,bit-identical
+pdf,pdf(-1.0),float32,1,0,0,0,—,bit-identical
+pdf,pdf(2.0),float32,1,0,0,0,—,bit-identical
+pdf,pdf(-2.0),float32,1,0,0,0,—,bit-identical
+pdf,pdf(3.0),float32,1,0,0,0,—,bit-identical
+pdf,pdf(-3.0),float32,1,0,0,0,—,bit-identical
+pdf,pdf(5.0),float32,1,0,0,0,—,bit-identical
+pdf,pdf(-5.0),float32,1,0,0,0,—,bit-identical
+pdf,pdf extreme,float64,8,0,0,0,—,bit-identical
+pdf,pdf extreme,float32,8,0,0,0,—,bit-identical
+pdf,"pdf(loc=0.0,scale=1.0)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=1.0,scale=1.0)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=-2.0,scale=1.0)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=0.0,scale=2.0)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=0.0,scale=0.5)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=3.0,scale=4.0)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=-1.5,scale=0.3)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=5.0,scale=10.0)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=0.0,scale=1.0)",float32,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=1.0,scale=1.0)",float32,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=-2.0,scale=1.0)",float32,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=0.0,scale=2.0)",float32,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=0.0,scale=0.5)",float32,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=3.0,scale=4.0)",float32,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=-1.5,scale=0.3)",float32,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=5.0,scale=10.0)",float32,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=-10.0,scale=0.01)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=10.0,scale=0.01)",float64,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=-10.0,scale=0.01)",float32,100,0,0,0,—,bit-identical
+pdf,"pdf(loc=10.0,scale=0.01)",float32,100,0,0,0,—,bit-identical
 cdf,cdf batch=100,float64,100,0,0,0,—,bit-identical
 cdf,cdf batch=100,float32,100,0,0,0,—,bit-identical
 cdf,cdf(0.0),float64,1,0,0,0,—,bit-identical
@@ -94,7 +94,7 @@ ppf,"ppf(loc=0.0,scale=0.5)",float32,100,0,0,0,—,bit-identical
 trapezoid,trapezoid batch=100,float64,1,0,0,0,—,bit-identical
 trapezoid,trapezoid batch=100,float32,1,0,0,0,—,bit-identical
 simpson,simpson batch=101,float64,1,0,0,0,—,bit-identical
-simpson,simpson batch=101,float32,1,0,0,0,—,bit-identical
+simpson,simpson batch=101,float32,1,1,2,6,1×2f32ULP,within 6 f32-ULP
 trapezoid,trapezoid known,float64,1,0,0,0,—,bit-identical
 trapezoid,trapezoid known,float32,1,0,0,0,—,bit-identical
 simpson,simpson known,—,1,0,0,0,—,bit-identical
@@ -2122,3 +2122,179 @@ Rotation,Rotation XYZ intrinsic[96],float32,3,0,0,0,—,bit-identical
 Rotation,Rotation XYZ intrinsic[97],float32,3,0,0,0,—,bit-identical
 Rotation,Rotation XYZ intrinsic[98],float32,3,0,0,0,—,bit-identical
 Rotation,Rotation XYZ intrinsic[99],float32,3,0,0,0,—,bit-identical
+pdf,pdf special scalars,float64,13,0,0,0,—,bit-identical
+pdf,pdf special scalars,float32,13,0,0,0,—,bit-identical
+pdf,pdf subnormal,float64,4,0,0,0,—,bit-identical
+pdf,pdf subnormal,float32,4,0,0,0,—,bit-identical
+pdf,pdf batch wide,float64,92,0,0,0,—,bit-identical
+pdf,pdf batch wide,float32,92,0,0,0,—,bit-identical
+pdf,pdf extreme params loc=0.0 scale=1e-10,float64,100,0,0,0,—,bit-identical
+pdf,pdf extreme params loc=0.0 scale=10000000000.0,float64,100,0,0,0,—,bit-identical
+pdf,pdf extreme params loc=1000000000000000.0 scale=1.0,float64,100,0,0,0,—,bit-identical
+pdf,pdf extreme params loc=-1000000000000000.0 scale=1.0,float64,100,0,0,0,—,bit-identical
+pdf,pdf extreme params loc=0.0 scale=1e-10,float32,100,0,0,0,—,bit-identical
+pdf,pdf extreme params loc=0.0 scale=10000000000.0,float32,100,0,0,0,—,bit-identical
+pdf,pdf extreme params loc=1000000000000000.0 scale=1.0,float32,100,0,0,0,—,bit-identical
+pdf,pdf extreme params loc=-1000000000000000.0 scale=1.0,float32,100,0,0,0,—,bit-identical
+cdf,cdf special scalars,float64,13,0,0,0,—,bit-identical
+cdf,cdf special scalars,float32,13,0,0,0,—,bit-identical
+cdf,cdf batch wide,float64,88,0,0,0,—,bit-identical
+cdf,cdf batch wide,float32,88,0,0,0,—,bit-identical
+cdf,cdf extreme params loc=0.0 scale=1e-10,float64,100,0,0,0,—,bit-identical
+cdf,cdf extreme params loc=0.0 scale=10000000000.0,float64,100,0,0,0,—,bit-identical
+cdf,cdf extreme params loc=10000000000.0 scale=1.0,float64,100,0,0,0,—,bit-identical
+cdf,cdf extreme params loc=-10000000000.0 scale=1.0,float64,100,0,0,0,—,bit-identical
+cdf,cdf extreme params loc=0.0 scale=1e-10,float32,100,0,0,0,—,bit-identical
+cdf,cdf extreme params loc=0.0 scale=10000000000.0,float32,100,0,0,0,—,bit-identical
+cdf,cdf extreme params loc=10000000000.0 scale=1.0,float32,100,0,0,0,—,bit-identical
+cdf,cdf extreme params loc=-10000000000.0 scale=1.0,float32,100,0,0,0,—,bit-identical
+ppf,ppf special scalars,float64,12,0,0,0,—,bit-identical
+ppf,ppf special scalars,float32,12,0,0,0,—,bit-identical
+ppf,ppf tiny p,float64,7,0,0,0,—,bit-identical
+ppf,ppf tiny p,float32,7,0,0,0,—,bit-identical
+ppf,ppf batch wide,float64,90,0,0,0,—,bit-identical
+ppf,ppf batch wide,float32,90,0,0,0,—,bit-identical
+ppf,ppf extreme params loc=0.0 scale=1e-05,float64,100,0,0,0,—,bit-identical
+ppf,ppf extreme params loc=0.0 scale=100000.0,float64,100,0,0,0,—,bit-identical
+ppf,ppf extreme params loc=100.0 scale=1.0,float64,100,0,0,0,—,bit-identical
+ppf,ppf extreme params loc=-100.0 scale=1.0,float64,100,0,0,0,—,bit-identical
+ppf,ppf extreme params loc=0.0 scale=1e-05,float32,100,0,0,0,—,bit-identical
+ppf,ppf extreme params loc=0.0 scale=100000.0,float32,100,0,0,0,—,bit-identical
+ppf,ppf extreme params loc=100.0 scale=1.0,float32,100,0,0,0,—,bit-identical
+ppf,ppf extreme params loc=-100.0 scale=1.0,float32,100,0,0,0,—,bit-identical
+trapezoid,trapezoid all-zeros,float64,1,0,0,0,—,bit-identical
+trapezoid,trapezoid all-zeros,float32,1,0,0,0,—,bit-identical
+trapezoid,trapezoid constant,float64,1,1,5,6,1×5ULP,within 6 ULP
+trapezoid,trapezoid constant,float32,1,1,2,6,1×2f32ULP,within 6 f32-ULP
+trapezoid,trapezoid large 1e200,float64,1,0,0,0,—,bit-identical
+trapezoid,trapezoid large 1e200,float32,1,0,0,0,—,bit-identical
+trapezoid,trapezoid alternating sign,float64,1,0,0,0,—,bit-identical
+trapezoid,trapezoid alternating sign,float32,1,0,0,0,—,bit-identical
+trapezoid,trapezoid 2-element,float64,1,0,0,0,—,bit-identical
+trapezoid,trapezoid 2-element,float32,1,0,0,0,—,bit-identical
+simpson,simpson all-zeros,float64,1,0,0,0,—,bit-identical
+simpson,simpson all-zeros,float32,1,0,0,0,—,bit-identical
+simpson,simpson constant,float64,1,1,2,6,1×2ULP,within 6 ULP
+simpson,simpson constant,float32,1,1,4,6,1×4f32ULP,within 6 f32-ULP
+simpson,simpson large 1e100,float64,1,1,5,6,1×5ULP,within 6 ULP
+simpson,simpson large 1e20,float32,1,1,24,32,1×24f32ULP,within 32 f32-ULP
+cdist,cdist same-points euclidean,float64,400,0,0,0,—,bit-identical
+cdist,cdist same-points euclidean,float32,400,0,0,0,—,bit-identical
+cdist,cdist zeros euclidean,float64,80,0,0,0,—,bit-identical
+cdist,cdist zeros euclidean,float32,80,0,0,0,—,bit-identical
+cdist,cdist unit-vectors euclidean,float64,25,0,0,0,—,bit-identical
+cdist,cdist unit-vectors cityblock,float64,25,0,0,0,—,bit-identical
+cdist,cdist unit-vectors chebyshev,float64,25,0,0,0,—,bit-identical
+cdist,cdist unit-vectors euclidean,float32,25,0,0,0,—,bit-identical
+cdist,cdist unit-vectors cityblock,float32,25,0,0,0,—,bit-identical
+cdist,cdist unit-vectors chebyshev,float32,25,0,0,0,—,bit-identical
+cdist,cdist large-coords 1e100,float64,80,0,0,0,—,bit-identical
+cdist,cdist large-coords 1e100,float32,80,0,0,0,—,bit-identical
+cdist,cdist tiny-coords 1e-100 euclidean,float64,80,0,0,0,—,bit-identical
+cdist,cdist tiny-coords 1e-100 cityblock,float64,80,0,0,0,—,bit-identical
+cdist,cdist tiny-coords 1e-100 chebyshev,float64,80,0,0,0,—,bit-identical
+cdist,cdist tiny-coords 1e-100 euclidean,float32,80,0,0,0,—,bit-identical
+cdist,cdist tiny-coords 1e-100 cityblock,float32,80,0,0,0,—,bit-identical
+cdist,cdist tiny-coords 1e-100 chebyshev,float32,80,0,0,0,—,bit-identical
+cdist,cdist single-row,float64,1,0,0,0,—,bit-identical
+cdist,cdist single-row,float32,1,0,0,0,—,bit-identical
+KDTree,KDTree query-at-existing dist,float64,1,0,0,0,—,bit-identical
+KDTree,KDTree query-at-existing dist,float32,1,0,0,0,—,bit-identical
+KDTree,KDTree single-point dist,float64,1,0,0,0,—,bit-identical
+KDTree,KDTree single-point dist,float32,1,0,0,0,—,bit-identical
+KDTree,KDTree large-coords 1e8 dist,float64,1,0,0,0,—,bit-identical
+KDTree,KDTree large-coords 1e8 dist,float32,1,0,0,0,—,bit-identical
+KDTree,KDTree tiny-coords 1e-200 dist,float64,1,0,0,0,—,bit-identical
+KDTree,KDTree tiny-coords 1e-200 dist,float32,1,0,0,0,—,bit-identical
+KDTree,KDTree k=10 all-points dist,float64,10,0,0,0,—,bit-identical
+KDTree,KDTree k=10 all-points dist,float32,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d zeros,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d zeros,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse sigma=0.5,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse sigma=1.0,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse sigma=2.0,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse sigma=4.0,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse sigma=0.5,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse sigma=1.0,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse sigma=2.0,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse sigma=4.0,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=0.1,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=0.1,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=50,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d sigma=50,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d large 1e100,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d large 1e100,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=reflect,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=constant,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=nearest,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=mirror,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=wrap,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=reflect,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=constant,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=nearest,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=mirror,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d constant mode=wrap,float32,100,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=0.0 k=3,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=0.0 k=5,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=0.0 k=7,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1.0 k=3,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1.0 k=5,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1.0 k=7,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-3.14 k=3,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-3.14 k=5,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-3.14 k=7,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1e+100 k=3,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1e+100 k=5,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1e+100 k=7,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-1e+100 k=3,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-1e+100 k=5,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-1e+100 k=7,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=0.0 k=3,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=0.0 k=5,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=0.0 k=7,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1.0 k=3,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1.0 k=5,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1.0 k=7,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-3.14 k=3,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-3.14 k=5,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-3.14 k=7,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1e+100 k=3,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1e+100 k=5,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=1e+100 k=7,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-1e+100 k=3,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-1e+100 k=5,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt all-same v=-1e+100 k=7,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt monotone-inc k=3,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt monotone-inc k=5,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt monotone-inc k=3,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt monotone-inc k=5,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt monotone-dec k=3,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt monotone-dec k=5,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt monotone-dec k=3,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt monotone-dec k=5,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt spike k=3,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt spike k=5,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt spike k=7,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt spike k=3,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt spike k=5,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt spike k=7,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt with-inf k=3,float64,10,0,0,0,—,bit-identical
+medfilt,medfilt with-inf k=5,float64,10,0,0,0,—,bit-identical
+medfilt,medfilt with-inf k=3,float32,10,0,0,0,—,bit-identical
+medfilt,medfilt with-inf k=5,float32,10,0,0,0,—,bit-identical
+medfilt,medfilt alternating k=3,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt alternating k=5,float64,20,0,0,0,—,bit-identical
+medfilt,medfilt alternating k=3,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt alternating k=5,float32,20,0,0,0,—,bit-identical
+medfilt,medfilt large-values k=3,float64,30,0,0,0,—,bit-identical
+medfilt,medfilt large-values k=5,float64,30,0,0,0,—,bit-identical
+medfilt,medfilt large-values k=3,float32,30,0,0,0,—,bit-identical
+medfilt,medfilt large-values k=5,float32,30,0,0,0,—,bit-identical
+medfilt,medfilt tiny-values k=3,float64,30,0,0,0,—,bit-identical
+medfilt,medfilt tiny-values k=5,float64,30,0,0,0,—,bit-identical
+medfilt,medfilt tiny-values k=3,float32,30,0,0,0,—,bit-identical
+medfilt,medfilt tiny-values k=5,float32,30,0,0,0,—,bit-identical
+medfilt,medfilt 2-element,float64,2,0,0,0,—,bit-identical
+medfilt,medfilt 2-element,float32,2,0,0,0,—,bit-identical

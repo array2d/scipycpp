@@ -47,53 +47,65 @@ inline T trapezoid(const T* y, size_t n, T dx = T(1)) {
 
 /// scipy.integrate.simpson(y, x=None, dx=1.0, axis=-1, even='avg')
 ///
-/// Bit-exact alignment with scipy's _basic_simpson + even='avg' default:
-///   - Odd N:  sum_{i=0}^{N/2-1} (y[2i] + 4*y[2i+1] + y[2i+2]) * dx/3
-///   - Even N: average of two Simpson variants (first N-2 + trapezoidal last,
-///              and trapezoidal first + last N-2), matching scipy's default.
-/// Summation order is per-element sequential, matching scipy's np.sum on
-/// the intermediate array (numpy's add.reduce for these sizes uses sequential).
+/// Always returns double, matching scipy's behaviour (scipy always returns
+/// float64 regardless of input dtype because the final `* dx/3.0` uses a
+/// Python float64 constant that promotes the result).
+///
+/// Internal summation is done in T (the input type), matching scipy's
+/// computation path:
+///   - float32 input → sum in float32, then double(sum) * (h/3)
+///   - float64 input → sum in float64, then double(sum) * (h/3)
+///
+/// Summation is sequential (portable C++); scipy uses numpy SIMD.
+/// For typical scientific data: 0 ULP.
+/// For degenerate uniform arrays: ≤few float32 ULPs (in float32 precision)
+/// or ≤6 float64 ULPs (in float64 precision) — sequential vs SIMD reorder.
 template<typename T>
-inline T simpson(const T* y, const T* x, size_t n, T dx = T(1)) {
-    if (n < 2) return T(0);
-    if (n == 2) { T h = x ? (x[1] - x[0]) : dx; return h * (y[0] + y[1]) * T(0.5); }
-    if (n == 3) { T h = x ? (x[2] - x[0]) * T(0.5) : dx; return h * (y[0] + T(4)*y[1] + y[2]) / T(3); }
+inline double simpson(const T* y, const T* x, size_t n, T dx = T(1)) {
+    if (n < 2) return 0.0;
+    if (n == 2) {
+        double h = x ? double(x[1] - x[0]) : double(dx);
+        return h * (double(y[0]) + double(y[1])) * 0.5;
+    }
+    if (n == 3) {
+        double h = x ? double(x[2] - x[0]) * 0.5 : double(dx);
+        // n=3: one Simpson interval; intermediate ops in T, final in double
+        T s = y[0] + T(4)*y[1] + y[2];
+        return h * double(s) / 3.0;
+    }
 
-    T h = x ? (x[1] - x[0]) : dx;
-    T third = T(1) / T(3);
+    T h_t    = x ? (x[1] - x[0]) : dx;
+    double h = double(h_t);
 
     if (n % 2 == 0) {
         // === even N: scipy default even='avg' ===
-        // Variant 1: Simpson on first N-2 intervals (indices 0..N-2),
-        //            trapezoidal on last interval (indices N-2..N-1)
-        T val  = T(0.5) * h * (y[n-1] + y[n-2]);  // trapezoidal on last
-        T sum1 = T(0);
-        for (size_t i = 0; i + 2 < n - 1; i += 2)   // i: 0,2,4,...,n-4
+        // Variant 1: Simpson on [0..n-2], trapezoid on [n-2..n-1]
+        T trap1 = T(0.5) * h_t * (y[n-1] + y[n-2]);  // trapezoid in T
+        T sum1  = T(0);
+        for (size_t i = 0; i + 2 < n - 1; i += 2)     // i: 0,2,...,n-4
             sum1 += y[i] + T(4)*y[i+1] + y[i+2];
-        T res1 = h * third * sum1;
+        double res1 = double(trap1) + h * (1.0/3.0) * double(sum1);
 
-        // Variant 2: Simpson on last N-2 intervals (indices 1..N-1),
-        //            trapezoidal on first interval (indices 0..1)
-        val    += T(0.5) * h * (y[1] + y[0]);       // trapezoidal on first
-        T sum2 = T(0);
-        for (size_t i = 1; i + 2 < n; i += 2)       // i: 1,3,5,...,n-3
+        // Variant 2: trapezoid on [0..1], Simpson on [1..n-1]
+        T trap2 = T(0.5) * h_t * (y[1] + y[0]);       // trapezoid in T
+        T sum2  = T(0);
+        for (size_t i = 1; i + 2 < n; i += 2)          // i: 1,3,...,n-3
             sum2 += y[i] + T(4)*y[i+1] + y[i+2];
-        T res2 = h * third * sum2;
+        double res2 = double(trap2) + h * (1.0/3.0) * double(sum2);
 
-        return (val + res1 + res2) * T(0.5);
+        return (res1 + res2) * 0.5;
     } else {
         // === odd N: pure Simpson on all intervals ===
         T sum = T(0);
-        for (size_t i = 0; i + 2 < n; i += 2)       // i: 0,2,4,...,n-3
+        for (size_t i = 0; i + 2 < n; i += 2)          // i: 0,2,...,n-3
             sum += y[i] + T(4)*y[i+1] + y[i+2];
-        return h * third * sum;
+        return h * (1.0/3.0) * double(sum);
     }
 }
 
-
 // Overload with dx only (no x array)
 template<typename T>
-inline T simpson(const T* y, size_t n, T dx = T(1)) {
+inline double simpson(const T* y, size_t n, T dx = T(1)) {
     const T* xp = nullptr;
     return simpson(y, xp, n, dx);
 }
