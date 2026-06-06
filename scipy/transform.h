@@ -294,9 +294,8 @@ struct Rotation {
     /// scipy.spatial.transform.Rotation.from_euler(seq, angle) — single axis.
     /// seq: "x"/"X", "y"/"Y", "z"/"Z"
     /// q = [axis * sin(angle/2), cos(angle/2)]
-    /// Note: uses std::sin/std::cos (glibc).  On x86-64 with numpy SVML the
-    /// trig result may differ ≤2 ULP from scipy's numpy.sin/cos path.
-    /// Use the Python wrapper (pycpp/transform_py.h) for 0-ULP alignment.
+    /// Uses std::sin/cos (glibc) — scipy's from_euler Cython code also calls
+    /// libc sin/cos (not numpy SVML), so this is 0-ULP vs scipy.from_euler.
     static Rotation from_euler(const char* seq, T angle) {
         Rotation rot;
         std::string s(seq);
@@ -325,6 +324,7 @@ struct Rotation {
     ///     → q = q_first ⊗ … ⊗ q_last  (leftmost applied first = body frame)
     /// Hamilton product p⊗q: result[x] = p.w*q.x + p.x*q.w + p.y*q.z - p.z*q.y
     ///                        result[w] = p.w*q.w - dot(p.xyz, q.xyz)
+    /// Uses std::sin/cos (glibc = scipy's Cython path) → 0-ULP vs scipy.
     static Rotation from_euler(const char* seq, const T* angles) {
         std::string s(seq);
         size_t n = s.size();

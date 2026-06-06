@@ -2247,811 +2247,811 @@ from_euler,"from_euler(x,-1.0472) as_matrix",—,9,0,0,0,—,bit-identical
 from_euler,"from_euler(y,0.5236) as_matrix",—,9,0,0,0,—,bit-identical
 from_euler,"from_euler(y,-0.7854) as_matrix",—,9,0,0,0,—,bit-identical
 from_euler,"from_euler(y,3.1416) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,20,30,45) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,10,-20,40) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[0]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[1]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[2]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[3]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[4]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[5]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[6]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[7]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[8]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[9]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[10]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[11]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[12]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[13]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[14]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[15]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[16]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[17]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[18]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[19]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[20]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[21]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[22]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[23]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[24]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[25]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[26]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[27]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[28]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[29]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[30]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[31]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[32]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[33]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[34]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[35]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[36]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[37]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[38]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[39]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[40]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[41]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[42]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[43]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[44]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[45]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[46]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[47]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[48]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[49]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[50]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[51]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[52]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[53]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[54]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[55]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[56]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[57]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[58]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[59]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[60]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[61]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[62]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[63]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[64]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[65]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[66]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[67]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[68]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[69]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[70]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[71]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[72]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[73]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[74]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[75]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[76]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[77]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[78]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[79]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[80]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[81]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[82]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[83]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[84]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[85]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[86]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[87]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[88]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[89]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[90]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[91]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[92]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[93]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[94]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[95]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[96]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[97]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[98]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,random[99]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[0]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[1]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[2]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[3]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[4]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[5]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[6]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[7]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[8]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[9]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[10]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[11]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[12]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[13]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[14]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[15]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[16]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[17]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[18]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[19]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[20]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[21]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[22]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[23]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[24]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[25]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[26]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[27]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[28]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[29]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[30]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[31]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[32]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[33]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[34]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[35]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[36]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[37]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[38]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[39]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[40]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[41]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[42]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[43]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[44]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[45]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[46]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[47]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[48]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[49]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[50]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[51]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[52]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[53]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[54]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[55]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[56]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[57]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[58]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[59]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[60]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[61]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[62]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[63]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[64]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[65]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[66]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[67]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[68]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[69]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[70]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[71]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[72]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[73]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[74]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[75]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[76]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[77]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[78]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[79]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[80]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[81]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[82]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[83]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[84]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[85]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[86]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[87]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[88]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[89]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[90]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[91]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[92]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[93]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[94]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[95]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[96]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[97]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[98]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xzy,random[99]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[0]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[1]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[2]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[3]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[4]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[5]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[6]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[7]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[8]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[9]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[10]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[11]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[12]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[13]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[14]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[15]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[16]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[17]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[18]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[19]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[20]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[21]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[22]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[23]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[24]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[25]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[26]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[27]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[28]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[29]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[30]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[31]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[32]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[33]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[34]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[35]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[36]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[37]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[38]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[39]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[40]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[41]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[42]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[43]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[44]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[45]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[46]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[47]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[48]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[49]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[50]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[51]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[52]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[53]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[54]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[55]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[56]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[57]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[58]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[59]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[60]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[61]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[62]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[63]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[64]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[65]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[66]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[67]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[68]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[69]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[70]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[71]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[72]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[73]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[74]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[75]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[76]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[77]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[78]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[79]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[80]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[81]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[82]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[83]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[84]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[85]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[86]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[87]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[88]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[89]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[90]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[91]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[92]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[93]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[94]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[95]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[96]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[97]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[98]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yxz,random[99]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[0]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[1]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[2]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[3]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[4]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[5]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[6]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[7]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[8]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[9]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[10]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[11]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[12]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[13]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[14]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[15]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[16]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[17]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[18]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[19]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[20]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[21]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[22]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[23]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[24]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[25]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[26]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[27]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[28]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[29]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[30]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[31]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[32]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[33]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[34]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[35]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[36]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[37]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[38]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[39]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[40]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[41]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[42]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[43]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[44]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[45]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[46]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[47]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[48]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[49]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[50]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[51]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[52]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[53]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[54]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[55]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[56]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[57]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[58]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[59]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[60]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[61]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[62]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[63]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[64]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[65]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[66]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[67]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[68]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[69]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[70]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[71]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[72]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[73]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[74]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[75]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[76]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[77]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[78]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[79]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[80]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[81]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[82]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[83]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[84]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[85]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[86]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[87]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[88]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[89]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[90]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[91]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[92]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[93]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[94]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[95]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[96]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[97]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[98]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(yzx,random[99]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[0]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[1]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[2]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[3]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[4]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[5]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[6]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[7]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[8]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[9]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[10]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[11]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[12]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[13]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[14]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[15]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[16]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[17]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[18]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[19]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[20]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[21]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[22]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[23]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[24]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[25]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[26]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[27]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[28]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[29]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[30]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[31]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[32]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[33]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[34]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[35]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[36]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[37]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[38]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[39]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[40]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[41]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[42]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[43]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[44]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[45]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[46]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[47]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[48]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[49]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[50]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[51]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[52]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[53]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[54]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[55]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[56]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[57]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[58]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[59]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[60]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[61]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[62]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[63]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[64]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[65]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[66]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[67]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[68]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[69]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[70]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[71]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[72]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[73]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[74]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[75]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[76]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[77]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[78]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[79]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[80]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[81]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[82]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[83]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[84]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[85]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[86]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[87]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[88]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[89]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[90]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[91]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[92]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[93]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[94]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[95]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[96]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[97]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[98]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zxy,random[99]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[0]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[1]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[2]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[3]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[4]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[5]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[6]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[7]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[8]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[9]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[10]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[11]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[12]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[13]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[14]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[15]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[16]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[17]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[18]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[19]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[20]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[21]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[22]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[23]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[24]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[25]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[26]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[27]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[28]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[29]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[30]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[31]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[32]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[33]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[34]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[35]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[36]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[37]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[38]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[39]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[40]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[41]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[42]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[43]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[44]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[45]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[46]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[47]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[48]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[49]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[50]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[51]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[52]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[53]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[54]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[55]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[56]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[57]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[58]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[59]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[60]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[61]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[62]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[63]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[64]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[65]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[66]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[67]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[68]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[69]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[70]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[71]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[72]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[73]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[74]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[75]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[76]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[77]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[78]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[79]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[80]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[81]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[82]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[83]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[84]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[85]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[86]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[87]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[88]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[89]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[90]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[91]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[92]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[93]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[94]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[95]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[96]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[97]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[98]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(zyx,random[99]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[0]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[1]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[2]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[3]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[4]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[5]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[6]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[7]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[8]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[9]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[10]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[11]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[12]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[13]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[14]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[15]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[16]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[17]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[18]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[19]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[20]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[21]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[22]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[23]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[24]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[25]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[26]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[27]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[28]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[29]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[30]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[31]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[32]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[33]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[34]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[35]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[36]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[37]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[38]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[39]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[40]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[41]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[42]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[43]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[44]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[45]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[46]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[47]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[48]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[49]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[50]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[51]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[52]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[53]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[54]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[55]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[56]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[57]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[58]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[59]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[60]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[61]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[62]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[63]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[64]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[65]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[66]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[67]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[68]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[69]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[70]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[71]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[72]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[73]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[74]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[75]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[76]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[77]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[78]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[79]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[80]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[81]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[82]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[83]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[84]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[85]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[86]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[87]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[88]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[89]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[90]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[91]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[92]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[93]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[94]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[95]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[96]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[97]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[98]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(XYZ,random[99]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[0]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[1]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[2]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[3]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[4]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[5]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[6]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[7]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[8]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[9]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[10]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[11]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[12]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[13]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[14]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[15]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[16]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[17]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[18]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[19]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[20]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[21]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[22]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[23]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[24]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[25]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[26]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[27]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[28]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[29]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[30]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[31]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[32]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[33]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[34]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[35]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[36]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[37]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[38]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[39]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[40]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[41]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[42]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[43]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[44]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[45]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[46]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[47]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[48]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[49]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[50]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[51]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[52]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[53]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[54]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[55]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[56]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[57]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[58]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[59]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[60]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[61]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[62]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[63]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[64]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[65]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[66]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[67]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[68]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[69]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[70]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[71]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[72]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[73]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[74]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[75]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[76]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[77]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[78]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[79]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[80]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[81]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[82]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[83]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[84]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[85]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[86]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[87]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[88]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[89]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[90]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[91]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[92]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[93]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[94]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[95]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[96]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[97]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[98]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(ZYX,random[99]) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,eps=1e-07) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,eps=1e-12) as_matrix",—,9,0,0,0,—,bit-identical
-from_euler,"from_euler(xyz,eps=5.84e-06) as_matrix",—,9,0,0,0,—,bit-identical
+from_euler,"from_euler(xyz,20,30,45) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,10,-20,40) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[0]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[1]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[2]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[3]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[4]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[5]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[6]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[7]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[8]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[9]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[10]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[11]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[12]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[13]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[14]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[15]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[16]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[17]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[18]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[19]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[20]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[21]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[22]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[23]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[24]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[25]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[26]) as_matrix",—,9,9,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[27]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[28]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[29]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[30]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[31]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[32]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[33]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[34]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[35]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[36]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[37]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[38]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[39]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[40]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[41]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[42]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[43]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[44]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[45]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[46]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[47]) as_matrix",—,9,8,2,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[48]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[49]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[50]) as_matrix",—,9,9,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[51]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[52]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[53]) as_matrix",—,9,8,2,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[54]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[55]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[56]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[57]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[58]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[59]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[60]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[61]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[62]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[63]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[64]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[65]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[66]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[67]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[68]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[69]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[70]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[71]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[72]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[73]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[74]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[75]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[76]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[77]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[78]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[79]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[80]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[81]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[82]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[83]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[84]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[85]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[86]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[87]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[88]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[89]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[90]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[91]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[92]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[93]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[94]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[95]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[96]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[97]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[98]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,random[99]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[0]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[1]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[2]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[3]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[4]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[5]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[6]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[7]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[8]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[9]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[10]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[11]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[12]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[13]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[14]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[15]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[16]) as_matrix",—,9,4,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[17]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[18]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[19]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[20]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[21]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[22]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[23]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[24]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[25]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[26]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[27]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[28]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[29]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[30]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[31]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[32]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[33]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[34]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[35]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[36]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[37]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[38]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[39]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[40]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[41]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[42]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[43]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[44]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[45]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[46]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[47]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[48]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[49]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[50]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[51]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[52]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[53]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[54]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[55]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[56]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[57]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[58]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[59]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[60]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[61]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[62]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[63]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[64]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[65]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[66]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[67]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[68]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[69]) as_matrix",—,9,4,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[70]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[71]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[72]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[73]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[74]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[75]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[76]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[77]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[78]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[79]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[80]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[81]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[82]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[83]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[84]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[85]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[86]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[87]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[88]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[89]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[90]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[91]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[92]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[93]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[94]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[95]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[96]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[97]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[98]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(xzy,random[99]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[0]) as_matrix",—,9,8,2,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[1]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[2]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[3]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[4]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[5]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[6]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[7]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[8]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[9]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[10]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[11]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[12]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[13]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[14]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[15]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[16]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[17]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[18]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[19]) as_matrix",—,9,9,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[20]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[21]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[22]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[23]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[24]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[25]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[26]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[27]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[28]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[29]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[30]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[31]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[32]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[33]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[34]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[35]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[36]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[37]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[38]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[39]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[40]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[41]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[42]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[43]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[44]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[45]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[46]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[47]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[48]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[49]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[50]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[51]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[52]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[53]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[54]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[55]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[56]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[57]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[58]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[59]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[60]) as_matrix",—,9,9,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[61]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[62]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[63]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[64]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[65]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[66]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[67]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[68]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[69]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[70]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[71]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[72]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[73]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[74]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[75]) as_matrix",—,9,5,2,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[76]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[77]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[78]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[79]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[80]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[81]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[82]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[83]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[84]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[85]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[86]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[87]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[88]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[89]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[90]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[91]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[92]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[93]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[94]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[95]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[96]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[97]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[98]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yxz,random[99]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[0]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[1]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[2]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[3]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[4]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[5]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[6]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[7]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[8]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[9]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[10]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[11]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[12]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[13]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[14]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[15]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[16]) as_matrix",—,9,4,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[17]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[18]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[19]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[20]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[21]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[22]) as_matrix",—,9,9,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[23]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[24]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[25]) as_matrix",—,9,4,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[26]) as_matrix",—,9,4,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[27]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[28]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[29]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[30]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[31]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[32]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[33]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[34]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[35]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[36]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[37]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[38]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[39]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[40]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[41]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[42]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[43]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[44]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[45]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[46]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[47]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[48]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[49]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[50]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[51]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[52]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[53]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[54]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[55]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[56]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[57]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[58]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[59]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[60]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[61]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[62]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[63]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[64]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[65]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[66]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[67]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[68]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[69]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[70]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[71]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[72]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[73]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[74]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[75]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[76]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[77]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[78]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[79]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[80]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[81]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[82]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[83]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[84]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[85]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[86]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[87]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[88]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[89]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[90]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[91]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[92]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[93]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[94]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[95]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[96]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[97]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[98]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(yzx,random[99]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[0]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[1]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[2]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[3]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[4]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[5]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[6]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[7]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[8]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[9]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[10]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[11]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[12]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[13]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[14]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[15]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[16]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[17]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[18]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[19]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[20]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[21]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[22]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[23]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[24]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[25]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[26]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[27]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[28]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[29]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[30]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[31]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[32]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[33]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[34]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[35]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[36]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[37]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[38]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[39]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[40]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[41]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[42]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[43]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[44]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[45]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[46]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[47]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[48]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[49]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[50]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[51]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[52]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[53]) as_matrix",—,9,8,2,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[54]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[55]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[56]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[57]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[58]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[59]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[60]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[61]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[62]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[63]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[64]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[65]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[66]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[67]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[68]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[69]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[70]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[71]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[72]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[73]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[74]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[75]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[76]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[77]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[78]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[79]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[80]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[81]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[82]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[83]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[84]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[85]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[86]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[87]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[88]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[89]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[90]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[91]) as_matrix",—,9,4,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[92]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[93]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[94]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[95]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[96]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[97]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[98]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zxy,random[99]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[0]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[1]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[2]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[3]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[4]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[5]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[6]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[7]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[8]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[9]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[10]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[11]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[12]) as_matrix",—,9,1,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[13]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[14]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[15]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[16]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[17]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[18]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[19]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[20]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[21]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[22]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[23]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[24]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[25]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[26]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[27]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[28]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[29]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[30]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[31]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[32]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[33]) as_matrix",—,9,5,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[34]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[35]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[36]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[37]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[38]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[39]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[40]) as_matrix",—,9,2,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[41]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[42]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[43]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[44]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[45]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[46]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[47]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[48]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[49]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[50]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[51]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[52]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[53]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[54]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[55]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[56]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[57]) as_matrix",—,9,9,2,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[58]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[59]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[60]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[61]) as_matrix",—,9,7,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[62]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[63]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[64]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[65]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[66]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[67]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[68]) as_matrix",—,9,5,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[69]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[70]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[71]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[72]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[73]) as_matrix",—,9,7,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[74]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[75]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[76]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[77]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[78]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[79]) as_matrix",—,9,9,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[80]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[81]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[82]) as_matrix",—,9,4,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[83]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[84]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[85]) as_matrix",—,9,6,2,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[86]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[87]) as_matrix",—,9,8,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[88]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[89]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[90]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[91]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[92]) as_matrix",—,9,3,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[93]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[94]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[95]) as_matrix",—,9,6,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[96]) as_matrix",—,9,8,1,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[97]) as_matrix",—,9,2,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[98]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(zyx,random[99]) as_matrix",—,9,6,1,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[0]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[1]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[2]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[3]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[4]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[5]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[6]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[7]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[8]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[9]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[10]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[11]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[12]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[13]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[14]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[15]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[16]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[17]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[18]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[19]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[20]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[21]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[22]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[23]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[24]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[25]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[26]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[27]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[28]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[29]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[30]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[31]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[32]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[33]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[34]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[35]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[36]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[37]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[38]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[39]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[40]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[41]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[42]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[43]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[44]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[45]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[46]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[47]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[48]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[49]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[50]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[51]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[52]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[53]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[54]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[55]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[56]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[57]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[58]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[59]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[60]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[61]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[62]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[63]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[64]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[65]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[66]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[67]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[68]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[69]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[70]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[71]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[72]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[73]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[74]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[75]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[76]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[77]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[78]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[79]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[80]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[81]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[82]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[83]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[84]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[85]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[86]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[87]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[88]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[89]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[90]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[91]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[92]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[93]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[94]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[95]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[96]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[97]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[98]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(XYZ,random[99]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[0]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[1]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[2]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[3]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[4]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[5]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[6]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[7]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[8]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[9]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[10]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[11]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[12]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[13]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[14]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[15]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[16]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[17]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[18]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[19]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[20]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[21]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[22]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[23]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[24]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[25]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[26]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[27]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[28]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[29]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[30]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[31]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[32]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[33]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[34]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[35]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[36]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[37]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[38]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[39]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[40]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[41]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[42]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[43]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[44]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[45]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[46]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[47]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[48]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[49]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[50]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[51]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[52]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[53]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[54]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[55]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[56]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[57]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[58]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[59]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[60]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[61]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[62]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[63]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[64]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[65]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[66]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[67]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[68]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[69]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[70]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[71]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[72]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[73]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[74]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[75]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[76]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[77]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[78]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[79]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[80]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[81]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[82]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[83]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[84]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[85]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[86]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[87]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[88]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[89]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[90]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[91]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[92]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[93]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[94]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[95]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[96]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[97]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[98]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(ZYX,random[99]) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,eps=1e-07) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,eps=1e-12) as_matrix",—,9,0,0,1e-14,—,within atol
+from_euler,"from_euler(xyz,eps=5.84e-06) as_matrix",—,9,0,0,1e-14,—,within atol
 from_euler,from_euler roundtrip z[0],—,3,0,0,0,—,bit-identical
 from_euler,from_euler roundtrip z[1],—,3,0,0,0,—,bit-identical
 from_euler,from_euler roundtrip z[2],—,3,0,0,0,—,bit-identical

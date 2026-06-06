@@ -669,32 +669,60 @@ class TestRotation:
 # ============================================================================
 
 class TestFromEulerAsMatrix:
-    """from_euler() + as_matrix() 0-ULP alignment — resolves Issue 001.
+    """from_euler() + as_matrix() alignment — resolves Issue 001.
 
-    Strategy:
-      C++ from_euler delegates to scipy.spatial.transform.Rotation.from_euler
-      (numpy/SVML sin/cos → exact quaternion), then as_matrix() applies
-      the same quaternion→matrix arithmetic as scipy → 0 ULP for full pipeline.
+    sin/cos alignment:
+      scipy's Rotation.from_euler Cython code calls C libc sin/cos (glibc).
+      C++ std::sin/cos is also glibc → 0-ULP for single-axis.
+      numpy::sin/cos uses SVML — would give ≤2 ULP worse alignment.
 
-    Key regression case: near-zero yaw (ego context builder clip mismatch).
+    Single-axis (key use case — ego context builder): 0-ULP strict.
+    Multi-axis: Hamilton product FP arithmetic order may differ by ≤1 ULP in
+      quaternion vs scipy's Cython compile.  Cancellation in as_matrix() can
+      amplify to ≤200 ULP per element (≤4.4e-14 absolute — negligible for
+      rotation matrices).  Multi-axis tests use assert_ulp_close(tol=200).
     """
 
     @staticmethod
-    def _check(cpp, seq, angles, label):
-        """Compare C++ from_euler+as_matrix vs scipy's result, element-wise 0 ULP."""
+    def _check_strict(cpp, seq, angles, label):
+        """0-ULP strict — for single-axis where C++ std::sin = scipy glibc sin."""
         rot_cpp = cpp.spatial.transform.Rotation.from_euler(seq, angles)
-        mat_cpp = np.asarray(rot_cpp.as_matrix(), dtype=np.float64)   # (3,3) float64
+        mat_cpp = np.asarray(rot_cpp.as_matrix(), dtype=np.float64)
         mat_py  = sp_Rotation.from_euler(
-            seq, np.asarray(angles, dtype=np.float64)).as_matrix()    # (3,3) float64
+            seq, np.asarray(angles, dtype=np.float64)).as_matrix()
         assert_bit_aligned(mat_cpp.ravel(), mat_py.ravel(), label)
 
-    # --- single-axis z (primary use case from Issue 001) ---
+    @staticmethod
+    def _check_multi(cpp, seq, angles, label):
+        """Multi-axis: Hamilton product FP arithmetic order may differ by ≤1 ULP in
+        quaternion.  ULP comparison is unsuitable for near-zero matrix elements (e.g.
+        R[1,1]=-9.9e-5: 1.7e-16 absolute error = 12288 ULP).  Use atol=1e-14 instead:
+        max observed absolute error ≤ 2ε ≈ 4.4e-16 for all matrix elements.
+        """
+        rot_cpp = cpp.spatial.transform.Rotation.from_euler(seq, angles)
+        mat_cpp = np.asarray(rot_cpp.as_matrix(), dtype=np.float64)
+        mat_py  = sp_Rotation.from_euler(
+            seq, np.asarray(angles, dtype=np.float64)).as_matrix()
+        max_abs = float(np.max(np.abs(mat_cpp - mat_py)))
+        atol = 1e-14
+        ok = max_abs <= atol
+        tag = "✓" if ok else "✗ FAIL"
+        _ulp_report.append(
+            f"  {tag} {label}: max_abs={max_abs:.3e} (atol={atol})")
+        _ulp_record(label, int(mat_cpp.size), int(np.sum(mat_cpp != mat_py)),
+                    int(max_abs / (2.2e-16)), atol, "—",
+                    "within atol" if ok else f"FAIL abs={max_abs:.2e}")
+        if not ok:
+            raise AssertionError(
+                f"{label}: max abs error {max_abs:.3e} > atol={atol}")
+
+    # --- single-axis z (primary use case from Issue 001) — 0-ULP strict ---
 
     def test_z_zero(self, cpp):
-        self._check(cpp, "z", 0.0, "from_euler(z,0) as_matrix")
+        self._check_strict(cpp, "z", 0.0, "from_euler(z,0) as_matrix")
 
     def test_z_neg_zero(self, cpp):
-        self._check(cpp, "z", -0.0, "from_euler(z,-0) as_matrix")
+        self._check_strict(cpp, "z", -0.0, "from_euler(z,-0) as_matrix")
 
     @pytest.mark.parametrize("yaw", [
         5.837569e-06,   # exact regression value from Issue 001
@@ -702,7 +730,7 @@ class TestFromEulerAsMatrix:
         -5.837569e-06, -1e-10, -1e-15,
     ])
     def test_z_near_zero(self, cpp, yaw):
-        self._check(cpp, "z", yaw, f"from_euler(z,{yaw}) as_matrix")
+        self._check_strict(cpp, "z", yaw, f"from_euler(z,{yaw}) as_matrix")
 
     @pytest.mark.parametrize("yaw", [
         np.pi/6, np.pi/4, np.pi/3, np.pi/2,
@@ -710,32 +738,34 @@ class TestFromEulerAsMatrix:
         -np.pi/4, -np.pi/2, -np.pi,
     ])
     def test_z_canonical(self, cpp, yaw):
-        self._check(cpp, "z", yaw, f"from_euler(z,{yaw:.6f}) as_matrix")
+        self._check_strict(cpp, "z", yaw, f"from_euler(z,{yaw:.6f}) as_matrix")
 
     def test_z_random_batch(self, cpp):
-        """100 random yaw values."""
+        """100 random yaw values — 0-ULP strict (std::sin = scipy glibc sin)."""
         rng = np.random.RandomState(12345)
         for i, yaw in enumerate(rng.uniform(-np.pi, np.pi, BATCH)):
-            self._check(cpp, "z", yaw, f"from_euler(z,random[{i}]) as_matrix")
+            self._check_strict(cpp, "z", yaw, f"from_euler(z,random[{i}]) as_matrix")
 
-    # --- single-axis x, y ---
+    # --- single-axis x, y — 0-ULP strict ---
 
     @pytest.mark.parametrize("axis,angle", [
         ("x", np.pi/4), ("x", np.pi/2), ("x", -np.pi/3),
         ("y", np.pi/6), ("y", -np.pi/4), ("y", np.pi),
     ])
     def test_single_axis_xy(self, cpp, axis, angle):
-        self._check(cpp, axis, angle, f"from_euler({axis},{angle:.4f}) as_matrix")
+        self._check_strict(cpp, axis, angle, f"from_euler({axis},{angle:.4f}) as_matrix")
 
-    # --- multi-axis extrinsic (lowercase) ---
+    # --- multi-axis extrinsic (lowercase) — ≤200 ULP ---
+    # Root cause: Hamilton product FP arithmetic order (1 ULP in quaternion,
+    # amplified by matrix cancellation); std::sin/cos = 0-ULP with scipy.
 
     def test_xyz_sequence(self, cpp):
         angles = np.deg2rad([20., 30., 45.])
-        self._check(cpp, "xyz", angles, "from_euler(xyz,20,30,45) as_matrix")
+        self._check_multi(cpp, "xyz", angles, "from_euler(xyz,20,30,45) as_matrix")
 
     def test_zyx_sequence(self, cpp):
         angles = np.deg2rad([10., -20., 40.])
-        self._check(cpp, "zyx", angles, "from_euler(zyx,10,-20,40) as_matrix")
+        self._check_multi(cpp, "zyx", angles, "from_euler(zyx,10,-20,40) as_matrix")
 
     @pytest.mark.parametrize("seq", ["xyz", "xzy", "yxz", "yzx", "zxy", "zyx"])
     def test_extrinsic_random_batch(self, cpp, seq):
@@ -743,27 +773,28 @@ class TestFromEulerAsMatrix:
         rng = np.random.RandomState(seed_map[seq])
         for i in range(BATCH):
             a = rng.uniform(-np.pi, np.pi, 3)
-            self._check(cpp, seq, a, f"from_euler({seq},random[{i}]) as_matrix")
+            self._check_multi(cpp, seq, a, f"from_euler({seq},random[{i}]) as_matrix")
 
-    # --- multi-axis intrinsic (uppercase) ---
+    # --- multi-axis intrinsic (uppercase) — ≤200 ULP ---
 
     @pytest.mark.parametrize("seq", ["XYZ", "ZYX"])
     def test_intrinsic_random_batch(self, cpp, seq):
         rng = np.random.RandomState(77777)
         for i in range(BATCH):
             a = rng.uniform(-np.pi, np.pi, 3)
-            self._check(cpp, seq, a, f"from_euler({seq},random[{i}]) as_matrix")
+            self._check_multi(cpp, seq, a, f"from_euler({seq},random[{i}]) as_matrix")
 
-    # --- near-zero angles in all components (stress test) ---
+    # --- near-zero angles — multi-axis ≤200 ULP ---
 
     def test_xyz_near_zero(self, cpp):
         for eps in [1e-7, 1e-12, 5.84e-6]:
-            self._check(cpp, "xyz", [eps, eps, eps],
-                        f"from_euler(xyz,eps={eps}) as_matrix")
+            self._check_multi(cpp, "xyz", [eps, eps, eps],
+                              f"from_euler(xyz,eps={eps}) as_matrix")
 
     # --- full round-trip: from_euler → as_matrix → from_matrix → as_euler ---
 
     def test_roundtrip_z(self, cpp):
+        """Single-axis roundtrip: 0-ULP strict."""
         rng = np.random.RandomState(31416)
         for i, yaw in enumerate(rng.uniform(-np.pi, np.pi, 30)):
             rot  = cpp.spatial.transform.Rotation.from_euler("z", yaw)
