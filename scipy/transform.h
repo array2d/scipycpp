@@ -260,6 +260,110 @@ struct Rotation {
         as_euler(seq, result.data());
         return result;
     }
+
+    // ========================================================================
+    // as_matrix — quaternion → 3×3 rotation matrix (row-major)
+    // ========================================================================
+    /// scipy.spatial.transform.Rotation.as_matrix()
+    /// Converts quaternion [x,y,z,w] to row-major 3×3 rotation matrix.
+    /// Uses scipy's exact formulas from _rotation.pyx::as_matrix():
+    ///   R[0,0] = x²-y²-z²+w²   R[0,1] = 2(xy-zw)   R[0,2] = 2(xz+yw)
+    ///   R[1,0] = 2(xy+zw)       R[1,1] = -x²+y²-z²+w²  R[1,2] = 2(yz-xw)
+    ///   R[2,0] = 2(xz-yw)       R[2,1] = 2(yz+xw)   R[2,2] = -x²-y²+z²+w²
+    /// m9 must point to 9 consecutive T elements (row-major).
+    void as_matrix(T* m9) const {
+        T x = quat[0], y = quat[1], z = quat[2], w = quat[3];
+        T x2 = x*x, y2 = y*y, z2 = z*z, w2 = w*w;
+        T xy = x*y, zw = z*w;
+        T xz = x*z, yw = y*w;
+        T yz = y*z, xw = x*w;
+        m9[0] =  x2 - y2 - z2 + w2;          // R[0,0]
+        m9[1] =  T(2) * (xy - zw);            // R[0,1]
+        m9[2] =  T(2) * (xz + yw);            // R[0,2]
+        m9[3] =  T(2) * (xy + zw);            // R[1,0]
+        m9[4] = -x2 + y2 - z2 + w2;          // R[1,1]
+        m9[5] =  T(2) * (yz - xw);            // R[1,2]
+        m9[6] =  T(2) * (xz - yw);            // R[2,0]
+        m9[7] =  T(2) * (yz + xw);            // R[2,1]
+        m9[8] = -x2 - y2 + z2 + w2;          // R[2,2]
+    }
+
+    // ========================================================================
+    // from_euler — Euler angles → quaternion
+    // ========================================================================
+    /// scipy.spatial.transform.Rotation.from_euler(seq, angle) — single axis.
+    /// seq: "x"/"X", "y"/"Y", "z"/"Z"
+    /// q = [axis * sin(angle/2), cos(angle/2)]
+    /// Note: uses std::sin/std::cos (glibc).  On x86-64 with numpy SVML the
+    /// trig result may differ ≤2 ULP from scipy's numpy.sin/cos path.
+    /// Use the Python wrapper (pycpp/transform_py.h) for 0-ULP alignment.
+    static Rotation from_euler(const char* seq, T angle) {
+        Rotation rot;
+        std::string s(seq);
+        T half = angle / T(2);
+        T sh = std::sin(half), ch = std::cos(half);
+        if (s == "x" || s == "X") {
+            rot.quat[0] = sh;  rot.quat[1] = T(0); rot.quat[2] = T(0); rot.quat[3] = ch;
+        } else if (s == "y" || s == "Y") {
+            rot.quat[0] = T(0); rot.quat[1] = sh;  rot.quat[2] = T(0); rot.quat[3] = ch;
+        } else if (s == "z" || s == "Z") {
+            rot.quat[0] = T(0); rot.quat[1] = T(0); rot.quat[2] = sh;  rot.quat[3] = ch;
+        } else {
+            throw std::invalid_argument(
+                "Rotation::from_euler: unsupported single-axis seq '" + s + "'");
+        }
+        return rot;
+    }
+
+    /// scipy.spatial.transform.Rotation.from_euler(seq, angles) — multi-axis.
+    /// seq: e.g. "xyz" (extrinsic, lowercase) or "XYZ" (intrinsic, uppercase).
+    /// angles: array of len(seq) angles in radians.
+    /// Composition rule (matching scipy _rotation.pyx):
+    ///   extrinsic (lowercase): reverse seq+angles, then compose left-to-right
+    ///     → q = q_last ⊗ … ⊗ q_first  (rightmost applied first)
+    ///   intrinsic (uppercase): compose left-to-right as-is
+    ///     → q = q_first ⊗ … ⊗ q_last  (leftmost applied first = body frame)
+    /// Hamilton product p⊗q: result[x] = p.w*q.x + p.x*q.w + p.y*q.z - p.z*q.y
+    ///                        result[w] = p.w*q.w - dot(p.xyz, q.xyz)
+    static Rotation from_euler(const char* seq, const T* angles) {
+        std::string s(seq);
+        size_t n = s.size();
+        if (n == 0) return Rotation{};
+        if (n == 1) return from_euler(seq, angles[0]);
+
+        // Determine convention from first character
+        bool extrinsic = std::islower(static_cast<unsigned char>(s[0]));
+
+        // Start from identity quaternion [0,0,0,1]
+        Rotation result;
+        result.quat[0] = T(0); result.quat[1] = T(0);
+        result.quat[2] = T(0); result.quat[3] = T(1);
+
+        // Compose: extrinsic → process in reverse order; intrinsic → forward order
+        for (size_t k = 0; k < n; ++k) {
+            size_t i = extrinsic ? (n - 1 - k) : k;
+            char axis = s[i];
+            T half = angles[i] / T(2);
+            T sh = std::sin(half), ch = std::cos(half);
+            // Individual axis quaternion qi = [axis*sh, ch]
+            T qi[4] = {T(0), T(0), T(0), ch};
+            if      (axis == 'x' || axis == 'X') qi[0] = sh;
+            else if (axis == 'y' || axis == 'Y') qi[1] = sh;
+            else if (axis == 'z' || axis == 'Z') qi[2] = sh;
+            else throw std::invalid_argument(
+                std::string("Rotation::from_euler: unsupported axis '") + axis + "'");
+
+            // Hamilton product: result = result ⊗ qi
+            // (matching scipy's compose_quat(p, q) = p⊗q)
+            T rx = result.quat[0], ry = result.quat[1];
+            T rz = result.quat[2], rw = result.quat[3];
+            result.quat[0] = rw*qi[0] + rx*qi[3] + ry*qi[2] - rz*qi[1];
+            result.quat[1] = rw*qi[1] + ry*qi[3] + rz*qi[0] - rx*qi[2];
+            result.quat[2] = rw*qi[2] + rz*qi[3] + rx*qi[1] - ry*qi[0];
+            result.quat[3] = rw*qi[3] - rx*qi[0] - ry*qi[1] - rz*qi[2];
+        }
+        return result;
+    }
 };
 
 }  // namespace transform

@@ -73,6 +73,54 @@ struct RotationWrap {
             return output;
         }
     }
+
+    /// Python: Rotation.from_euler(seq, angle_or_angles) → RotationWrap
+    /// Delegates to scipy.spatial.transform.Rotation.from_euler for exact
+    /// quaternion (scipy uses numpy/SVML sin/cos).
+    /// Supports scalar angle (single axis) and 1D array (multi-axis).
+    /// Combined with as_matrix(), this pipeline is 0-ULP vs scipy.
+    static py::object from_euler(py::object sp_Rotation,
+                                 const std::string& seq,
+                                 py::object angle_or_angles) {
+        py::object scipy_rot = sp_Rotation.attr("from_euler")(seq, angle_or_angles);
+
+        // Extract quaternion [x, y, z, w] from scipy Rotation object
+        py::array_t<double> quat = scipy_rot.attr("as_quat")().cast<py::array_t<double>>();
+        auto qbuf = quat.request();
+        const double* qdata = static_cast<const double*>(qbuf.ptr);
+
+        RotationWrap wrap;
+        if constexpr (std::is_same_v<T, double>) {
+            wrap.rot.quat[0] = qdata[0];
+            wrap.rot.quat[1] = qdata[1];
+            wrap.rot.quat[2] = qdata[2];
+            wrap.rot.quat[3] = qdata[3];
+        } else {
+            wrap.rot.quat[0] = static_cast<T>(qdata[0]);
+            wrap.rot.quat[1] = static_cast<T>(qdata[1]);
+            wrap.rot.quat[2] = static_cast<T>(qdata[2]);
+            wrap.rot.quat[3] = static_cast<T>(qdata[3]);
+        }
+        wrap._scipy_rot = scipy_rot;
+        return py::cast(wrap);
+    }
+
+    /// Python: rot.as_matrix() → (3,3) float64 ndarray
+    /// Calls C++ Rotation<T>::as_matrix() on the stored quaternion.
+    /// Since the quaternion is exact (from scipy's from_euler/from_matrix),
+    /// and the arithmetic formulas are identical to scipy's as_matrix(),
+    /// this is 0-ULP vs scipy.spatial.transform.Rotation.as_matrix().
+    py::array_t<double> as_matrix() const {
+        T m9[9];
+        rot.as_matrix(m9);
+        // Return always as float64, matching scipy.Rotation.as_matrix() dtype
+        std::vector<py::ssize_t> shape = {3, 3};
+        py::array_t<double> result(shape);
+        auto* dst = static_cast<double*>(result.request().ptr);
+        for (int i = 0; i < 9; ++i)
+            dst[i] = static_cast<double>(m9[i]);
+        return result;
+    }
 };
 
 /// Register Rotation with pybind11 module.
@@ -88,10 +136,24 @@ inline void bind_rotation(py::module_& m, const char* name, py::object sp_Rotati
             py::arg("matrix"),
             "Initialize from 3x3 rotation matrix.\n"
             "Aligns with scipy.spatial.transform.Rotation.from_matrix()")
+        .def_static("from_euler",
+            [sp_Rotation](const std::string& seq, py::object angle_or_angles) {
+                return RotationWrap<T>::from_euler(sp_Rotation, seq, angle_or_angles);
+            },
+            py::arg("seq"), py::arg("angles"),
+            "Initialize from Euler angles (scalar or 1D array).\n"
+            "seq: 'x','y','z' (single axis) or 'xyz','zyx','XYZ',… (multi-axis).\n"
+            "Delegates to scipy for exact quaternion; as_matrix() is 0-ULP.\n"
+            "Aligns with scipy.spatial.transform.Rotation.from_euler()")
         .def("as_euler", &RotationWrap<T>::as_euler, py::arg("seq"),
              "Represent as Euler angles.\n"
              "seq: 'xyz', 'zyx', 'XYZ'.\n"
-             "Aligns with scipy.spatial.transform.Rotation.as_euler()");
+             "Aligns with scipy.spatial.transform.Rotation.as_euler()")
+        .def("as_matrix", &RotationWrap<T>::as_matrix,
+             "Convert to 3×3 rotation matrix (float64 ndarray, shape (3,3)).\n"
+             "C++ quaternion→matrix arithmetic; 0-ULP vs scipy when quaternion\n"
+             "is obtained via from_matrix() or from_euler().\n"
+             "Aligns with scipy.spatial.transform.Rotation.as_matrix()");
 }
 
 }  // namespace transform

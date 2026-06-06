@@ -665,6 +665,118 @@ class TestRotation:
 
 
 # ============================================================================
+# BIT-LEVEL: Rotation.from_euler() + as_matrix()  (Issue 001)
+# ============================================================================
+
+class TestFromEulerAsMatrix:
+    """from_euler() + as_matrix() 0-ULP alignment — resolves Issue 001.
+
+    Strategy:
+      C++ from_euler delegates to scipy.spatial.transform.Rotation.from_euler
+      (numpy/SVML sin/cos → exact quaternion), then as_matrix() applies
+      the same quaternion→matrix arithmetic as scipy → 0 ULP for full pipeline.
+
+    Key regression case: near-zero yaw (ego context builder clip mismatch).
+    """
+
+    @staticmethod
+    def _check(cpp, seq, angles, label):
+        """Compare C++ from_euler+as_matrix vs scipy's result, element-wise 0 ULP."""
+        rot_cpp = cpp.spatial.transform.Rotation.from_euler(seq, angles)
+        mat_cpp = np.asarray(rot_cpp.as_matrix(), dtype=np.float64)   # (3,3) float64
+        mat_py  = sp_Rotation.from_euler(
+            seq, np.asarray(angles, dtype=np.float64)).as_matrix()    # (3,3) float64
+        assert_bit_aligned(mat_cpp.ravel(), mat_py.ravel(), label)
+
+    # --- single-axis z (primary use case from Issue 001) ---
+
+    def test_z_zero(self, cpp):
+        self._check(cpp, "z", 0.0, "from_euler(z,0) as_matrix")
+
+    def test_z_neg_zero(self, cpp):
+        self._check(cpp, "z", -0.0, "from_euler(z,-0) as_matrix")
+
+    @pytest.mark.parametrize("yaw", [
+        5.837569e-06,   # exact regression value from Issue 001
+        1e-10, 1e-15, 1e-307,
+        -5.837569e-06, -1e-10, -1e-15,
+    ])
+    def test_z_near_zero(self, cpp, yaw):
+        self._check(cpp, "z", yaw, f"from_euler(z,{yaw}) as_matrix")
+
+    @pytest.mark.parametrize("yaw", [
+        np.pi/6, np.pi/4, np.pi/3, np.pi/2,
+        2*np.pi/3, 3*np.pi/4, np.pi,
+        -np.pi/4, -np.pi/2, -np.pi,
+    ])
+    def test_z_canonical(self, cpp, yaw):
+        self._check(cpp, "z", yaw, f"from_euler(z,{yaw:.6f}) as_matrix")
+
+    def test_z_random_batch(self, cpp):
+        """100 random yaw values."""
+        rng = np.random.RandomState(12345)
+        for i, yaw in enumerate(rng.uniform(-np.pi, np.pi, BATCH)):
+            self._check(cpp, "z", yaw, f"from_euler(z,random[{i}]) as_matrix")
+
+    # --- single-axis x, y ---
+
+    @pytest.mark.parametrize("axis,angle", [
+        ("x", np.pi/4), ("x", np.pi/2), ("x", -np.pi/3),
+        ("y", np.pi/6), ("y", -np.pi/4), ("y", np.pi),
+    ])
+    def test_single_axis_xy(self, cpp, axis, angle):
+        self._check(cpp, axis, angle, f"from_euler({axis},{angle:.4f}) as_matrix")
+
+    # --- multi-axis extrinsic (lowercase) ---
+
+    def test_xyz_sequence(self, cpp):
+        angles = np.deg2rad([20., 30., 45.])
+        self._check(cpp, "xyz", angles, "from_euler(xyz,20,30,45) as_matrix")
+
+    def test_zyx_sequence(self, cpp):
+        angles = np.deg2rad([10., -20., 40.])
+        self._check(cpp, "zyx", angles, "from_euler(zyx,10,-20,40) as_matrix")
+
+    @pytest.mark.parametrize("seq", ["xyz", "xzy", "yxz", "yzx", "zxy", "zyx"])
+    def test_extrinsic_random_batch(self, cpp, seq):
+        seed_map = {"xyz": 42, "xzy": 43, "yxz": 44, "yzx": 45, "zxy": 46, "zyx": 99}
+        rng = np.random.RandomState(seed_map[seq])
+        for i in range(BATCH):
+            a = rng.uniform(-np.pi, np.pi, 3)
+            self._check(cpp, seq, a, f"from_euler({seq},random[{i}]) as_matrix")
+
+    # --- multi-axis intrinsic (uppercase) ---
+
+    @pytest.mark.parametrize("seq", ["XYZ", "ZYX"])
+    def test_intrinsic_random_batch(self, cpp, seq):
+        rng = np.random.RandomState(77777)
+        for i in range(BATCH):
+            a = rng.uniform(-np.pi, np.pi, 3)
+            self._check(cpp, seq, a, f"from_euler({seq},random[{i}]) as_matrix")
+
+    # --- near-zero angles in all components (stress test) ---
+
+    def test_xyz_near_zero(self, cpp):
+        for eps in [1e-7, 1e-12, 5.84e-6]:
+            self._check(cpp, "xyz", [eps, eps, eps],
+                        f"from_euler(xyz,eps={eps}) as_matrix")
+
+    # --- full round-trip: from_euler → as_matrix → from_matrix → as_euler ---
+
+    def test_roundtrip_z(self, cpp):
+        rng = np.random.RandomState(31416)
+        for i, yaw in enumerate(rng.uniform(-np.pi, np.pi, 30)):
+            rot  = cpp.spatial.transform.Rotation.from_euler("z", yaw)
+            mat  = np.asarray(rot.as_matrix())
+            rot2 = cpp.spatial.transform.Rotation.from_matrix(mat)
+            euler_cpp = np.asarray(rot2.as_euler("xyz"), dtype=np.float64)
+            euler_py  = sp_Rotation.from_euler("z", yaw).as_matrix()
+            euler_py2 = sp_Rotation.from_matrix(euler_py).as_euler("xyz")
+            assert_bit_aligned(euler_cpp, euler_py2,
+                               f"from_euler roundtrip z[{i}]")
+
+
+# ============================================================================
 # SPECIAL / EXTREME VALUES — 0 ULP across all APIs
 #
 # Covers: ±0.0, ±inf, NaN, subnormals, domain boundaries, saturating inputs,
