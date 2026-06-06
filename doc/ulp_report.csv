@@ -2224,8 +2224,6 @@ gaussian_filter1d,gaussian_filter1d sigma=0.1,float64,100,0,0,0,—,bit-identica
 gaussian_filter1d,gaussian_filter1d sigma=0.1,float32,100,0,0,0,—,bit-identical
 gaussian_filter1d,gaussian_filter1d sigma=50,float64,100,0,0,0,—,bit-identical
 gaussian_filter1d,gaussian_filter1d sigma=50,float32,100,0,0,0,—,bit-identical
-gaussian_filter1d,gaussian_filter1d large 1e100,float64,100,0,0,0,—,bit-identical
-gaussian_filter1d,gaussian_filter1d large 1e100,float32,100,0,0,0,—,bit-identical
 gaussian_filter1d,gaussian_filter1d constant mode=reflect,float64,100,0,0,0,—,bit-identical
 gaussian_filter1d,gaussian_filter1d constant mode=constant,float64,100,0,0,0,—,bit-identical
 gaussian_filter1d,gaussian_filter1d constant mode=nearest,float64,100,0,0,0,—,bit-identical
@@ -2236,6 +2234,110 @@ gaussian_filter1d,gaussian_filter1d constant mode=constant,float32,100,0,0,0,—
 gaussian_filter1d,gaussian_filter1d constant mode=nearest,float32,100,0,0,0,—,bit-identical
 gaussian_filter1d,gaussian_filter1d constant mode=mirror,float32,100,0,0,0,—,bit-identical
 gaussian_filter1d,gaussian_filter1d constant mode=wrap,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=reflect,float64,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=constant,float64,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=nearest,float64,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=mirror,float64,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=wrap,float64,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=reflect,float32,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=constant,float32,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=nearest,float32,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=mirror,float32,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=1 mode=wrap,float32,1,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=reflect,float64,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=constant,float64,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=nearest,float64,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=mirror,float64,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=wrap,float64,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=reflect,float32,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=constant,float32,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=nearest,float32,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=mirror,float32,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=2 mode=wrap,float32,2,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=reflect,float64,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=constant,float64,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=nearest,float64,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=mirror,float64,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=wrap,float64,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=reflect,float32,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=constant,float32,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=nearest,float32,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=mirror,float32,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d n=3 mode=wrap,float32,3,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=reflect,float64,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=constant,float64,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=nearest,float64,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=mirror,float64,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=wrap,float64,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=reflect,float32,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=constant,float32,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=nearest,float32,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=mirror,float32,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d half>>n mode=wrap,float32,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=reflect,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=constant,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=nearest,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=mirror,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=wrap,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=reflect,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=constant,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=nearest,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=mirror,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[0] mode=wrap,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=reflect,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=constant,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=nearest,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=mirror,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=wrap,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=reflect,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=constant,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=nearest,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=mirror,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d impulse[-1] mode=wrap,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d truncate=2.0,float64,30,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d truncate=3.0,float64,30,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d truncate=6.0,float64,30,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d truncate=2.0,float32,30,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d truncate=3.0,float32,30,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d truncate=6.0,float32,30,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d cval=0.0,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d cval=3.14159,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d cval=-1.5,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d cval=10000000000.0,float64,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d cval=0.0,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d cval=3.14159,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d cval=-1.5,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d cval=10000000000.0,float32,20,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d linear ramp,float64,50,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d linear ramp,float32,50,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d step function,float64,50,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d step function,float32,50,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d +inf middle,float64,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d +inf middle,float32,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d inf[0],float64,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d inf[-1],float64,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d inf[0],float32,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d inf[-1],float32,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d alternating ±inf,float64,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d alternating ±inf,float32,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d NaN[0],float64,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d NaN[2],float64,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d NaN[-1],float64,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d NaN[0],float32,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d NaN[2],float32,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d NaN[-1],float32,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d all-NaN,float64,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d all-NaN,float32,10,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f64 scale=1e+100,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f64 scale=1e+200,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f64 scale=2e+307,float64,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f64 subnormal,float64,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f64 min-normal,float64,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f32 scale=1e+20,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f32 scale=1e+30,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f32 near-max,float32,100,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f32 subnormal,float32,5,0,0,0,—,bit-identical
+gaussian_filter1d,gaussian_filter1d f32 min-normal,float32,5,0,0,0,—,bit-identical
 medfilt,medfilt all-same v=0.0 k=3,float64,20,0,0,0,—,bit-identical
 medfilt,medfilt all-same v=0.0 k=5,float64,20,0,0,0,—,bit-identical
 medfilt,medfilt all-same v=0.0 k=7,float64,20,0,0,0,—,bit-identical

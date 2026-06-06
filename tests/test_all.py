@@ -1023,71 +1023,266 @@ class TestSpecialValuesKDTree:
 
 
 class TestSpecialValuesGaussianFilter1d:
-    """Special / extreme values for ndimage.gaussian_filter1d."""
+    """Extensive edge-case and extreme-value tests for ndimage.gaussian_filter1d.
+
+    Bug discovered (and fixed): n=1 + mode='mirror' caused SIGFPE (integer
+    divide-by-zero) in bnd() because period p = 2*n-2 = 0.  A guard
+    `if (n <= 1) return src[0]` was added to ndimage.h.
+    """
 
     @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
     def dtype(self, request): return request.param
 
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _g(cpp, a, sigma=1.5, mode="reflect", cval=0.0, truncate=4.0):
+        return np.asarray(cpp.ndimage.gaussian_filter1d(
+            a, sigma=sigma, mode=mode, cval=cval, truncate=truncate))
+
+    @staticmethod
+    def _s(cpp, a, sigma=1.5, mode="reflect", cval=0.0, truncate=4.0):
+        return sp_ndimage.gaussian_filter1d(
+            a, sigma=sigma, mode=mode, cval=cval, truncate=truncate)
+
+    # ------------------------------------------------------------------
+    # Existing baseline tests (kept)
+    # ------------------------------------------------------------------
     def test_all_zeros(self, cpp, dtype):
-        """All-zero input → all-zero output."""
         a = np.zeros(BATCH, dtype=dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5)),
-            sp_ndimage.gaussian_filter1d(a, sigma=1.5),
-            _s("gaussian_filter1d zeros", dtype))
+        assert_bit_aligned(self._g(cpp, a), self._s(cpp, a),
+                           _s("gaussian_filter1d zeros", dtype))
 
     def test_constant_signal(self, cpp, dtype):
-        """Constant signal → same constant output (convolution with sum=1 kernel)."""
         a = np.full(BATCH, 2.71828, dtype=dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=2.0)),
-            sp_ndimage.gaussian_filter1d(a, sigma=2.0),
-            _s("gaussian_filter1d constant", dtype))
+        assert_bit_aligned(self._g(cpp, a, sigma=2.0), self._s(cpp, a, sigma=2.0),
+                           _s("gaussian_filter1d constant", dtype))
 
-    def test_single_impulse(self, cpp, dtype):
-        """Single spike in the center — tests exact Gaussian kernel shape."""
-        a = np.zeros(BATCH, dtype=dtype)
-        a[BATCH // 2] = 1.0
+    def test_single_impulse_center(self, cpp, dtype):
+        """Single spike in the center — exact Gaussian kernel shape."""
+        a = np.zeros(BATCH, dtype=dtype); a[BATCH // 2] = 1.0
         for sigma in [0.5, 1.0, 2.0, 4.0]:
             assert_bit_aligned(
-                np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=sigma)),
-                sp_ndimage.gaussian_filter1d(a, sigma=sigma),
+                self._g(cpp, a, sigma=sigma), self._s(cpp, a, sigma=sigma),
                 _s(f"gaussian_filter1d impulse sigma={sigma}", dtype))
 
     def test_very_small_sigma(self, cpp, dtype):
-        """sigma → 0: kernel approaches delta function."""
         a = random_batch((BATCH,), dtype=dtype, seed=9040)
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=0.1)),
-            sp_ndimage.gaussian_filter1d(a, sigma=0.1),
-            _s("gaussian_filter1d sigma=0.1", dtype))
+        assert_bit_aligned(self._g(cpp, a, sigma=0.1), self._s(cpp, a, sigma=0.1),
+                           _s("gaussian_filter1d sigma=0.1", dtype))
 
     def test_very_large_sigma(self, cpp, dtype):
-        """sigma >> n: kernel covers entire array."""
         a = random_batch((BATCH,), dtype=dtype, seed=9041)
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=50.0)),
-            sp_ndimage.gaussian_filter1d(a, sigma=50.0),
-            _s("gaussian_filter1d sigma=50", dtype))
-
-    def test_large_values(self, cpp, dtype):
-        """Very large input values — check overflow safety."""
-        rng = np.random.RandomState(9042)
-        a = (rng.randn(BATCH) * 1e100).astype(dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
-            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
-            _s("gaussian_filter1d large 1e100", dtype))
+        assert_bit_aligned(self._g(cpp, a, sigma=50.0), self._s(cpp, a, sigma=50.0),
+                           _s("gaussian_filter1d sigma=50", dtype))
 
     def test_all_modes_constant_input(self, cpp, dtype):
-        """All 5 boundary modes with constant input (result should equal input)."""
         a = np.full(BATCH, 5.0, dtype=dtype)
         for mode in ["reflect", "constant", "nearest", "mirror", "wrap"]:
             assert_bit_aligned(
-                np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5, mode=mode)),
-                np.asarray(sp_ndimage.gaussian_filter1d(a, sigma=1.5, mode=mode),
-                           dtype=np.float64),
+                self._g(cpp, a, mode=mode),
+                np.asarray(self._s(cpp, a, mode=mode), dtype=np.float64),
                 _s(f"gaussian_filter1d constant mode={mode}", dtype))
+
+    # ------------------------------------------------------------------
+    # Tiny array sizes: n=1, n=2, n=3
+    # ------------------------------------------------------------------
+    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
+    def test_n1_all_modes(self, cpp, dtype, mode):
+        """n=1: fixed SIGFPE bug for mirror (p=2*n-2=0 → modulo-by-zero)."""
+        a = np.array([dtype(3.14)], dtype=dtype)
+        assert_bit_aligned(
+            self._g(cpp, a, sigma=1.0, mode=mode),
+            self._s(cpp, a, sigma=1.0, mode=mode),
+            _s(f"gaussian_filter1d n=1 mode={mode}", dtype))
+
+    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
+    def test_n2_all_modes(self, cpp, dtype, mode):
+        """n=2: smallest non-trivial array for all boundary modes."""
+        a = np.array([dtype(1.0), dtype(2.0)], dtype=dtype)
+        assert_bit_aligned(
+            self._g(cpp, a, sigma=1.0, mode=mode),
+            self._s(cpp, a, sigma=1.0, mode=mode),
+            _s(f"gaussian_filter1d n=2 mode={mode}", dtype))
+
+    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
+    def test_n3_all_modes(self, cpp, dtype, mode):
+        """n=3: mirror period=4, reflect period=6 — boundary wraps test."""
+        a = np.array([dtype(1.0), dtype(3.0), dtype(2.0)], dtype=dtype)
+        assert_bit_aligned(
+            self._g(cpp, a, sigma=1.0, mode=mode),
+            self._s(cpp, a, sigma=1.0, mode=mode),
+            _s(f"gaussian_filter1d n=3 mode={mode}", dtype))
+
+    # ------------------------------------------------------------------
+    # Kernel larger than array (half = ceil(truncate*sigma) >> n)
+    # ------------------------------------------------------------------
+    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
+    def test_kernel_larger_than_array(self, cpp, dtype, mode):
+        """sigma=20 n=5: kernel half=80, boundary extension ≫ array length."""
+        a = np.arange(5, dtype=dtype) + dtype(1)
+        assert_bit_aligned(
+            self._g(cpp, a, sigma=20.0, mode=mode),
+            self._s(cpp, a, sigma=20.0, mode=mode),
+            _s(f"gaussian_filter1d half>>n mode={mode}", dtype))
+
+    # ------------------------------------------------------------------
+    # Impulse at array boundaries (not just center)
+    # ------------------------------------------------------------------
+    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
+    def test_impulse_at_left_boundary(self, cpp, dtype, mode):
+        """Impulse at index 0 — tests left boundary extension for all modes."""
+        a = np.zeros(20, dtype=dtype); a[0] = dtype(1.0)
+        assert_bit_aligned(
+            self._g(cpp, a, sigma=2.0, mode=mode),
+            self._s(cpp, a, sigma=2.0, mode=mode),
+            _s(f"gaussian_filter1d impulse[0] mode={mode}", dtype))
+
+    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
+    def test_impulse_at_right_boundary(self, cpp, dtype, mode):
+        """Impulse at index n-1 — tests right boundary extension for all modes."""
+        a = np.zeros(20, dtype=dtype); a[-1] = dtype(1.0)
+        assert_bit_aligned(
+            self._g(cpp, a, sigma=2.0, mode=mode),
+            self._s(cpp, a, sigma=2.0, mode=mode),
+            _s(f"gaussian_filter1d impulse[-1] mode={mode}", dtype))
+
+    # ------------------------------------------------------------------
+    # Non-default truncate and cval
+    # ------------------------------------------------------------------
+    @pytest.mark.parametrize("truncate", [2.0, 3.0, 6.0])
+    def test_non_default_truncate(self, cpp, dtype, truncate):
+        """Different truncate values change kernel half-width."""
+        a = random_batch((30,), dtype=dtype, seed=9043)
+        assert_bit_aligned(
+            self._g(cpp, a, sigma=1.5, truncate=truncate),
+            self._s(cpp, a, sigma=1.5, truncate=truncate),
+            _s(f"gaussian_filter1d truncate={truncate}", dtype))
+
+    @pytest.mark.parametrize("cval", [0.0, 3.14159, -1.5, 1e10])
+    def test_non_default_cval(self, cpp, dtype, cval):
+        """Non-zero cval in constant mode changes boundary fill."""
+        a = random_batch((20,), dtype=dtype, seed=9044)
+        assert_bit_aligned(
+            self._g(cpp, a, sigma=1.5, mode="constant", cval=dtype(cval)),
+            self._s(cpp, a, sigma=1.5, mode="constant", cval=dtype(cval)),
+            _s(f"gaussian_filter1d cval={cval}", dtype))
+
+    # ------------------------------------------------------------------
+    # Smooth signal shapes
+    # ------------------------------------------------------------------
+    def test_linear_ramp(self, cpp, dtype):
+        a = np.arange(50, dtype=dtype)
+        assert_bit_aligned(self._g(cpp, a, sigma=2.0), self._s(cpp, a, sigma=2.0),
+                           _s("gaussian_filter1d linear ramp", dtype))
+
+    def test_step_function(self, cpp, dtype):
+        a = np.r_[np.zeros(25, dtype=dtype), np.ones(25, dtype=dtype)]
+        assert_bit_aligned(self._g(cpp, a, sigma=2.0), self._s(cpp, a, sigma=2.0),
+                           _s("gaussian_filter1d step function", dtype))
+
+    # ------------------------------------------------------------------
+    # ±inf propagation
+    # ------------------------------------------------------------------
+    def test_single_inf_middle(self, cpp, dtype):
+        a = np.array([0, 0, 1, 0, 0], dtype=dtype); a[2] = dtype(np.inf)
+        assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
+                           _s("gaussian_filter1d +inf middle", dtype))
+
+    def test_inf_at_boundaries(self, cpp, dtype):
+        for pos in [0, -1]:
+            a = np.ones(10, dtype=dtype); a[pos] = dtype(np.inf)
+            assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
+                               _s(f"gaussian_filter1d inf[{pos}]", dtype))
+
+    def test_alternating_inf(self, cpp, dtype):
+        """±inf alternating → NaN everywhere (inf - inf)."""
+        a = np.array([np.inf, -np.inf] * 5, dtype=dtype)
+        assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
+                           _s("gaussian_filter1d alternating ±inf", dtype))
+
+    # ------------------------------------------------------------------
+    # NaN propagation
+    # ------------------------------------------------------------------
+    def test_nan_propagation(self, cpp, dtype):
+        for pos in [0, 2, -1]:
+            a = np.ones(10, dtype=dtype); a[pos] = dtype(np.nan)
+            assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
+                               _s(f"gaussian_filter1d NaN[{pos}]", dtype))
+
+    def test_all_nan(self, cpp, dtype):
+        a = np.full(10, np.nan, dtype=dtype)
+        assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
+                           _s("gaussian_filter1d all-NaN", dtype))
+
+    # ------------------------------------------------------------------
+    # Extreme magnitudes — float64
+    # ------------------------------------------------------------------
+    @pytest.mark.parametrize("scale", [1e100, 1e200, 2e307])
+    def test_f64_large_magnitude(self, cpp, scale):
+        """float64 values up to near float64 max (~1.8e308)."""
+        a = (np.random.RandomState(9050).randn(BATCH) * scale).astype(np.float64)
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5)),
+            sp_ndimage.gaussian_filter1d(a, sigma=1.5),
+            f"gaussian_filter1d f64 scale={scale:.0e} [float64]")
+
+    def test_f64_subnormal(self, cpp):
+        """float64 subnormal values (~5e-324) — underflow to zero after convolution."""
+        a = np.array([5e-324, 0.0, 5e-324, 0.0, 5e-324])
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
+            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
+            "gaussian_filter1d f64 subnormal [float64]")
+
+    def test_f64_min_normal(self, cpp):
+        """float64 minimum normal (~2.2e-308) — subnormal outputs expected."""
+        ftiny = np.finfo(np.float64).tiny
+        a = np.array([ftiny, -ftiny, ftiny, -ftiny, ftiny])
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
+            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
+            "gaussian_filter1d f64 min-normal [float64]")
+
+    # ------------------------------------------------------------------
+    # Extreme magnitudes — float32
+    # ------------------------------------------------------------------
+    @pytest.mark.parametrize("scale", [1e20, 1e30])
+    def test_f32_large_magnitude(self, cpp, scale):
+        """float32 values up to ~1e30 (well below float32 max 3.4e38)."""
+        a = (np.random.RandomState(9051).randn(BATCH) * scale).astype(np.float32)
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5)),
+            sp_ndimage.gaussian_filter1d(a, sigma=1.5),
+            f"gaussian_filter1d f32 scale={scale:.0e} [float32]")
+
+    def test_f32_near_max(self, cpp):
+        """float32 values near float32 max (~3.4e38)."""
+        fmax = np.finfo(np.float32).max
+        a = np.full(BATCH, np.float32(fmax * 0.9))
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5)),
+            sp_ndimage.gaussian_filter1d(a, sigma=1.5),
+            "gaussian_filter1d f32 near-max [float32]")
+
+    def test_f32_subnormal(self, cpp):
+        """float32 subnormal values (~1.4e-45)."""
+        fsub = np.float32(1.4e-45)
+        a = np.array([fsub, np.float32(0), fsub, np.float32(0), fsub])
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
+            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
+            "gaussian_filter1d f32 subnormal [float32]")
+
+    def test_f32_min_normal(self, cpp):
+        """float32 minimum normal (~1.18e-38)."""
+        ftiny = np.finfo(np.float32).tiny
+        a = np.array([ftiny, -ftiny, ftiny, -ftiny, ftiny])
+        assert_bit_aligned(
+            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
+            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
+            "gaussian_filter1d f32 min-normal [float32]")
 
 
 class TestSpecialValuesMedfilt:

@@ -93,7 +93,9 @@ inline void gaussian_filter1d(const T* src, T* dst, size_t n,
             case 2:  // nearest
                 return (idx < 0) ? src[0] : src[n - 1];
             case 3: {  // mirror (d c b | a b c d | c b a)
-                // period = 2*n - 2, first/last elements appear once
+                // period = 2*n - 2, first/last elements appear once.
+                // Guard: n==1 → period=0, modulo undefined; only element is src[0].
+                if (n <= 1) return src[0];
                 ptrdiff_t p = static_cast<ptrdiff_t>(2 * n - 2);
                 ptrdiff_t r = idx % p;
                 if (r < 0) r += p;
@@ -179,6 +181,7 @@ inline void gaussian_filter_correlate(const T* src, T* dst, size_t n,
             case 2:  // nearest
                 return (idx < 0) ? src[0] : src[n - 1];
             case 3: {  // mirror
+                if (n <= 1) return src[0];  // guard: period = 2*n-2 = 0 when n=1
                 ptrdiff_t p = static_cast<ptrdiff_t>(2 * n - 2);
                 ptrdiff_t r = idx % p;
                 if (r < 0) r += p;
