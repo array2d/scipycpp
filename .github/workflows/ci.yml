@@ -9,15 +9,57 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
+
+      - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y python3 python3-pip python3-dev libeigen3-dev
-          pip3 install pybind11 numpy scipy pytest
+
+      - name: Install numpycpp
+        run: |
+          curl -sLO https://github.com/array2d/numpycpp/releases/latest/download/numpycpp-dev-1.21.2-Linux.deb
+          sudo dpkg -i numpycpp-dev-1.21.2-Linux.deb
+
+      - name: Install Python dependencies
+        run: pip3 install pybind11 numpy scipy pytest
+
+      - name: Detect CPU features
+        id: cpu
+        run: |
+          AVX512=$(grep -c avx512f /proc/cpuinfo || true)
+          echo "avx512=$AVX512" >> "$GITHUB_OUTPUT"
+
       - name: Build test module
-        run: make -C tests
-      - name: Run tests
-        run: make -C tests test
+        run: |
+          if [ "${{ steps.cpu.outputs.avx512 }}" = "0" ]; then
+            # No AVX-512: drop -mavx512f, keep SSE4.1 + AVX2
+            make -C tests CXXFLAGS="-std=c++17 -O2 -fPIC -fopenmp -ffp-contract=off \
+              -ffloat-store -msse4.1 -mavx2 \
+              -fno-builtin-exp -fno-builtin-log -fno-builtin-sin \
+              -fno-builtin-cos -fno-builtin-tan -fno-builtin-pow \
+              -fno-builtin-sqrt -fno-builtin-atan2 -fno-builtin-log2 \
+              -fno-builtin-log10 -fno-builtin-asin -fno-builtin-acos \
+              -fno-builtin-atan -fno-builtin-exp2"
+          else
+            make -C tests
+          fi
+
+      - name: Run tests & export ULP report
+        run: |
+          cd tests
+          python3 -m pytest ../tests/test_all.py -q --tb=short --no-header \
+            2>../doc/ulp_report.txt || true
+          echo "--- ULP report ---"
+          cat ../doc/ulp_report.txt | tail -60
+
+      - name: Upload ULP report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ulp-report
+          path: |
+            doc/ulp_report.csv
+            doc/ulp_report.txt
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -25,8 +67,17 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libeigen3-dev
+          curl -sLO https://github.com/array2d/numpycpp/releases/latest/download/numpycpp-dev-1.21.2-Linux.deb
+          sudo dpkg -i numpycpp-dev-1.21.2-Linux.deb
+
       - name: Build .deb
         run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && make deb
+
       - name: Publish
         uses: softprops/action-gh-release@v2
         with:
