@@ -22,25 +22,6 @@
 namespace scipy::stats {
 
 // ============================================================================
-// Scalar numpy bridge helpers — call numpy::array funcs for single values.
-//   numpy::exp/log/sqrt are in the public numpy:: namespace (core.h).
-//   Calling them with n=1 dispatches through the bridge to npy_*/SVML,
-//   matching scipy's own math path bit-for-bit.
-//   NOTE: NOT in anonymous namespace — header-only inline templates need
-//   external linkage to avoid "used but never defined" warnings.
-// ============================================================================
-namespace detail {
-    template<typename T>
-    inline T np_exp(T x) { T r; numpy::exp(&x, &r, 1); return r; }
-    template<typename T>
-    inline T np_log(T x) { T r; numpy::log(&x, &r, 1); return r; }
-    template<typename T>
-    inline T np_sqrt(T x) { T r; numpy::sqrt(&x, &r, 1); return r; }
-    template<typename T>
-    inline T np_asin(T x) { T r; numpy::arcsin(&x, &r, 1); return r; }
-}  // namespace detail (scipy::stats::detail, NOT numpy::detail)
-
-// ============================================================================
 // Loop unrolling
 // ============================================================================
 
