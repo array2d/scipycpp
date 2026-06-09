@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <string>
 #include <algorithm>
-#include "numpy/numpy.h"
+#include "numpycpp/numpy.h"
 
 namespace scipy {
 namespace spatial {

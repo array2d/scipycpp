@@ -7,7 +7,7 @@
 #include <cmath>
 #include <vector>
 #include <cstddef>
-#include "numpy/numpy.h"
+#include "numpycpp/numpy.h"
 
 namespace scipy {
 namespace ndimage {

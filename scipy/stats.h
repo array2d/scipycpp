@@ -17,7 +17,7 @@
 #include <cstddef>
 #include <limits>
 #include <vector>
-#include "numpy/numpy.h"
+#include "numpycpp/numpy.h"
 
 namespace scipy::stats {
 
