@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <utility>
 #include <limits>
-#include "numpy/core.h"
+#include "numpy/numpy.h"
 #include "ckdtree/ckdtree.hpp"
 
 namespace scipy {

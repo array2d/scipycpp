@@ -17,7 +17,7 @@
 #include <cstddef>
 #include <limits>
 #include <vector>
-#include "numpy/core.h"
+#include "numpy/numpy.h"
 
 namespace scipy::stats {
 
@@ -38,8 +38,6 @@ namespace detail {
     inline T np_sqrt(T x) { T r; numpy::sqrt(&x, &r, 1); return r; }
     template<typename T>
     inline T np_asin(T x) { T r; numpy::arcsin(&x, &r, 1); return r; }
-    template<typename T>
-    inline T np_atan2(T y, T x) { T r; numpy::arctan2_scalar(&y, &r, 1, x); return r; }
 }  // namespace detail (scipy::stats::detail, NOT numpy::detail)
 
 // ============================================================================
