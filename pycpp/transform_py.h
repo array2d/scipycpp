@@ -51,6 +51,16 @@ struct RotationWrap {
             wrap.rot.quat[2] = static_cast<T>(qdata[2]);
             wrap.rot.quat[3] = static_cast<T>(qdata[3]);
         }
+
+        // Store the original matrix in the C++ Rotation object — avoids
+        // quaternion roundtrip ULP-error when as_euler()/as_matrix() are
+        // called on the C++ side (e.g., RotationWrap::as_matrix()).
+        auto mbuf = matrix.request();
+        const double* mdata = static_cast<const double*>(mbuf.ptr);
+        wrap.rot.has_matrix = true;
+        for (int i = 0; i < 9; ++i)
+            wrap.rot.matrix[i] = static_cast<T>(mdata[i]);
+
         wrap._scipy_rot = scipy_rot;
         return py::cast(wrap);
     }

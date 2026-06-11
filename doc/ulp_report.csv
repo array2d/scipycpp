@@ -102,216 +102,216 @@ solve,solve 2x2,float64,2,0,0,0,—,bit-identical
 solve,solve 2x2,float32,2,0,0,0,—,bit-identical
 solve,solve identity,float64,3,0,0,0,—,bit-identical
 solve,solve identity,float32,3,0,0,0,—,bit-identical
-solve,solve batch[0] n=5,float64,5,5,16,atol=1e-14,2×1ULP 2×2ULP 1×16ULP,within atol=1e-14
-solve,solve batch[1] n=7,float64,7,7,7,atol=1e-14,1×3ULP 1×4ULP 1×5ULP 3×6ULP 1×7ULP,within atol=1e-14
-solve,solve batch[2] n=6,float64,6,4,6,atol=1e-14,1×2ULP 2×3ULP 1×6ULP,within atol=1e-14
-solve,solve batch[3] n=5,float64,5,5,15,atol=1e-14,1×1ULP 2×2ULP 1×8ULP 1×15ULP,within atol=1e-14
-solve,solve batch[4] n=4,float64,4,3,7,atol=1e-14,2×2ULP 1×7ULP,within atol=1e-14
-solve,solve batch[5] n=4,float64,4,3,5,atol=1e-14,1×1ULP 1×2ULP 1×5ULP,within atol=1e-14
-solve,solve batch[6] n=5,float64,5,5,5,atol=1e-14,1×3ULP 3×4ULP 1×5ULP,within atol=1e-14
-solve,solve batch[7] n=6,float64,6,6,15,atol=1e-14,2×10ULP 2×13ULP 1×14ULP 1×15ULP,within atol=1e-14
-solve,solve batch[8] n=7,float64,7,6,10,atol=1e-14,2×1ULP 2×2ULP 1×3ULP 1×10ULP,within atol=1e-14
-solve,solve batch[9] n=4,float64,4,3,2,atol=1e-14,2×1ULP 1×2ULP,within atol=1e-14
-solve,solve batch[10] n=4,float64,4,2,1,atol=1e-14,2×1ULP,within atol=1e-14
-solve,solve batch[11] n=4,float64,4,4,40,atol=1e-14,1×26ULP 1×28ULP 1×29ULP 1×40ULP,within atol=1e-14
-solve,solve batch[12] n=5,float64,5,5,9,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×5ULP 1×9ULP,within atol=1e-14
-solve,solve batch[13] n=6,float64,6,4,39,atol=1e-14,1×1ULP 2×2ULP 1×39ULP,within atol=1e-14
-solve,solve batch[14] n=5,float64,5,4,22,atol=1e-14,1×2ULP 2×3ULP 1×22ULP,within atol=1e-14
-solve,solve batch[15] n=6,float64,6,5,514,atol=1e-14,4×1ULP 1×514ULP,within atol=1e-14
-solve,solve batch[16] n=6,float64,6,6,7,atol=1e-14,4×3ULP 1×4ULP 1×7ULP,within atol=1e-14
-solve,solve batch[17] n=5,float64,5,5,36,atol=1e-14,1×1ULP 1×2ULP 1×7ULP 1×24ULP 1×36ULP,within atol=1e-14
-solve,solve batch[18] n=4,float64,4,2,1,atol=1e-14,2×1ULP,within atol=1e-14
-solve,solve batch[19] n=7,float64,7,4,4,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×4ULP,within atol=1e-14
-solve,solve batch[20] n=7,float64,7,7,53,atol=1e-14,4×1ULP 1×4ULP 1×11ULP 1×53ULP,within atol=1e-14
-solve,solve batch[21] n=4,float64,4,4,2,atol=1e-14,2×1ULP 2×2ULP,within atol=1e-14
-solve,solve batch[22] n=5,float64,5,3,29,atol=1e-14,1×2ULP 1×6ULP 1×29ULP,within atol=1e-14
-solve,solve batch[23] n=6,float64,6,4,11,atol=1e-14,1×2ULP 1×4ULP 1×8ULP 1×11ULP,within atol=1e-14
-solve,solve batch[24] n=6,float64,6,5,7,atol=1e-14,2×1ULP 2×2ULP 1×7ULP,within atol=1e-14
-solve,solve batch[25] n=8,float64,8,8,20,atol=1e-14,4×2ULP 1×3ULP 1×4ULP 1×9ULP 1×20ULP,within atol=1e-14
-solve,solve batch[26] n=8,float64,8,6,4,atol=1e-14,1×1ULP 3×2ULP 2×4ULP,within atol=1e-14
-solve,solve batch[27] n=8,float64,8,8,5,atol=1e-14,3×1ULP 2×2ULP 1×3ULP 1×4ULP 1×5ULP,within atol=1e-14
-solve,solve batch[28] n=8,float64,8,5,7,atol=1e-14,3×1ULP 1×4ULP 1×7ULP,within atol=1e-14
-solve,solve batch[29] n=8,float64,8,8,38,atol=1e-14,1×1ULP 2×2ULP 1×3ULP 1×5ULP 1×7ULP 1×10ULP 1×38ULP,within atol=1e-14
-solve,solve batch[30] n=6,float64,6,5,3,atol=1e-14,3×1ULP 1×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[31] n=6,float64,6,5,3,atol=1e-14,1×1ULP 2×2ULP 2×3ULP,within atol=1e-14
-solve,solve batch[32] n=4,float64,4,2,1,atol=1e-14,2×1ULP,within atol=1e-14
-solve,solve batch[33] n=8,float64,8,7,10,atol=1e-14,1×2ULP 2×3ULP 2×4ULP 1×5ULP 1×10ULP,within atol=1e-14
-solve,solve batch[34] n=5,float64,5,3,28,atol=1e-14,1×2ULP 1×5ULP 1×28ULP,within atol=1e-14
-solve,solve batch[35] n=8,float64,8,8,40,atol=1e-14,1×4ULP 2×5ULP 2×6ULP 1×10ULP 1×17ULP 1×40ULP,within atol=1e-14
-solve,solve batch[36] n=7,float64,7,7,7,atol=1e-14,1×2ULP 1×3ULP 3×4ULP 1×6ULP 1×7ULP,within atol=1e-14
-solve,solve batch[37] n=8,float64,8,7,18,atol=1e-14,2×1ULP 1×2ULP 1×3ULP 1×4ULP 1×5ULP 1×18ULP,within atol=1e-14
-solve,solve batch[38] n=7,float64,7,7,174,atol=1e-14,1×6ULP 1×11ULP 1×13ULP 1×14ULP 1×15ULP 1×25ULP 1×174ULP,within atol=1e-14
-solve,solve batch[39] n=5,float64,5,5,9,atol=1e-14,2×4ULP 1×5ULP 1×6ULP 1×9ULP,within atol=1e-14
-solve,solve batch[40] n=7,float64,7,6,4,atol=1e-14,1×1ULP 2×2ULP 1×3ULP 2×4ULP,within atol=1e-14
-solve,solve batch[41] n=5,float64,5,4,5,atol=1e-14,1×1ULP 1×2ULP 1×4ULP 1×5ULP,within atol=1e-14
-solve,solve batch[42] n=8,float64,8,6,5,atol=1e-14,2×1ULP 2×2ULP 1×3ULP 1×5ULP,within atol=1e-14
-solve,solve batch[43] n=6,float64,6,6,10,atol=1e-14,1×2ULP 1×3ULP 2×4ULP 1×5ULP 1×10ULP,within atol=1e-14
-solve,solve batch[44] n=6,float64,6,5,5,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×4ULP 1×5ULP,within atol=1e-14
-solve,solve batch[45] n=7,float64,7,6,17,atol=1e-14,1×1ULP 2×2ULP 1×4ULP 1×8ULP 1×17ULP,within atol=1e-14
-solve,solve batch[46] n=4,float64,4,3,5,atol=1e-14,2×1ULP 1×5ULP,within atol=1e-14
-solve,solve batch[47] n=8,float64,8,7,16,atol=1e-14,2×2ULP 1×3ULP 1×4ULP 2×5ULP 1×16ULP,within atol=1e-14
-solve,solve batch[48] n=5,float64,5,5,3,atol=1e-14,1×1ULP 2×2ULP 2×3ULP,within atol=1e-14
-solve,solve batch[49] n=8,float64,8,8,34,atol=1e-14,1×1ULP 3×2ULP 1×3ULP 1×5ULP 1×7ULP 1×34ULP,within atol=1e-14
-solve,solve batch[50] n=8,float64,8,7,6,atol=1e-14,2×1ULP 1×2ULP 2×3ULP 1×4ULP 1×6ULP,within atol=1e-14
-solve,solve batch[51] n=4,float64,4,2,10,atol=1e-14,1×1ULP 1×10ULP,within atol=1e-14
-solve,solve batch[52] n=8,float64,8,7,13,atol=1e-14,1×3ULP 2×8ULP 1×9ULP 1×10ULP 2×13ULP,within atol=1e-14
-solve,solve batch[53] n=5,float64,5,5,10,atol=1e-14,1×4ULP 1×6ULP 1×7ULP 1×9ULP 1×10ULP,within atol=1e-14
-solve,solve batch[54] n=4,float64,4,4,4,atol=1e-14,2×1ULP 2×4ULP,within atol=1e-14
-solve,solve batch[55] n=8,float64,8,8,393,atol=1e-14,1×1ULP 1×3ULP 2×8ULP 1×12ULP 1×15ULP 1×48ULP 1×393ULP,within atol=1e-14
-solve,solve batch[56] n=7,float64,7,6,5,atol=1e-14,2×1ULP 2×2ULP 1×4ULP 1×5ULP,within atol=1e-14
-solve,solve batch[57] n=6,float64,6,6,13,atol=1e-14,1×3ULP 1×7ULP 1×8ULP 1×10ULP 2×13ULP,within atol=1e-14
-solve,solve batch[58] n=4,float64,4,2,2,atol=1e-14,1×1ULP 1×2ULP,within atol=1e-14
-solve,solve batch[59] n=8,float64,8,8,16,atol=1e-14,1×2ULP 2×3ULP 2×8ULP 1×9ULP 1×15ULP 1×16ULP,within atol=1e-14
-solve,solve batch[60] n=7,float64,7,7,23,atol=1e-14,1×1ULP 2×2ULP 2×3ULP 1×4ULP 1×23ULP,within atol=1e-14
-solve,solve batch[61] n=7,float64,7,6,11,atol=1e-14,2×1ULP 1×3ULP 1×5ULP 1×6ULP 1×11ULP,within atol=1e-14
-solve,solve batch[62] n=4,float64,4,4,40,atol=1e-14,1×2ULP 1×3ULP 1×8ULP 1×40ULP,within atol=1e-14
-solve,solve batch[63] n=8,float64,8,8,46,atol=1e-14,3×1ULP 1×2ULP 1×5ULP 1×9ULP 1×10ULP 1×46ULP,within atol=1e-14
-solve,solve batch[64] n=4,float64,4,4,12,atol=1e-14,1×2ULP 1×3ULP 1×7ULP 1×12ULP,within atol=1e-14
-solve,solve batch[65] n=7,float64,7,6,21,atol=1e-14,2×2ULP 1×4ULP 1×10ULP 1×11ULP 1×21ULP,within atol=1e-14
-solve,solve batch[66] n=4,float64,4,4,5,atol=1e-14,1×1ULP 2×2ULP 1×5ULP,within atol=1e-14
-solve,solve batch[67] n=5,float64,5,5,4,atol=1e-14,3×1ULP 1×2ULP 1×4ULP,within atol=1e-14
-solve,solve batch[68] n=7,float64,7,5,19,atol=1e-14,1×1ULP 2×2ULP 1×11ULP 1×19ULP,within atol=1e-14
-solve,solve batch[69] n=8,float64,8,7,3,atol=1e-14,1×1ULP 5×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[70] n=7,float64,7,7,26,atol=1e-14,3×1ULP 1×2ULP 1×7ULP 1×8ULP 1×26ULP,within atol=1e-14
-solve,solve batch[71] n=5,float64,5,4,3,atol=1e-14,2×1ULP 1×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[72] n=4,float64,4,2,2,atol=1e-14,1×1ULP 1×2ULP,within atol=1e-14
-solve,solve batch[73] n=6,float64,6,6,12,atol=1e-14,2×1ULP 1×2ULP 1×4ULP 1×6ULP 1×12ULP,within atol=1e-14
-solve,solve batch[74] n=6,float64,6,4,2,atol=1e-14,1×1ULP 3×2ULP,within atol=1e-14
-solve,solve batch[75] n=4,float64,4,2,2,atol=1e-14,2×2ULP,within atol=1e-14
-solve,solve batch[76] n=5,float64,5,3,112,atol=1e-14,1×1ULP 1×24ULP 1×112ULP,within atol=1e-14
-solve,solve batch[77] n=4,float64,4,4,5,atol=1e-14,3×1ULP 1×5ULP,within atol=1e-14
-solve,solve batch[78] n=7,float64,7,7,35,atol=1e-14,1×12ULP 1×19ULP 1×21ULP 1×23ULP 1×27ULP 1×30ULP 1×35ULP,within atol=1e-14
-solve,solve batch[79] n=5,float64,5,5,11,atol=1e-14,1×2ULP 1×3ULP 1×4ULP 1×7ULP 1×11ULP,within atol=1e-14
-solve,solve batch[80] n=8,float64,8,8,44,atol=1e-14,1×26ULP 1×27ULP 2×30ULP 1×32ULP 1×39ULP 1×43ULP 1×44ULP,within atol=1e-14
-solve,solve batch[81] n=4,float64,4,2,10,atol=1e-14,1×1ULP 1×10ULP,within atol=1e-14
-solve,solve batch[82] n=4,float64,4,4,3,atol=1e-14,1×1ULP 1×2ULP 2×3ULP,within atol=1e-14
-solve,solve batch[83] n=5,float64,5,5,4,atol=1e-14,1×2ULP 1×3ULP 3×4ULP,within atol=1e-14
-solve,solve batch[84] n=8,float64,8,6,14,atol=1e-14,1×2ULP 2×3ULP 1×4ULP 1×5ULP 1×14ULP,within atol=1e-14
-solve,solve batch[85] n=4,float64,4,3,3,atol=1e-14,2×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[86] n=8,float64,8,8,310,atol=1e-14,1×1ULP 2×2ULP 2×3ULP 1×4ULP 1×8ULP 1×310ULP,within atol=1e-14
-solve,solve batch[87] n=7,float64,7,6,6,atol=1e-14,4×1ULP 1×3ULP 1×6ULP,within atol=1e-14
-solve,solve batch[88] n=5,float64,5,0,0,atol=1e-14,—,bit-identical
-solve,solve batch[89] n=5,float64,5,4,8,atol=1e-14,3×1ULP 1×8ULP,within atol=1e-14
-solve,solve batch[90] n=8,float64,8,8,11,atol=1e-14,3×1ULP 1×2ULP 1×3ULP 1×8ULP 1×9ULP 1×11ULP,within atol=1e-14
-solve,solve batch[91] n=8,float64,8,6,4,atol=1e-14,2×1ULP 2×2ULP 1×3ULP 1×4ULP,within atol=1e-14
-solve,solve batch[92] n=6,float64,6,5,8,atol=1e-14,1×1ULP 1×2ULP 1×4ULP 1×5ULP 1×8ULP,within atol=1e-14
-solve,solve batch[93] n=6,float64,6,4,3,atol=1e-14,1×1ULP 2×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[94] n=6,float64,6,6,3,atol=1e-14,2×1ULP 3×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[95] n=5,float64,5,5,3,atol=1e-14,2×1ULP 2×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[96] n=6,float64,6,6,129,atol=1e-14,1×66ULP 1×73ULP 1×78ULP 1×114ULP 1×116ULP 1×129ULP,within atol=1e-14
-solve,solve batch[97] n=4,float64,4,4,8,atol=1e-14,1×3ULP 2×4ULP 1×8ULP,within atol=1e-14
-solve,solve batch[98] n=6,float64,6,6,8,atol=1e-14,2×1ULP 2×3ULP 2×8ULP,within atol=1e-14
-solve,solve batch[99] n=6,float64,6,6,82,atol=1e-14,1×54ULP 1×55ULP 2×57ULP 1×59ULP 1×82ULP,within atol=1e-14
-solve,solve batch[0] n=5,float32,5,3,34,atol=1e-14,2×1ULP 1×34ULP,within atol=1e-14
-solve,solve batch[1] n=7,float32,7,7,32,atol=1e-14,1×17ULP 1×21ULP 1×23ULP 1×28ULP 2×29ULP 1×32ULP,within atol=1e-14
-solve,solve batch[2] n=6,float32,6,3,13,atol=1e-14,1×2ULP 1×4ULP 1×13ULP,within atol=1e-14
-solve,solve batch[3] n=5,float32,5,5,29,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×8ULP 1×29ULP,within atol=1e-14
-solve,solve batch[4] n=4,float32,4,1,2,atol=1e-14,1×2ULP,within atol=1e-14
-solve,solve batch[5] n=4,float32,4,2,3,atol=1e-14,1×1ULP 1×3ULP,within atol=1e-14
-solve,solve batch[6] n=5,float32,5,5,2,atol=1e-14,1×1ULP 4×2ULP,within atol=1e-14
-solve,solve batch[7] n=6,float32,6,6,11,atol=1e-14,1×5ULP 2×6ULP 2×7ULP 1×11ULP,within atol=1e-14
-solve,solve batch[8] n=7,float32,7,7,11,atol=1e-14,2×1ULP 3×2ULP 1×3ULP 1×11ULP,within atol=1e-14
-solve,solve batch[9] n=4,float32,4,0,0,atol=1e-14,—,bit-identical
-solve,solve batch[10] n=4,float32,4,2,1,atol=1e-14,2×1ULP,within atol=1e-14
-solve,solve batch[11] n=4,float32,4,4,22,atol=1e-14,1×15ULP 1×16ULP 1×17ULP 1×22ULP,within atol=1e-14
-solve,solve batch[12] n=5,float32,5,5,11,atol=1e-14,2×1ULP 1×3ULP 1×6ULP 1×11ULP,within atol=1e-14
-solve,solve batch[13] n=6,float32,6,2,16,atol=1e-14,1×1ULP 1×16ULP,within atol=1e-14
-solve,solve batch[14] n=5,float32,5,3,10,atol=1e-14,2×1ULP 1×10ULP,within atol=1e-14
-solve,solve batch[15] n=6,float32,6,4,457,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 1×457ULP,within atol=1e-14
-solve,solve batch[16] n=6,float32,6,5,6,atol=1e-14,2×2ULP 2×4ULP 1×6ULP,within atol=1e-14
-solve,solve batch[17] n=5,float32,5,5,13,atol=1e-14,1×1ULP 1×2ULP 2×3ULP 1×13ULP,within atol=1e-14
-solve,solve batch[18] n=4,float32,4,0,0,atol=1e-14,—,bit-identical
-solve,solve batch[19] n=7,float32,7,5,22,atol=1e-14,2×2ULP 1×9ULP 1×10ULP 1×22ULP,within atol=1e-14
-solve,solve batch[20] n=7,float32,7,7,3,atol=1e-14,3×1ULP 3×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[21] n=4,float32,4,1,1,atol=1e-14,1×1ULP,within atol=1e-14
-solve,solve batch[22] n=5,float32,5,4,2,atol=1e-14,2×1ULP 2×2ULP,within atol=1e-14
-solve,solve batch[23] n=6,float32,6,6,33,atol=1e-14,3×1ULP 1×2ULP 1×6ULP 1×33ULP,within atol=1e-14
-solve,solve batch[24] n=6,float32,6,6,3,atol=1e-14,3×1ULP 2×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[25] n=8,float32,8,8,15,atol=1e-14,2×1ULP 1×3ULP 1×5ULP 1×7ULP 1×9ULP 1×10ULP 1×15ULP,within atol=1e-14
-solve,solve batch[26] n=8,float32,8,8,18,atol=1e-14,2×1ULP 1×2ULP 1×4ULP 1×5ULP 1×6ULP 1×7ULP 1×18ULP,within atol=1e-14
-solve,solve batch[27] n=8,float32,8,8,10,atol=1e-14,3×2ULP 1×3ULP 2×4ULP 1×5ULP 1×10ULP,within atol=1e-14
-solve,solve batch[28] n=8,float32,8,6,12,atol=1e-14,3×1ULP 1×2ULP 1×3ULP 1×12ULP,within atol=1e-14
-solve,solve batch[29] n=8,float32,8,4,131,atol=1e-14,1×1ULP 1×6ULP 1×11ULP 1×131ULP,within atol=1e-14
-solve,solve batch[30] n=6,float32,6,3,3,atol=1e-14,2×1ULP 1×3ULP,within atol=1e-14
-solve,solve batch[31] n=6,float32,6,4,3,atol=1e-14,1×1ULP 1×2ULP 2×3ULP,within atol=1e-14
-solve,solve batch[32] n=4,float32,4,4,2,atol=1e-14,3×1ULP 1×2ULP,within atol=1e-14
-solve,solve batch[33] n=8,float32,8,7,4,atol=1e-14,3×1ULP 2×2ULP 2×4ULP,within atol=1e-14
-solve,solve batch[34] n=5,float32,5,4,11,atol=1e-14,2×2ULP 1×4ULP 1×11ULP,within atol=1e-14
-solve,solve batch[35] n=8,float32,8,7,13,atol=1e-14,1×1ULP 3×2ULP 1×3ULP 1×4ULP 1×13ULP,within atol=1e-14
-solve,solve batch[36] n=7,float32,7,7,9,atol=1e-14,2×3ULP 2×5ULP 1×6ULP 1×7ULP 1×9ULP,within atol=1e-14
-solve,solve batch[37] n=8,float32,8,6,5,atol=1e-14,5×1ULP 1×5ULP,within atol=1e-14
-solve,solve batch[38] n=7,float32,7,7,642,atol=1e-14,1×4ULP 1×5ULP 1×6ULP 1×9ULP 1×21ULP 1×51ULP 1×642ULP,within atol=1e-14
-solve,solve batch[39] n=5,float32,5,5,33,atol=1e-14,2×11ULP 1×15ULP 1×24ULP 1×33ULP,within atol=1e-14
-solve,solve batch[40] n=7,float32,7,6,5,atol=1e-14,3×1ULP 2×2ULP 1×5ULP,within atol=1e-14
-solve,solve batch[41] n=5,float32,5,5,10,atol=1e-14,1×1ULP 1×2ULP 1×3ULP 2×10ULP,within atol=1e-14
-solve,solve batch[42] n=8,float32,8,6,5,atol=1e-14,2×1ULP 1×2ULP 1×3ULP 1×4ULP 1×5ULP,within atol=1e-14
-solve,solve batch[43] n=6,float32,6,6,42,atol=1e-14,1×1ULP 2×2ULP 1×4ULP 1×5ULP 1×42ULP,within atol=1e-14
-solve,solve batch[44] n=6,float32,6,5,2,atol=1e-14,2×1ULP 3×2ULP,within atol=1e-14
-solve,solve batch[45] n=7,float32,7,6,8,atol=1e-14,2×1ULP 3×3ULP 1×8ULP,within atol=1e-14
-solve,solve batch[46] n=4,float32,4,3,4,atol=1e-14,1×1ULP 1×2ULP 1×4ULP,within atol=1e-14
-solve,solve batch[47] n=8,float32,8,6,94,atol=1e-14,1×1ULP 1×4ULP 1×9ULP 1×12ULP 1×14ULP 1×94ULP,within atol=1e-14
-solve,solve batch[48] n=5,float32,5,5,6,atol=1e-14,1×1ULP 2×2ULP 1×4ULP 1×6ULP,within atol=1e-14
-solve,solve batch[49] n=8,float32,8,6,8,atol=1e-14,2×1ULP 2×2ULP 1×4ULP 1×8ULP,within atol=1e-14
-solve,solve batch[50] n=8,float32,8,7,35,atol=1e-14,1×1ULP 2×2ULP 2×4ULP 1×6ULP 1×35ULP,within atol=1e-14
-solve,solve batch[51] n=4,float32,4,3,10,atol=1e-14,1×1ULP 1×3ULP 1×10ULP,within atol=1e-14
-solve,solve batch[52] n=8,float32,8,7,16,atol=1e-14,2×2ULP 1×5ULP 1×7ULP 1×9ULP 1×13ULP 1×16ULP,within atol=1e-14
-solve,solve batch[53] n=5,float32,5,5,5,atol=1e-14,1×1ULP 2×2ULP 2×5ULP,within atol=1e-14
-solve,solve batch[54] n=4,float32,4,2,3,atol=1e-14,1×1ULP 1×3ULP,within atol=1e-14
-solve,solve batch[55] n=8,float32,8,8,337,atol=1e-14,1×1ULP 2×3ULP 1×4ULP 1×11ULP 1×21ULP 1×25ULP 1×337ULP,within atol=1e-14
-solve,solve batch[56] n=7,float32,7,6,10,atol=1e-14,4×1ULP 1×8ULP 1×10ULP,within atol=1e-14
-solve,solve batch[57] n=6,float32,6,6,185,atol=1e-14,1×3ULP 1×5ULP 1×6ULP 1×9ULP 1×25ULP 1×185ULP,within atol=1e-14
-solve,solve batch[58] n=4,float32,4,1,3,atol=1e-14,1×3ULP,within atol=1e-14
-solve,solve batch[59] n=8,float32,8,7,11,atol=1e-14,1×1ULP 4×2ULP 1×8ULP 1×11ULP,within atol=1e-14
-solve,solve batch[60] n=7,float32,7,6,6,atol=1e-14,4×1ULP 1×4ULP 1×6ULP,within atol=1e-14
-solve,solve batch[61] n=7,float32,7,6,6,atol=1e-14,3×1ULP 2×3ULP 1×6ULP,within atol=1e-14
-solve,solve batch[62] n=4,float32,4,3,16,atol=1e-14,1×1ULP 1×2ULP 1×16ULP,within atol=1e-14
-solve,solve batch[63] n=8,float32,8,5,10,atol=1e-14,1×1ULP 1×5ULP 1×6ULP 1×9ULP 1×10ULP,within atol=1e-14
-solve,solve batch[64] n=4,float32,4,4,10,atol=1e-14,2×1ULP 1×3ULP 1×10ULP,within atol=1e-14
-solve,solve batch[65] n=7,float32,7,7,9,atol=1e-14,2×1ULP 1×2ULP 1×4ULP 1×6ULP 2×9ULP,within atol=1e-14
-solve,solve batch[66] n=4,float32,4,4,5,atol=1e-14,2×1ULP 1×2ULP 1×5ULP,within atol=1e-14
-solve,solve batch[67] n=5,float32,5,2,2,atol=1e-14,1×1ULP 1×2ULP,within atol=1e-14
-solve,solve batch[68] n=7,float32,7,7,33,atol=1e-14,1×1ULP 1×4ULP 1×5ULP 1×6ULP 2×8ULP 1×33ULP,within atol=1e-14
-solve,solve batch[69] n=8,float32,8,7,5,atol=1e-14,4×1ULP 1×2ULP 1×3ULP 1×5ULP,within atol=1e-14
-solve,solve batch[70] n=7,float32,7,5,6,atol=1e-14,1×1ULP 1×2ULP 2×3ULP 1×6ULP,within atol=1e-14
-solve,solve batch[71] n=5,float32,5,4,6,atol=1e-14,1×1ULP 2×3ULP 1×6ULP,within atol=1e-14
-solve,solve batch[72] n=4,float32,4,4,3,atol=1e-14,2×1ULP 1×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[73] n=6,float32,6,6,3,atol=1e-14,2×1ULP 3×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[74] n=6,float32,6,6,27,atol=1e-14,1×1ULP 2×2ULP 1×4ULP 1×13ULP 1×27ULP,within atol=1e-14
-solve,solve batch[75] n=4,float32,4,3,3,atol=1e-14,2×1ULP 1×3ULP,within atol=1e-14
-solve,solve batch[76] n=5,float32,5,5,85,atol=1e-14,2×3ULP 1×5ULP 1×13ULP 1×85ULP,within atol=1e-14
-solve,solve batch[77] n=4,float32,4,4,7,atol=1e-14,2×1ULP 1×2ULP 1×7ULP,within atol=1e-14
-solve,solve batch[78] n=7,float32,7,7,20,atol=1e-14,1×7ULP 1×10ULP 1×11ULP 1×13ULP 1×15ULP 1×18ULP 1×20ULP,within atol=1e-14
-solve,solve batch[79] n=5,float32,5,5,8,atol=1e-14,2×5ULP 3×8ULP,within atol=1e-14
-solve,solve batch[80] n=8,float32,8,8,92,atol=1e-14,1×44ULP 1×55ULP 1×59ULP 1×74ULP 1×83ULP 1×84ULP 1×87ULP 1×92ULP,within atol=1e-14
-solve,solve batch[81] n=4,float32,4,3,7,atol=1e-14,2×1ULP 1×7ULP,within atol=1e-14
-solve,solve batch[82] n=4,float32,4,3,1,atol=1e-14,3×1ULP,within atol=1e-14
-solve,solve batch[83] n=5,float32,5,5,11,atol=1e-14,3×7ULP 1×10ULP 1×11ULP,within atol=1e-14
-solve,solve batch[84] n=8,float32,8,8,51,atol=1e-14,1×7ULP 2×9ULP 1×11ULP 2×12ULP 1×18ULP 1×51ULP,within atol=1e-14
-solve,solve batch[85] n=4,float32,4,3,2,atol=1e-14,1×1ULP 2×2ULP,within atol=1e-14
-solve,solve batch[86] n=8,float32,8,7,59,atol=1e-14,3×1ULP 2×5ULP 1×14ULP 1×59ULP,within atol=1e-14
-solve,solve batch[87] n=7,float32,7,4,2,atol=1e-14,3×1ULP 1×2ULP,within atol=1e-14
-solve,solve batch[88] n=5,float32,5,4,3,atol=1e-14,1×1ULP 2×2ULP 1×3ULP,within atol=1e-14
-solve,solve batch[89] n=5,float32,5,4,5,atol=1e-14,2×1ULP 1×3ULP 1×5ULP,within atol=1e-14
-solve,solve batch[90] n=8,float32,8,8,37,atol=1e-14,1×6ULP 2×22ULP 1×23ULP 2×26ULP 1×27ULP 1×37ULP,within atol=1e-14
-solve,solve batch[91] n=8,float32,8,5,4,atol=1e-14,1×1ULP 1×2ULP 2×3ULP 1×4ULP,within atol=1e-14
-solve,solve batch[92] n=6,float32,6,6,12,atol=1e-14,1×1ULP 3×3ULP 1×10ULP 1×12ULP,within atol=1e-14
-solve,solve batch[93] n=6,float32,6,4,2,atol=1e-14,3×1ULP 1×2ULP,within atol=1e-14
-solve,solve batch[94] n=6,float32,6,1,1,atol=1e-14,1×1ULP,within atol=1e-14
-solve,solve batch[95] n=5,float32,5,3,2,atol=1e-14,1×1ULP 2×2ULP,within atol=1e-14
-solve,solve batch[96] n=6,float32,6,6,220,atol=1e-14,1×115ULP 1×126ULP 1×138ULP 1×196ULP 1×203ULP 1×220ULP,within atol=1e-14
-solve,solve batch[97] n=4,float32,4,4,2,atol=1e-14,2×1ULP 2×2ULP,within atol=1e-14
-solve,solve batch[98] n=6,float32,6,5,2,atol=1e-14,1×1ULP 4×2ULP,within atol=1e-14
-solve,solve batch[99] n=6,float32,6,6,103,atol=1e-14,1×45ULP 1×69ULP 1×71ULP 1×73ULP 1×75ULP 1×103ULP,within atol=1e-14
-solve,solve large n=10,float64,10,9,11,atol=1e-14,2×1ULP 3×2ULP 1×3ULP 1×4ULP 1×9ULP 1×11ULP,within atol=1e-14
-solve,solve large n=20,float64,20,20,5609,atol=1e-14,1×1ULP 2×2ULP 1×3ULP 1×5ULP 1×7ULP 2×9ULP 2×10ULP 1×11ULP 1×12ULP 2×13ULP 1×16ULP 1×17ULP 1×19ULP 1×21ULP 1×53ULP 1×5609ULP,within atol=1e-14
-solve,solve large n=10,float32,10,7,18,atol=1e-14,3×1ULP 2×2ULP 1×3ULP 1×18ULP,within atol=1e-14
-solve,solve large n=20,float32,20,19,5611,atol=1e-14,1×1ULP 1×3ULP 1×4ULP 1×5ULP 1×6ULP 2×8ULP 2×9ULP 2×11ULP 1×13ULP 1×33ULP 1×47ULP 1×52ULP 2×56ULP 1×69ULP 1×5611ULP,within atol=1e-14
-solve,solve ill-cond seed=5555,float64,5,5,22840,atol=1e-10,1×12949ULP 1×14326ULP 1×15519ULP 1×17929ULP 1×22840ULP,within atol=1e-10
-solve,solve ill-cond seed=6666,float64,5,5,31715,atol=1e-10,1×21263ULP 1×21798ULP 1×22274ULP 1×30392ULP 1×31715ULP,within atol=1e-10
-solve,solve ill-cond seed=7777,float64,5,5,27112,atol=1e-10,1×8030ULP 1×11005ULP 1×12614ULP 1×23601ULP 1×27112ULP,within atol=1e-10
-solve,solve ill-cond seed=5555,float32,5,5,88991,atol=1e-10,1×58110ULP 1×66649ULP 1×68499ULP 1×73367ULP 1×88991ULP,within atol=1e-10
-solve,solve ill-cond seed=6666,float32,5,5,49197,atol=1e-10,1×29540ULP 1×30196ULP 1×30378ULP 1×42653ULP 1×49197ULP,within atol=1e-10
-solve,solve ill-cond seed=7777,float32,5,5,4802,atol=1e-10,1×349ULP 1×385ULP 1×625ULP 1×1554ULP 1×4802ULP,within atol=1e-10
+solve,solve batch[0] n=5,float64,5,5,16,≤2000 ULP,2×1ULP 2×2ULP 1×16ULP,within ≤2000 ULP
+solve,solve batch[1] n=7,float64,7,7,7,≤2000 ULP,1×3ULP 1×4ULP 1×5ULP 3×6ULP 1×7ULP,within ≤2000 ULP
+solve,solve batch[2] n=6,float64,6,4,6,≤2000 ULP,1×2ULP 2×3ULP 1×6ULP,within ≤2000 ULP
+solve,solve batch[3] n=5,float64,5,5,15,≤2000 ULP,1×1ULP 2×2ULP 1×8ULP 1×15ULP,within ≤2000 ULP
+solve,solve batch[4] n=4,float64,4,3,7,≤2000 ULP,2×2ULP 1×7ULP,within ≤2000 ULP
+solve,solve batch[5] n=4,float64,4,3,5,≤2000 ULP,1×1ULP 1×2ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[6] n=5,float64,5,5,5,≤2000 ULP,1×3ULP 3×4ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[7] n=6,float64,6,6,15,≤2000 ULP,2×10ULP 2×13ULP 1×14ULP 1×15ULP,within ≤2000 ULP
+solve,solve batch[8] n=7,float64,7,6,10,≤2000 ULP,2×1ULP 2×2ULP 1×3ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[9] n=4,float64,4,3,2,≤2000 ULP,2×1ULP 1×2ULP,within ≤2000 ULP
+solve,solve batch[10] n=4,float64,4,2,1,≤2000 ULP,2×1ULP,within ≤2000 ULP
+solve,solve batch[11] n=4,float64,4,4,40,≤2000 ULP,1×26ULP 1×28ULP 1×29ULP 1×40ULP,within ≤2000 ULP
+solve,solve batch[12] n=5,float64,5,5,9,≤2000 ULP,1×1ULP 1×2ULP 1×3ULP 1×5ULP 1×9ULP,within ≤2000 ULP
+solve,solve batch[13] n=6,float64,6,4,39,≤2000 ULP,1×1ULP 2×2ULP 1×39ULP,within ≤2000 ULP
+solve,solve batch[14] n=5,float64,5,4,22,≤2000 ULP,1×2ULP 2×3ULP 1×22ULP,within ≤2000 ULP
+solve,solve batch[15] n=6,float64,6,5,514,≤2000 ULP,4×1ULP 1×514ULP,within ≤2000 ULP
+solve,solve batch[16] n=6,float64,6,6,7,≤2000 ULP,4×3ULP 1×4ULP 1×7ULP,within ≤2000 ULP
+solve,solve batch[17] n=5,float64,5,5,36,≤2000 ULP,1×1ULP 1×2ULP 1×7ULP 1×24ULP 1×36ULP,within ≤2000 ULP
+solve,solve batch[18] n=4,float64,4,2,1,≤2000 ULP,2×1ULP,within ≤2000 ULP
+solve,solve batch[19] n=7,float64,7,4,4,≤2000 ULP,1×1ULP 1×2ULP 1×3ULP 1×4ULP,within ≤2000 ULP
+solve,solve batch[20] n=7,float64,7,7,53,≤2000 ULP,4×1ULP 1×4ULP 1×11ULP 1×53ULP,within ≤2000 ULP
+solve,solve batch[21] n=4,float64,4,4,2,≤2000 ULP,2×1ULP 2×2ULP,within ≤2000 ULP
+solve,solve batch[22] n=5,float64,5,3,29,≤2000 ULP,1×2ULP 1×6ULP 1×29ULP,within ≤2000 ULP
+solve,solve batch[23] n=6,float64,6,4,11,≤2000 ULP,1×2ULP 1×4ULP 1×8ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[24] n=6,float64,6,5,7,≤2000 ULP,2×1ULP 2×2ULP 1×7ULP,within ≤2000 ULP
+solve,solve batch[25] n=8,float64,8,8,20,≤2000 ULP,4×2ULP 1×3ULP 1×4ULP 1×9ULP 1×20ULP,within ≤2000 ULP
+solve,solve batch[26] n=8,float64,8,6,4,≤2000 ULP,1×1ULP 3×2ULP 2×4ULP,within ≤2000 ULP
+solve,solve batch[27] n=8,float64,8,8,5,≤2000 ULP,3×1ULP 2×2ULP 1×3ULP 1×4ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[28] n=8,float64,8,5,7,≤2000 ULP,3×1ULP 1×4ULP 1×7ULP,within ≤2000 ULP
+solve,solve batch[29] n=8,float64,8,8,38,≤2000 ULP,1×1ULP 2×2ULP 1×3ULP 1×5ULP 1×7ULP 1×10ULP 1×38ULP,within ≤2000 ULP
+solve,solve batch[30] n=6,float64,6,5,3,≤2000 ULP,3×1ULP 1×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[31] n=6,float64,6,5,3,≤2000 ULP,1×1ULP 2×2ULP 2×3ULP,within ≤2000 ULP
+solve,solve batch[32] n=4,float64,4,2,1,≤2000 ULP,2×1ULP,within ≤2000 ULP
+solve,solve batch[33] n=8,float64,8,7,10,≤2000 ULP,1×2ULP 2×3ULP 2×4ULP 1×5ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[34] n=5,float64,5,3,28,≤2000 ULP,1×2ULP 1×5ULP 1×28ULP,within ≤2000 ULP
+solve,solve batch[35] n=8,float64,8,8,40,≤2000 ULP,1×4ULP 2×5ULP 2×6ULP 1×10ULP 1×17ULP 1×40ULP,within ≤2000 ULP
+solve,solve batch[36] n=7,float64,7,7,7,≤2000 ULP,1×2ULP 1×3ULP 3×4ULP 1×6ULP 1×7ULP,within ≤2000 ULP
+solve,solve batch[37] n=8,float64,8,7,18,≤2000 ULP,2×1ULP 1×2ULP 1×3ULP 1×4ULP 1×5ULP 1×18ULP,within ≤2000 ULP
+solve,solve batch[38] n=7,float64,7,7,174,≤2000 ULP,1×6ULP 1×11ULP 1×13ULP 1×14ULP 1×15ULP 1×25ULP 1×174ULP,within ≤2000 ULP
+solve,solve batch[39] n=5,float64,5,5,9,≤2000 ULP,2×4ULP 1×5ULP 1×6ULP 1×9ULP,within ≤2000 ULP
+solve,solve batch[40] n=7,float64,7,6,4,≤2000 ULP,1×1ULP 2×2ULP 1×3ULP 2×4ULP,within ≤2000 ULP
+solve,solve batch[41] n=5,float64,5,4,5,≤2000 ULP,1×1ULP 1×2ULP 1×4ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[42] n=8,float64,8,6,5,≤2000 ULP,2×1ULP 2×2ULP 1×3ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[43] n=6,float64,6,6,10,≤2000 ULP,1×2ULP 1×3ULP 2×4ULP 1×5ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[44] n=6,float64,6,5,5,≤2000 ULP,1×1ULP 1×2ULP 1×3ULP 1×4ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[45] n=7,float64,7,6,17,≤2000 ULP,1×1ULP 2×2ULP 1×4ULP 1×8ULP 1×17ULP,within ≤2000 ULP
+solve,solve batch[46] n=4,float64,4,3,5,≤2000 ULP,2×1ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[47] n=8,float64,8,7,16,≤2000 ULP,2×2ULP 1×3ULP 1×4ULP 2×5ULP 1×16ULP,within ≤2000 ULP
+solve,solve batch[48] n=5,float64,5,5,3,≤2000 ULP,1×1ULP 2×2ULP 2×3ULP,within ≤2000 ULP
+solve,solve batch[49] n=8,float64,8,8,34,≤2000 ULP,1×1ULP 3×2ULP 1×3ULP 1×5ULP 1×7ULP 1×34ULP,within ≤2000 ULP
+solve,solve batch[50] n=8,float64,8,7,6,≤2000 ULP,2×1ULP 1×2ULP 2×3ULP 1×4ULP 1×6ULP,within ≤2000 ULP
+solve,solve batch[51] n=4,float64,4,2,10,≤2000 ULP,1×1ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[52] n=8,float64,8,7,13,≤2000 ULP,1×3ULP 2×8ULP 1×9ULP 1×10ULP 2×13ULP,within ≤2000 ULP
+solve,solve batch[53] n=5,float64,5,5,10,≤2000 ULP,1×4ULP 1×6ULP 1×7ULP 1×9ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[54] n=4,float64,4,4,4,≤2000 ULP,2×1ULP 2×4ULP,within ≤2000 ULP
+solve,solve batch[55] n=8,float64,8,8,393,≤2000 ULP,1×1ULP 1×3ULP 2×8ULP 1×12ULP 1×15ULP 1×48ULP 1×393ULP,within ≤2000 ULP
+solve,solve batch[56] n=7,float64,7,6,5,≤2000 ULP,2×1ULP 2×2ULP 1×4ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[57] n=6,float64,6,6,13,≤2000 ULP,1×3ULP 1×7ULP 1×8ULP 1×10ULP 2×13ULP,within ≤2000 ULP
+solve,solve batch[58] n=4,float64,4,2,2,≤2000 ULP,1×1ULP 1×2ULP,within ≤2000 ULP
+solve,solve batch[59] n=8,float64,8,8,16,≤2000 ULP,1×2ULP 2×3ULP 2×8ULP 1×9ULP 1×15ULP 1×16ULP,within ≤2000 ULP
+solve,solve batch[60] n=7,float64,7,7,23,≤2000 ULP,1×1ULP 2×2ULP 2×3ULP 1×4ULP 1×23ULP,within ≤2000 ULP
+solve,solve batch[61] n=7,float64,7,6,11,≤2000 ULP,2×1ULP 1×3ULP 1×5ULP 1×6ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[62] n=4,float64,4,4,40,≤2000 ULP,1×2ULP 1×3ULP 1×8ULP 1×40ULP,within ≤2000 ULP
+solve,solve batch[63] n=8,float64,8,8,46,≤2000 ULP,3×1ULP 1×2ULP 1×5ULP 1×9ULP 1×10ULP 1×46ULP,within ≤2000 ULP
+solve,solve batch[64] n=4,float64,4,4,12,≤2000 ULP,1×2ULP 1×3ULP 1×7ULP 1×12ULP,within ≤2000 ULP
+solve,solve batch[65] n=7,float64,7,6,21,≤2000 ULP,2×2ULP 1×4ULP 1×10ULP 1×11ULP 1×21ULP,within ≤2000 ULP
+solve,solve batch[66] n=4,float64,4,4,5,≤2000 ULP,1×1ULP 2×2ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[67] n=5,float64,5,5,4,≤2000 ULP,3×1ULP 1×2ULP 1×4ULP,within ≤2000 ULP
+solve,solve batch[68] n=7,float64,7,5,19,≤2000 ULP,1×1ULP 2×2ULP 1×11ULP 1×19ULP,within ≤2000 ULP
+solve,solve batch[69] n=8,float64,8,7,3,≤2000 ULP,1×1ULP 5×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[70] n=7,float64,7,7,26,≤2000 ULP,3×1ULP 1×2ULP 1×7ULP 1×8ULP 1×26ULP,within ≤2000 ULP
+solve,solve batch[71] n=5,float64,5,4,3,≤2000 ULP,2×1ULP 1×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[72] n=4,float64,4,2,2,≤2000 ULP,1×1ULP 1×2ULP,within ≤2000 ULP
+solve,solve batch[73] n=6,float64,6,6,12,≤2000 ULP,2×1ULP 1×2ULP 1×4ULP 1×6ULP 1×12ULP,within ≤2000 ULP
+solve,solve batch[74] n=6,float64,6,4,2,≤2000 ULP,1×1ULP 3×2ULP,within ≤2000 ULP
+solve,solve batch[75] n=4,float64,4,2,2,≤2000 ULP,2×2ULP,within ≤2000 ULP
+solve,solve batch[76] n=5,float64,5,3,112,≤2000 ULP,1×1ULP 1×24ULP 1×112ULP,within ≤2000 ULP
+solve,solve batch[77] n=4,float64,4,4,5,≤2000 ULP,3×1ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[78] n=7,float64,7,7,35,≤2000 ULP,1×12ULP 1×19ULP 1×21ULP 1×23ULP 1×27ULP 1×30ULP 1×35ULP,within ≤2000 ULP
+solve,solve batch[79] n=5,float64,5,5,11,≤2000 ULP,1×2ULP 1×3ULP 1×4ULP 1×7ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[80] n=8,float64,8,8,44,≤2000 ULP,1×26ULP 1×27ULP 2×30ULP 1×32ULP 1×39ULP 1×43ULP 1×44ULP,within ≤2000 ULP
+solve,solve batch[81] n=4,float64,4,2,10,≤2000 ULP,1×1ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[82] n=4,float64,4,4,3,≤2000 ULP,1×1ULP 1×2ULP 2×3ULP,within ≤2000 ULP
+solve,solve batch[83] n=5,float64,5,5,4,≤2000 ULP,1×2ULP 1×3ULP 3×4ULP,within ≤2000 ULP
+solve,solve batch[84] n=8,float64,8,6,14,≤2000 ULP,1×2ULP 2×3ULP 1×4ULP 1×5ULP 1×14ULP,within ≤2000 ULP
+solve,solve batch[85] n=4,float64,4,3,3,≤2000 ULP,2×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[86] n=8,float64,8,8,310,≤2000 ULP,1×1ULP 2×2ULP 2×3ULP 1×4ULP 1×8ULP 1×310ULP,within ≤2000 ULP
+solve,solve batch[87] n=7,float64,7,6,6,≤2000 ULP,4×1ULP 1×3ULP 1×6ULP,within ≤2000 ULP
+solve,solve batch[88] n=5,float64,5,0,0,≤2000 ULP,—,bit-identical
+solve,solve batch[89] n=5,float64,5,4,8,≤2000 ULP,3×1ULP 1×8ULP,within ≤2000 ULP
+solve,solve batch[90] n=8,float64,8,8,11,≤2000 ULP,3×1ULP 1×2ULP 1×3ULP 1×8ULP 1×9ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[91] n=8,float64,8,6,4,≤2000 ULP,2×1ULP 2×2ULP 1×3ULP 1×4ULP,within ≤2000 ULP
+solve,solve batch[92] n=6,float64,6,5,8,≤2000 ULP,1×1ULP 1×2ULP 1×4ULP 1×5ULP 1×8ULP,within ≤2000 ULP
+solve,solve batch[93] n=6,float64,6,4,3,≤2000 ULP,1×1ULP 2×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[94] n=6,float64,6,6,3,≤2000 ULP,2×1ULP 3×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[95] n=5,float64,5,5,3,≤2000 ULP,2×1ULP 2×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[96] n=6,float64,6,6,129,≤2000 ULP,1×66ULP 1×73ULP 1×78ULP 1×114ULP 1×116ULP 1×129ULP,within ≤2000 ULP
+solve,solve batch[97] n=4,float64,4,4,8,≤2000 ULP,1×3ULP 2×4ULP 1×8ULP,within ≤2000 ULP
+solve,solve batch[98] n=6,float64,6,6,8,≤2000 ULP,2×1ULP 2×3ULP 2×8ULP,within ≤2000 ULP
+solve,solve batch[99] n=6,float64,6,6,82,≤2000 ULP,1×54ULP 1×55ULP 2×57ULP 1×59ULP 1×82ULP,within ≤2000 ULP
+solve,solve batch[0] n=5,float32,5,3,34,≤2000 ULP,2×1ULP 1×34ULP,within ≤2000 ULP
+solve,solve batch[1] n=7,float32,7,7,32,≤2000 ULP,1×17ULP 1×21ULP 1×23ULP 1×28ULP 2×29ULP 1×32ULP,within ≤2000 ULP
+solve,solve batch[2] n=6,float32,6,3,13,≤2000 ULP,1×2ULP 1×4ULP 1×13ULP,within ≤2000 ULP
+solve,solve batch[3] n=5,float32,5,5,29,≤2000 ULP,1×1ULP 1×2ULP 1×3ULP 1×8ULP 1×29ULP,within ≤2000 ULP
+solve,solve batch[4] n=4,float32,4,1,2,≤2000 ULP,1×2ULP,within ≤2000 ULP
+solve,solve batch[5] n=4,float32,4,2,3,≤2000 ULP,1×1ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[6] n=5,float32,5,5,2,≤2000 ULP,1×1ULP 4×2ULP,within ≤2000 ULP
+solve,solve batch[7] n=6,float32,6,6,11,≤2000 ULP,1×5ULP 2×6ULP 2×7ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[8] n=7,float32,7,7,11,≤2000 ULP,2×1ULP 3×2ULP 1×3ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[9] n=4,float32,4,0,0,≤2000 ULP,—,bit-identical
+solve,solve batch[10] n=4,float32,4,2,1,≤2000 ULP,2×1ULP,within ≤2000 ULP
+solve,solve batch[11] n=4,float32,4,4,22,≤2000 ULP,1×15ULP 1×16ULP 1×17ULP 1×22ULP,within ≤2000 ULP
+solve,solve batch[12] n=5,float32,5,5,11,≤2000 ULP,2×1ULP 1×3ULP 1×6ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[13] n=6,float32,6,2,16,≤2000 ULP,1×1ULP 1×16ULP,within ≤2000 ULP
+solve,solve batch[14] n=5,float32,5,3,10,≤2000 ULP,2×1ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[15] n=6,float32,6,4,457,≤2000 ULP,1×1ULP 1×2ULP 1×3ULP 1×457ULP,within ≤2000 ULP
+solve,solve batch[16] n=6,float32,6,5,6,≤2000 ULP,2×2ULP 2×4ULP 1×6ULP,within ≤2000 ULP
+solve,solve batch[17] n=5,float32,5,5,13,≤2000 ULP,1×1ULP 1×2ULP 2×3ULP 1×13ULP,within ≤2000 ULP
+solve,solve batch[18] n=4,float32,4,0,0,≤2000 ULP,—,bit-identical
+solve,solve batch[19] n=7,float32,7,5,22,≤2000 ULP,2×2ULP 1×9ULP 1×10ULP 1×22ULP,within ≤2000 ULP
+solve,solve batch[20] n=7,float32,7,7,3,≤2000 ULP,3×1ULP 3×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[21] n=4,float32,4,1,1,≤2000 ULP,1×1ULP,within ≤2000 ULP
+solve,solve batch[22] n=5,float32,5,4,2,≤2000 ULP,2×1ULP 2×2ULP,within ≤2000 ULP
+solve,solve batch[23] n=6,float32,6,6,33,≤2000 ULP,3×1ULP 1×2ULP 1×6ULP 1×33ULP,within ≤2000 ULP
+solve,solve batch[24] n=6,float32,6,6,3,≤2000 ULP,3×1ULP 2×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[25] n=8,float32,8,8,15,≤2000 ULP,2×1ULP 1×3ULP 1×5ULP 1×7ULP 1×9ULP 1×10ULP 1×15ULP,within ≤2000 ULP
+solve,solve batch[26] n=8,float32,8,8,18,≤2000 ULP,2×1ULP 1×2ULP 1×4ULP 1×5ULP 1×6ULP 1×7ULP 1×18ULP,within ≤2000 ULP
+solve,solve batch[27] n=8,float32,8,8,10,≤2000 ULP,3×2ULP 1×3ULP 2×4ULP 1×5ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[28] n=8,float32,8,6,12,≤2000 ULP,3×1ULP 1×2ULP 1×3ULP 1×12ULP,within ≤2000 ULP
+solve,solve batch[29] n=8,float32,8,4,131,≤2000 ULP,1×1ULP 1×6ULP 1×11ULP 1×131ULP,within ≤2000 ULP
+solve,solve batch[30] n=6,float32,6,3,3,≤2000 ULP,2×1ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[31] n=6,float32,6,4,3,≤2000 ULP,1×1ULP 1×2ULP 2×3ULP,within ≤2000 ULP
+solve,solve batch[32] n=4,float32,4,4,2,≤2000 ULP,3×1ULP 1×2ULP,within ≤2000 ULP
+solve,solve batch[33] n=8,float32,8,7,4,≤2000 ULP,3×1ULP 2×2ULP 2×4ULP,within ≤2000 ULP
+solve,solve batch[34] n=5,float32,5,4,11,≤2000 ULP,2×2ULP 1×4ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[35] n=8,float32,8,7,13,≤2000 ULP,1×1ULP 3×2ULP 1×3ULP 1×4ULP 1×13ULP,within ≤2000 ULP
+solve,solve batch[36] n=7,float32,7,7,9,≤2000 ULP,2×3ULP 2×5ULP 1×6ULP 1×7ULP 1×9ULP,within ≤2000 ULP
+solve,solve batch[37] n=8,float32,8,6,5,≤2000 ULP,5×1ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[38] n=7,float32,7,7,642,≤2000 ULP,1×4ULP 1×5ULP 1×6ULP 1×9ULP 1×21ULP 1×51ULP 1×642ULP,within ≤2000 ULP
+solve,solve batch[39] n=5,float32,5,5,33,≤2000 ULP,2×11ULP 1×15ULP 1×24ULP 1×33ULP,within ≤2000 ULP
+solve,solve batch[40] n=7,float32,7,6,5,≤2000 ULP,3×1ULP 2×2ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[41] n=5,float32,5,5,10,≤2000 ULP,1×1ULP 1×2ULP 1×3ULP 2×10ULP,within ≤2000 ULP
+solve,solve batch[42] n=8,float32,8,6,5,≤2000 ULP,2×1ULP 1×2ULP 1×3ULP 1×4ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[43] n=6,float32,6,6,42,≤2000 ULP,1×1ULP 2×2ULP 1×4ULP 1×5ULP 1×42ULP,within ≤2000 ULP
+solve,solve batch[44] n=6,float32,6,5,2,≤2000 ULP,2×1ULP 3×2ULP,within ≤2000 ULP
+solve,solve batch[45] n=7,float32,7,6,8,≤2000 ULP,2×1ULP 3×3ULP 1×8ULP,within ≤2000 ULP
+solve,solve batch[46] n=4,float32,4,3,4,≤2000 ULP,1×1ULP 1×2ULP 1×4ULP,within ≤2000 ULP
+solve,solve batch[47] n=8,float32,8,6,94,≤2000 ULP,1×1ULP 1×4ULP 1×9ULP 1×12ULP 1×14ULP 1×94ULP,within ≤2000 ULP
+solve,solve batch[48] n=5,float32,5,5,6,≤2000 ULP,1×1ULP 2×2ULP 1×4ULP 1×6ULP,within ≤2000 ULP
+solve,solve batch[49] n=8,float32,8,6,8,≤2000 ULP,2×1ULP 2×2ULP 1×4ULP 1×8ULP,within ≤2000 ULP
+solve,solve batch[50] n=8,float32,8,7,35,≤2000 ULP,1×1ULP 2×2ULP 2×4ULP 1×6ULP 1×35ULP,within ≤2000 ULP
+solve,solve batch[51] n=4,float32,4,3,10,≤2000 ULP,1×1ULP 1×3ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[52] n=8,float32,8,7,16,≤2000 ULP,2×2ULP 1×5ULP 1×7ULP 1×9ULP 1×13ULP 1×16ULP,within ≤2000 ULP
+solve,solve batch[53] n=5,float32,5,5,5,≤2000 ULP,1×1ULP 2×2ULP 2×5ULP,within ≤2000 ULP
+solve,solve batch[54] n=4,float32,4,2,3,≤2000 ULP,1×1ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[55] n=8,float32,8,8,337,≤2000 ULP,1×1ULP 2×3ULP 1×4ULP 1×11ULP 1×21ULP 1×25ULP 1×337ULP,within ≤2000 ULP
+solve,solve batch[56] n=7,float32,7,6,10,≤2000 ULP,4×1ULP 1×8ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[57] n=6,float32,6,6,185,≤2000 ULP,1×3ULP 1×5ULP 1×6ULP 1×9ULP 1×25ULP 1×185ULP,within ≤2000 ULP
+solve,solve batch[58] n=4,float32,4,1,3,≤2000 ULP,1×3ULP,within ≤2000 ULP
+solve,solve batch[59] n=8,float32,8,7,11,≤2000 ULP,1×1ULP 4×2ULP 1×8ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[60] n=7,float32,7,6,6,≤2000 ULP,4×1ULP 1×4ULP 1×6ULP,within ≤2000 ULP
+solve,solve batch[61] n=7,float32,7,6,6,≤2000 ULP,3×1ULP 2×3ULP 1×6ULP,within ≤2000 ULP
+solve,solve batch[62] n=4,float32,4,3,16,≤2000 ULP,1×1ULP 1×2ULP 1×16ULP,within ≤2000 ULP
+solve,solve batch[63] n=8,float32,8,5,10,≤2000 ULP,1×1ULP 1×5ULP 1×6ULP 1×9ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[64] n=4,float32,4,4,10,≤2000 ULP,2×1ULP 1×3ULP 1×10ULP,within ≤2000 ULP
+solve,solve batch[65] n=7,float32,7,7,9,≤2000 ULP,2×1ULP 1×2ULP 1×4ULP 1×6ULP 2×9ULP,within ≤2000 ULP
+solve,solve batch[66] n=4,float32,4,4,5,≤2000 ULP,2×1ULP 1×2ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[67] n=5,float32,5,2,2,≤2000 ULP,1×1ULP 1×2ULP,within ≤2000 ULP
+solve,solve batch[68] n=7,float32,7,7,33,≤2000 ULP,1×1ULP 1×4ULP 1×5ULP 1×6ULP 2×8ULP 1×33ULP,within ≤2000 ULP
+solve,solve batch[69] n=8,float32,8,7,5,≤2000 ULP,4×1ULP 1×2ULP 1×3ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[70] n=7,float32,7,5,6,≤2000 ULP,1×1ULP 1×2ULP 2×3ULP 1×6ULP,within ≤2000 ULP
+solve,solve batch[71] n=5,float32,5,4,6,≤2000 ULP,1×1ULP 2×3ULP 1×6ULP,within ≤2000 ULP
+solve,solve batch[72] n=4,float32,4,4,3,≤2000 ULP,2×1ULP 1×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[73] n=6,float32,6,6,3,≤2000 ULP,2×1ULP 3×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[74] n=6,float32,6,6,27,≤2000 ULP,1×1ULP 2×2ULP 1×4ULP 1×13ULP 1×27ULP,within ≤2000 ULP
+solve,solve batch[75] n=4,float32,4,3,3,≤2000 ULP,2×1ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[76] n=5,float32,5,5,85,≤2000 ULP,2×3ULP 1×5ULP 1×13ULP 1×85ULP,within ≤2000 ULP
+solve,solve batch[77] n=4,float32,4,4,7,≤2000 ULP,2×1ULP 1×2ULP 1×7ULP,within ≤2000 ULP
+solve,solve batch[78] n=7,float32,7,7,20,≤2000 ULP,1×7ULP 1×10ULP 1×11ULP 1×13ULP 1×15ULP 1×18ULP 1×20ULP,within ≤2000 ULP
+solve,solve batch[79] n=5,float32,5,5,8,≤2000 ULP,2×5ULP 3×8ULP,within ≤2000 ULP
+solve,solve batch[80] n=8,float32,8,8,92,≤2000 ULP,1×44ULP 1×55ULP 1×59ULP 1×74ULP 1×83ULP 1×84ULP 1×87ULP 1×92ULP,within ≤2000 ULP
+solve,solve batch[81] n=4,float32,4,3,7,≤2000 ULP,2×1ULP 1×7ULP,within ≤2000 ULP
+solve,solve batch[82] n=4,float32,4,3,1,≤2000 ULP,3×1ULP,within ≤2000 ULP
+solve,solve batch[83] n=5,float32,5,5,11,≤2000 ULP,3×7ULP 1×10ULP 1×11ULP,within ≤2000 ULP
+solve,solve batch[84] n=8,float32,8,8,51,≤2000 ULP,1×7ULP 2×9ULP 1×11ULP 2×12ULP 1×18ULP 1×51ULP,within ≤2000 ULP
+solve,solve batch[85] n=4,float32,4,3,2,≤2000 ULP,1×1ULP 2×2ULP,within ≤2000 ULP
+solve,solve batch[86] n=8,float32,8,7,59,≤2000 ULP,3×1ULP 2×5ULP 1×14ULP 1×59ULP,within ≤2000 ULP
+solve,solve batch[87] n=7,float32,7,4,2,≤2000 ULP,3×1ULP 1×2ULP,within ≤2000 ULP
+solve,solve batch[88] n=5,float32,5,4,3,≤2000 ULP,1×1ULP 2×2ULP 1×3ULP,within ≤2000 ULP
+solve,solve batch[89] n=5,float32,5,4,5,≤2000 ULP,2×1ULP 1×3ULP 1×5ULP,within ≤2000 ULP
+solve,solve batch[90] n=8,float32,8,8,37,≤2000 ULP,1×6ULP 2×22ULP 1×23ULP 2×26ULP 1×27ULP 1×37ULP,within ≤2000 ULP
+solve,solve batch[91] n=8,float32,8,5,4,≤2000 ULP,1×1ULP 1×2ULP 2×3ULP 1×4ULP,within ≤2000 ULP
+solve,solve batch[92] n=6,float32,6,6,12,≤2000 ULP,1×1ULP 3×3ULP 1×10ULP 1×12ULP,within ≤2000 ULP
+solve,solve batch[93] n=6,float32,6,4,2,≤2000 ULP,3×1ULP 1×2ULP,within ≤2000 ULP
+solve,solve batch[94] n=6,float32,6,1,1,≤2000 ULP,1×1ULP,within ≤2000 ULP
+solve,solve batch[95] n=5,float32,5,3,2,≤2000 ULP,1×1ULP 2×2ULP,within ≤2000 ULP
+solve,solve batch[96] n=6,float32,6,6,220,≤2000 ULP,1×115ULP 1×126ULP 1×138ULP 1×196ULP 1×203ULP 1×220ULP,within ≤2000 ULP
+solve,solve batch[97] n=4,float32,4,4,2,≤2000 ULP,2×1ULP 2×2ULP,within ≤2000 ULP
+solve,solve batch[98] n=6,float32,6,5,2,≤2000 ULP,1×1ULP 4×2ULP,within ≤2000 ULP
+solve,solve batch[99] n=6,float32,6,6,103,≤2000 ULP,1×45ULP 1×69ULP 1×71ULP 1×73ULP 1×75ULP 1×103ULP,within ≤2000 ULP
+solve,solve large n=10,float64,10,9,11,≤2000 ULP,2×1ULP 3×2ULP 1×3ULP 1×4ULP 1×9ULP 1×11ULP,within ≤2000 ULP
+solve,solve large n=20,float64,20,20,5609,≤10000 ULP,1×1ULP 2×2ULP 1×3ULP 1×5ULP 1×7ULP 2×9ULP 2×10ULP 1×11ULP 1×12ULP 2×13ULP 1×16ULP 1×17ULP 1×19ULP 1×21ULP 1×53ULP 1×5609ULP,within ≤10000 ULP
+solve,solve large n=10,float32,10,7,18,≤2000 ULP,3×1ULP 2×2ULP 1×3ULP 1×18ULP,within ≤2000 ULP
+solve,solve large n=20,float32,20,19,5611,≤10000 ULP,1×1ULP 1×3ULP 1×4ULP 1×5ULP 1×6ULP 2×8ULP 2×9ULP 2×11ULP 1×13ULP 1×33ULP 1×47ULP 1×52ULP 2×56ULP 1×69ULP 1×5611ULP,within ≤10000 ULP
+solve,solve ill-cond seed=5555,float64,5,5,22840,≤500000 ULP,1×12949ULP 1×14326ULP 1×15519ULP 1×17929ULP 1×22840ULP,within ≤500000 ULP
+solve,solve ill-cond seed=6666,float64,5,5,31715,≤500000 ULP,1×21263ULP 1×21798ULP 1×22274ULP 1×30392ULP 1×31715ULP,within ≤500000 ULP
+solve,solve ill-cond seed=7777,float64,5,5,27112,≤500000 ULP,1×8030ULP 1×11005ULP 1×12614ULP 1×23601ULP 1×27112ULP,within ≤500000 ULP
+solve,solve ill-cond seed=5555,float32,5,5,88991,≤500000 ULP,1×58110ULP 1×66649ULP 1×68499ULP 1×73367ULP 1×88991ULP,within ≤500000 ULP
+solve,solve ill-cond seed=6666,float32,5,5,49197,≤500000 ULP,1×29540ULP 1×30196ULP 1×30378ULP 1×42653ULP 1×49197ULP,within ≤500000 ULP
+solve,solve ill-cond seed=7777,float32,5,5,4802,≤500000 ULP,1×349ULP 1×385ULP 1×625ULP 1×1554ULP 1×4802ULP,within ≤500000 ULP
 cdist,cdist euclidean,float64,8000,0,0,0,—,bit-identical
 cdist,cdist cityblock,float64,8000,0,0,0,—,bit-identical
 cdist,cdist chebyshev,float64,8000,0,0,0,—,bit-identical

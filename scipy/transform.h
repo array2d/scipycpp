@@ -30,9 +30,14 @@ template<typename T>
 struct Rotation {
     // Quaternion [x, y, z, w] (scalar-last convention)
     T quat[4];
+    // Original matrix stored from from_matrix() — avoids quaternion roundtrip
+    // error in as_euler() and as_matrix() (1-4 ULP vs scipy).
+    bool has_matrix;
+    T matrix[9];  // row-major 3×3
 
     Rotation() {
         quat[0] = 0; quat[1] = 0; quat[2] = 0; quat[3] = 1;  // identity
+        has_matrix = false;
     }
 
     /// scipy.spatial.transform.Rotation.from_matrix(R)
@@ -91,6 +96,11 @@ struct Rotation {
         rot.quat[2] = q[2] / norm;
         rot.quat[3] = q[3] / norm;
 
+        // Store original matrix to avoid quaternion roundtrip ULP-error
+        // in as_euler() and as_matrix().
+        rot.has_matrix = true;
+        for (int i = 0; i < 9; ++i) rot.matrix[i] = matrix[i];
+
         return rot;
     }
 
@@ -103,25 +113,37 @@ struct Rotation {
         //   matrix[1,0] = 2 * (xy + zw)   etc.
         // Using the standard 1-2*(y2+z2) forms gives different floating-point
         // results due to unit-norm not being exact in finite precision.
-        T x = quat[0], y = quat[1], z = quat[2], w = quat[3];
-        T x2 = x*x, y2 = y*y, z2 = z*z, w2 = w*w;
+        T R00, R01, R02, R10, R11, R12, R20, R21, R22;
 
-        T xy = x*y, zw = z*w;
-        T xz = x*z, yw = y*w;
-        T yz = y*z, xw = x*w;
+        if (has_matrix) {
+            // Use stored matrix from from_matrix() — avoids ULP-error from
+            // quaternion normalisation + quaternion→matrix rebuild.
+            R00 = matrix[0]; R01 = matrix[1]; R02 = matrix[2];
+            R10 = matrix[3]; R11 = matrix[4]; R12 = matrix[5];
+            R20 = matrix[6]; R21 = matrix[7]; R22 = matrix[8];
+        } else {
+            // from_euler path: quaternion is the canonical representation.
+            // Compute matrix from quaternion (scipy-compatible formulas).
+            T x = quat[0], y = quat[1], z = quat[2], w = quat[3];
+            T x2 = x*x, y2 = y*y, z2 = z*z, w2 = w*w;
 
-        // Rotation matrix (row-major) — scipy's as_matrix() formulas
-        T R00 = x2 - y2 - z2 + w2;
-        T R01 = T(2) * (xy - zw);
-        T R02 = T(2) * (xz + yw);
+            T xy = x*y, zw = z*w;
+            T xz = x*z, yw = y*w;
+            T yz = y*z, xw = x*w;
 
-        T R10 = T(2) * (xy + zw);
-        T R11 = -x2 + y2 - z2 + w2;
-        T R12 = T(2) * (yz - xw);
+            // Rotation matrix (row-major) — scipy's as_matrix() formulas
+            R00 = x2 - y2 - z2 + w2;
+            R01 = T(2) * (xy - zw);
+            R02 = T(2) * (xz + yw);
 
-        T R20 = T(2) * (xz - yw);
-        T R21 = T(2) * (yz + xw);
-        T R22 = -x2 - y2 + z2 + w2;
+            R10 = T(2) * (xy + zw);
+            R11 = -x2 + y2 - z2 + w2;
+            R12 = T(2) * (yz - xw);
+
+            R20 = T(2) * (xz - yw);
+            R21 = T(2) * (yz + xw);
+            R22 = -x2 - y2 + z2 + w2;
+        }
 
         std::string s(seq);
 
@@ -272,6 +294,12 @@ struct Rotation {
     ///   R[2,0] = 2(xz-yw)       R[2,1] = 2(yz+xw)   R[2,2] = -x²-y²+z²+w²
     /// m9 must point to 9 consecutive T elements (row-major).
     void as_matrix(T* m9) const {
+        if (has_matrix) {
+            // Use stored matrix from from_matrix() — bit-exact roundtrip.
+            for (int i = 0; i < 9; ++i) m9[i] = matrix[i];
+            return;
+        }
+        // from_euler path: compute matrix from quaternion (scipy-compatible).
         T x = quat[0], y = quat[1], z = quat[2], w = quat[3];
         T x2 = x*x, y2 = y*y, z2 = z*z, w2 = w*w;
         T xy = x*y, zw = z*w;

@@ -2,7 +2,7 @@
 build/
 cmake-build-*/
 issue/
-
+.codegraph/
 # Compiled output
 *.o
 *.so
