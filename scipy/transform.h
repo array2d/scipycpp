@@ -96,10 +96,26 @@ struct Rotation {
         rot.quat[2] = q[2] / norm;
         rot.quat[3] = q[3] / norm;
 
-        // Store original matrix to avoid quaternion roundtrip ULP-error
-        // in as_euler() and as_matrix().
+        // Store quaternion-derived matrix to exactly match scipy's pipeline.
+        // scipy: from_matrix → quat → normalize → quat_to_matrix → euler
+        // Quat normalization can change matrix values by 1 ULP; scipy uses
+        // the quaternion-derived matrix for as_euler(), not the raw input.
+        // We MUST store the same quaternion-derived matrix for 0-bit match.
         rot.has_matrix = true;
-        for (int i = 0; i < 9; ++i) rot.matrix[i] = matrix[i];
+        {
+            T x = rot.quat[0], y = rot.quat[1], z = rot.quat[2], w = rot.quat[3];
+            T x2 = x*x, y2 = y*y, z2 = z*z, w2 = w*w;
+            T xy = x*y, zw = z*w, xz = x*z, yw = y*w, yz = y*z, xw = x*w;
+            rot.matrix[0] =  x2 - y2 - z2 + w2;
+            rot.matrix[1] =  T(2) * (xy - zw);
+            rot.matrix[2] =  T(2) * (xz + yw);
+            rot.matrix[3] =  T(2) * (xy + zw);
+            rot.matrix[4] = -x2 + y2 - z2 + w2;
+            rot.matrix[5] =  T(2) * (yz - xw);
+            rot.matrix[6] =  T(2) * (xz - yw);
+            rot.matrix[7] =  T(2) * (yz + xw);
+            rot.matrix[8] = -x2 - y2 + z2 + w2;
+        }
 
         return rot;
     }
@@ -339,6 +355,28 @@ struct Rotation {
             throw std::invalid_argument(
                 "Rotation::from_euler: unsupported single-axis seq '" + s + "'");
         }
+
+        // Compute and store the quaternion-derived matrix so as_euler()
+        // and as_matrix() use the same values as scipy's quat→matrix path.
+        // Single-axis quaternion: no composition, no normalization needed
+        // (norm = sh²+ch² = sin²(θ/2)+cos²(θ/2) = 1 exactly in ℝ,
+        //  but floating-point rounding may give norm ≈ 1 ± eps).
+        // Using quat→matrix formulas matches scipy's exact path.
+        rot.has_matrix = true;
+        {
+            T x = rot.quat[0], y = rot.quat[1], z = rot.quat[2], w = rot.quat[3];
+            T x2 = x*x, y2 = y*y, z2 = z*z, w2 = w*w;
+            T xy = x*y, zw = z*w, xz = x*z, yw = y*w, yz = y*z, xw = x*w;
+            rot.matrix[0] =  x2 - y2 - z2 + w2;
+            rot.matrix[1] =  T(2) * (xy - zw);
+            rot.matrix[2] =  T(2) * (xz + yw);
+            rot.matrix[3] =  T(2) * (xy + zw);
+            rot.matrix[4] = -x2 + y2 - z2 + w2;
+            rot.matrix[5] =  T(2) * (yz - xw);
+            rot.matrix[6] =  T(2) * (xz - yw);
+            rot.matrix[7] =  T(2) * (yz + xw);
+            rot.matrix[8] = -x2 - y2 + z2 + w2;
+        }
         return rot;
     }
 
@@ -389,6 +427,26 @@ struct Rotation {
             result.quat[1] = rw*qi[1] + ry*qi[3] + rz*qi[0] - rx*qi[2];
             result.quat[2] = rw*qi[2] + rz*qi[3] + rx*qi[1] - ry*qi[0];
             result.quat[3] = rw*qi[3] - rx*qi[0] - ry*qi[1] - rz*qi[2];
+        }
+
+        // Compute and store the quaternion-derived matrix so as_euler()
+        // and as_matrix() use the same values as scipy's quat→matrix path.
+        // This ensures 0-ULP match: scipy always reads the matrix from quaternion
+        // after composing, never stores a raw matrix.
+        result.has_matrix = true;
+        {
+            T x = result.quat[0], y = result.quat[1], z = result.quat[2], w = result.quat[3];
+            T x2 = x*x, y2 = y*y, z2 = z*z, w2 = w*w;
+            T xy = x*y, zw = z*w, xz = x*z, yw = y*w, yz = y*z, xw = x*w;
+            result.matrix[0] =  x2 - y2 - z2 + w2;
+            result.matrix[1] =  T(2) * (xy - zw);
+            result.matrix[2] =  T(2) * (xz + yw);
+            result.matrix[3] =  T(2) * (xy + zw);
+            result.matrix[4] = -x2 + y2 - z2 + w2;
+            result.matrix[5] =  T(2) * (yz - xw);
+            result.matrix[6] =  T(2) * (xz - yw);
+            result.matrix[7] =  T(2) * (yz + xw);
+            result.matrix[8] = -x2 - y2 + z2 + w2;
         }
         return result;
     }
