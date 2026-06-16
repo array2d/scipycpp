@@ -1,8 +1,8 @@
 // Native C++ stats — scipy.stats.* equivalents.
 //
 // Uses numpycpp for bit-exact transcendental ops matching Python numpy/scipy.
-// numpycpp::exp resolves to npy_exp (dlsym) or SVML on AVX-512, identical
-// to scipy's internal numpy.exp path → 0 ULP for norm.pdf.
+// numpy::exp resolves to npy_exp (dlsym) or SVML on AVX-512, identical
+// to scipy's internal numpy.exp path → 0 ULP for norm.pdf, including NaN encoding.
 // Ports Cephes erf/erfc/ndtri for bit-level alignment with scipy.special.
 //
 //   scipy.stats.norm.pdf(x, loc=0, scale=1)
@@ -153,7 +153,7 @@ inline T cephes_erfc(T a) {
         return (a < T(0)) ? T(2) : T(0);
     }
 
-    z = std::exp(z);  // exp(-a^2) — std::exp is libm, same as scipy's npy_exp
+    z = std::exp(z);  // exp(-a^2) — libm exp, same as scipy's Cephes (0 ULP)
 
     T p, q;
     if (x < T(8)) {
@@ -337,8 +337,14 @@ inline void norm_pdf(const T* src, T* dst, size_t n, T loc, T scale) {
     static const T sqrt_2pi = std::sqrt(T(2.0 * M_PI));
     std::vector<T> arg_buf(n);
     for (size_t i = 0; i < n; ++i) {
-        T z = (src[i] - loc) / scale;
-        arg_buf[i] = -(z * z) * T(0.5);
+        // NaN: C++ arithmetic (z*z, -...*0.5) alters NaN sign bit vs numpy C
+        // code.  Bypass computation: pass original NaN encoding to numpy::exp.
+        if (std::isnan(src[i])) {
+            arg_buf[i] = src[i];
+        } else {
+            T z = (src[i] - loc) / scale;
+            arg_buf[i] = -(z * z) * T(0.5);
+        }
     }
     numpy::exp(arg_buf.data(), dst, n);
     // Division order matches scipy: (exp / sqrt_2pi) / scale.
@@ -354,8 +360,12 @@ template<typename T>
 inline void norm_pdf(const T* src, T* dst, size_t n) {
     static const T sqrt_2pi = std::sqrt(T(2.0 * M_PI));
     std::vector<T> arg_buf(n);
-    for (size_t i = 0; i < n; ++i)
-        arg_buf[i] = -(src[i] * src[i]) * T(0.5);
+    for (size_t i = 0; i < n; ++i) {
+        if (std::isnan(src[i]))
+            arg_buf[i] = src[i];  // NaN: pass unmodified to numpy::exp
+        else
+            arg_buf[i] = -(src[i] * src[i]) * T(0.5);
+    }
     numpy::exp(arg_buf.data(), dst, n);
     for (size_t i = 0; i < n; ++i)
         dst[i] /= sqrt_2pi;

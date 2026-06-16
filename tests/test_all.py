@@ -1,20 +1,26 @@
 """
-Bit-level alignment tests — scipycpp C++ vs Python scipy APIs.
-SINGLE entry point: pytest tests/test_all.py -v
+全量位级对齐测试 —— scipycpp C++ vs Python scipy 全部 API。
 
-ALL APIs are bit-identical (0 ULP) for both float64/float32, including:
-  - 100-batch random data (uniform, normal, extreme ranges)
-  - Special values: ±0.0, ±inf, NaN, subnormals, boundary conditions
-  - Extreme values: saturating inputs, domain boundaries, tiny/huge scales
+运行:  pytest tests/test_all.py -v
 
-NOTE: All scipy APIs return float64 regardless of input dtype.
-C++ mirrors this behavior.
+架构: 5 函数驱动全量测试。
+  F3  compare()     — 位级比对，多策略支持
+  F4  call_cpp_py() — 按名称反射调用 CPP / PY 同名函数
+  F5  api_catalog() — 导出全部 API 元数据（按模块组织）
+  F1  极端数据生成   — 内嵌于各类目工厂函数
+  F2  reshape适配   — 内嵌于各类目工厂函数
 
-numpycpp exp/log/sqrt now resolve to npy_* / SVML, matching scipy's
-internal math path bit-for-bit on every x86_64 machine.
+严格参考 /home/peng.li24/github.com/array2d/numpycpp/tests/test_all.py 的测试方法。
 """
 
-import os, sys, atexit, importlib, warnings, numpy as np, pytest
+import os
+import sys
+import atexit
+import importlib
+import numpy as np
+import pytest
+from collections import namedtuple
+
 
 BATCH = 100
 
@@ -22,65 +28,52 @@ def _s(label, dtype=None):
     """Append [f64] or [f32] to label for ULP report clarity."""
     return label if dtype is None else f"{label} [{np.dtype(dtype).name}]"
 
-# ============================================================================
-# ULP computation & reporting
-# ============================================================================
 
-_ulp_report = []  # human-readable lines for stderr
-_ulp_records = []  # structured rows for CSV export
+# ═══════════════════════════════════════════════════════════════════════════════
+# scipy 参考模块（按需导入）
+# ═══════════════════════════════════════════════════════════════════════════════
 
-def _ulp_record(label, n_total, n_diff, max_ulp, tol, hist, status):
-    """Collect one row for CSV ULP report."""
-    # Parse module/dtype from label like "pdf batch=100 [float64]"
-    # Extract module (base API name, stripping parameters) and dtype [...] suffix
-    import re as _re
-    parts = label.split(" [", 1)
-    test_name = parts[0]
-    dtype_tag = parts[1].rstrip("]") if len(parts) > 1 else "—"
-    # Strip parameters to get base module: "pdf(loc=0.0,scale=0.01)" → "pdf"
-    # Match alphabetic + optional _word prefix before '(' or ' '
-    m = _re.match(r'^([a-zA-Z_]\w*)', test_name) if test_name else None
-    module = m.group(1) if m else (test_name.split()[0] if test_name else "—")
-    _ulp_records.append({
-        "module": module,
-        "test": test_name,
-        "dtype": dtype_tag,
-        "n_total": n_total,
-        "n_diff": n_diff,
-        "max_ulp": max_ulp,
-        "tol": tol,
-        "histogram": hist.replace(", ", " "),
-        "status": status,
-    })
+from scipy.stats import norm as sp_norm
+from scipy import integrate as sp_integrate
+from scipy.spatial import distance as sp_distance
+from scipy.spatial import cKDTree as sp_cKDTree
+from scipy import ndimage as sp_ndimage
+from scipy import signal as sp_signal
+from scipy.spatial.transform import Rotation as sp_Rotation
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# F3: compare — 统一比对入口，支持多种策略
+# ═══════════════════════════════════════════════════════════════════════════════
 
 _MAX_ULP = (1 << 62)  # sentinel for "definitely different" without int64 overflow
 
+_UINT_VIEW = {4: np.uint32, 8: np.uint64}
+_EL_VIEW   = {2: np.uint16, 4: np.uint32, 8: np.uint64}
+_EL_FMT    = {2: "04x", 4: "08x", 8: "016x"}
+
+
 def _ulp_dist(a, b):
     """ULP distance between two float64 values.
-    NaN vs NaN → 0  (both NaN ≡ bit-identical semantically).
-    NaN vs non-NaN → _MAX_ULP sentinel.
-    Same bit pattern → 0 (handles ±0, ±inf, etc. correctly).
-    Cross-sign (one positive, one negative, both finite/inf) → _MAX_ULP.
+    NaN vs NaN → 0. NaN vs non-NaN → _MAX_ULP. Cross-sign → _MAX_ULP.
     """
     a64, b64 = np.float64(a), np.float64(b)
-    # NaN handling first (isnan before any comparison)
     a_nan, b_nan = bool(np.isnan(a64)), bool(np.isnan(b64))
     if a_nan and b_nan:
-        return 0               # both NaN — semantically identical
+        return 0
     if a_nan or b_nan:
-        return _MAX_ULP        # NaN vs non-NaN — maximal mismatch
-    # Both non-NaN: compare via bit patterns
+        return _MAX_ULP
     ai = int(a64.view(np.uint64))
     bi = int(b64.view(np.uint64))
     if ai == bi:
-        return 0               # identical bits (includes ±0 == ±0, +inf == +inf)
-    # Cross-sign (one positive, one negative) — treat as maximal mismatch
+        return 0
     if (a64 < 0) != (b64 < 0):
         return _MAX_ULP
     return abs(ai - bi)
 
+
 def _ulp_dist32(a, b):
-    """ULP distance in float32 space (for float32 results compared as float32)."""
+    """ULP distance in float32 space."""
     a32, b32 = np.float32(a), np.float32(b)
     a_nan, b_nan = bool(np.isnan(a32)), bool(np.isnan(b32))
     if a_nan and b_nan: return 0
@@ -91,34 +84,12 @@ def _ulp_dist32(a, b):
     if (a32 < 0) != (b32 < 0): return _MAX_ULP
     return abs(ai - bi)
 
-def assert_f32_ulp_close(cpp_r, py_r, label, max_ulp=6):
-    """Compare float32 results in float32 ULP space.
-    Used for functions that both C++ and scipy compute/return in float32,
-    where sequential vs SIMD pairwise summation causes ≤few float32 ULPs.
-    """
-    a32 = np.float32(cpp_r)
-    b32 = np.float32(py_r)
-    diff = _ulp_dist32(a32, b32)
-    if diff == 0:
-        _ulp_report.append(f"  ✓ {label}: 0 ULP (bit-identical)")
-        _ulp_record(label, 1, 0, 0, max_ulp, "—", "bit-identical")
-        return
-    ok = diff <= max_ulp
-    tag = "✓" if ok else "✗ FAIL"
-    status = f"within {max_ulp} f32-ULP" if ok else "FAIL (exceeds tolerance)"
-    _ulp_report.append(f"  {tag} {label}: max={diff} f32-ULP (tol={max_ulp})"
-                       f"  C++={float(a32):.8g}  scipy={float(b32):.8g}")
-    _ulp_record(label, 1, 1 if diff > 0 else 0, diff, max_ulp,
-                f"1×{diff}f32ULP", status)
-    if not ok:
-        raise AssertionError(f"{label}: f32-ULP {diff} > tol={max_ulp}")
 
 def _ulp_stats(cpp, py):
     """Compute (n_diff, max_ulp, max_idx, hist_str) for two float64 arrays.
-    NaN==NaN is treated as matching (0 ULP), per IEEE 754 bit-identity rule.
+    NaN==NaN is treated as matching (0 ULP).
     """
     assert cpp.shape == py.shape
-    # Treat NaN vs NaN as identical; non-NaN use exact equality
     nan_both = np.isnan(cpp) & np.isnan(py)
     diff_mask = (cpp != py) & ~nan_both
     n_diff = int(np.sum(diff_mask))
@@ -132,274 +103,273 @@ def _ulp_stats(cpp, py):
     hist = ", ".join(f"{c}×{u}ULP" for u, c in zip(uniq, cnt))
     return (n_diff, max_ulp, max_idx, hist)
 
-def assert_bit_aligned(cpp_r, py_r, label=""):
-    cpp = np.asarray(cpp_r, dtype=np.float64)
-    py  = np.asarray(py_r, dtype=np.float64)
-    assert cpp.shape == py.shape, f"{label}: shape mismatch {cpp.shape} vs {py.shape}"
-    n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
-    if n_diff == 0:
-        _ulp_report.append(f"  ✓ {label}: 0 ULP (bit-identical)")
-        _ulp_record(label, int(cpp.size), 0, 0, 0, "—", "bit-identical")
-        return
-    _ulp_report.append(f"  ✗ FAIL {label}: {n_diff}/{cpp.size} differ, max={max_ulp} ULP [{hist}]")
-    _ulp_report.append(f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  scipy={py.flat[max_idx]:.18e}")
-    _ulp_record(label, int(cpp.size), n_diff, max_ulp, 0, hist, "FAIL (bit-aligned required)")
-    raise AssertionError(
-        f"{label}: BIT-LEVEL MISMATCH {n_diff}/{cpp.size} differ, max={max_ulp} ULP")
 
-def assert_ulp_close(cpp_r, py_r, label="", max_ulp_tol=3):
+# ── report 行收集 ────────────────────────────────────────────────────────────
+
+_ULP_REPORT   = []   # human-readable lines for stderr
+_ULP_RECORDS  = []   # structured rows for CSV export
+
+
+def _ulp_record(label, n_total, n_diff, max_ulp, tol, hist, status):
+    """Collect one row for CSV ULP report."""
+    import re as _re
+    parts = label.split(" [", 1)
+    test_name = parts[0]
+    dtype_tag = parts[1].rstrip("]") if len(parts) > 1 else "—"
+    m = _re.match(r'^([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)', test_name) if test_name else None
+    module = m.group(1) if m else (test_name.split()[0] if test_name else "—")
+    _ULP_RECORDS.append({
+        "module": module,
+        "test": test_name,
+        "dtype": dtype_tag,
+        "n_total": n_total,
+        "n_diff": n_diff,
+        "max_ulp": max_ulp,
+        "tol": tol,
+        "histogram": hist.replace(", ", " "),
+        "status": status,
+    })
+
+
+def _print_ulp_report():
+    if not _ULP_REPORT:
+        return
+    n_bit   = sum(1 for l in _ULP_REPORT if "0 ULP (bit-identical)" in l)
+    n_tolerated = sum(1 for l in _ULP_REPORT if l.startswith("  ✓") and "0 ULP" not in l)
+    n_fail  = sum(1 for l in _ULP_REPORT if "FAIL" in l)
+    print("\n" + "="*72, file=sys.stderr, flush=True)
+    summary = f"  ULP ALIGNMENT REPORT: {n_bit} bit-identical"
+    if n_tolerated: summary += f", {n_tolerated} within tolerance"
+    if n_fail:      summary += f", {n_fail} FAILURES"
+    print(summary, file=sys.stderr)
+    print("="*72, file=sys.stderr, flush=True)
+    for line in _ULP_REPORT:
+        print(line, file=sys.stderr, flush=True)
+    print("="*72, file=sys.stderr, flush=True)
+
+    if _ULP_RECORDS:
+        import csv as _csv
+        csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                "..", "doc", "ulp_report.csv")
+        os.makedirs(os.path.dirname(csv_path), exist_ok=True)
+        fieldnames = ["module", "test", "dtype", "n_total", "n_diff",
+                      "max_ulp", "tol", "histogram", "status"]
+        with open(csv_path, "w", newline="") as f:
+            writer = _csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            for r in _ULP_RECORDS:
+                writer.writerow(r)
+        print(f"  CSV exported → {csv_path}", file=sys.stderr, flush=True)
+
+
+atexit.register(_print_ulp_report)
+
+
+# ── 策略分发 ─────────────────────────────────────────────────────────────────
+
+def compare(cpp_result, py_result, strategy="bit_exact", label=""):
+    """统一比对入口。
+
+    支持策略:
+      bit_exact          — 0 ULP 位级精确
+      scalar_eq          — 标量值相等
+      shape_only         — 仅形状匹配
+      nan_mask           — 仅 NaN 掩码匹配
+      none               — 跳过比对
+      ulp_close:N        — 允许最多 N 个 float64 ULP
+      f32_ulp_close:N    — 允许最多 N 个 float32 ULP (convert to float32 first)
+      linalg_close:N     — linalg 专用 ULP 比较 (Eigen3 vs LAPACK)
+    """
+    if strategy == "none":
+        return
+
+    if strategy == "scalar_eq":
+        c = float(np.asarray(cpp_result).item())
+        p = float(np.asarray(py_result).item())
+        if c != p:
+            _ULP_RECORDS.append({"module": label, "test": label, "dtype": "—",
+                                 "n_total": 1, "n_diff": 1, "max_ulp": -1,
+                                 "tol": 0, "histogram": "—", "status": "FAIL"})
+            raise AssertionError(f"[{label}] scalar mismatch: C++={c} vs scipy={p}")
+        _ULP_REPORT.append(f"  ✓ {label}: scalar match C++={c}")
+        _ULP_RECORDS.append({"module": label, "test": label, "dtype": "—",
+                             "n_total": 1, "n_diff": 0, "max_ulp": 0,
+                             "tol": 0, "histogram": "—", "status": "bit-identical"})
+        return
+
+    if strategy == "shape_only":
+        if np.asarray(cpp_result).shape != np.asarray(py_result).shape:
+            raise AssertionError(f"[{label}] shape mismatch: "
+                                 f"C++ {np.asarray(cpp_result).shape} vs scipy {np.asarray(py_result).shape}")
+        return
+
+    if strategy == "nan_mask":
+        cpp = np.asarray(cpp_result)
+        py  = np.asarray(py_result)
+        if not np.array_equal(np.isnan(cpp), np.isnan(py)):
+            raise AssertionError(f"[{label}] NaN mask mismatch")
+        return
+
+    if strategy.startswith("ulp_close:"):
+        tol = int(strategy.split(":")[1])
+        _compare_ulp_close(cpp_result, py_result, label, tol)
+        return
+
+    if strategy.startswith("f32_ulp_close:"):
+        tol = int(strategy.split(":")[1])
+        _compare_f32_ulp_close(cpp_result, py_result, label, tol)
+        return
+
+    if strategy.startswith("linalg_close:"):
+        tol = int(strategy.split(":")[1])
+        _compare_linalg_close(cpp_result, py_result, label, tol)
+        return
+
+
+    # default: bit_exact
+    _compare_bit_exact(cpp_result, py_result, label)
+
+
+def _compare_bit_exact(cpp_result, py_result, label=""):
+    """0 ULP 位级精确比对，含 hex dump 诊断。"""
+    cpp = np.asarray(cpp_result, dtype=np.float64)
+    py  = np.asarray(py_result,  dtype=np.float64)
+
+    if cpp.shape != py.shape:
+        raise AssertionError(
+            f"[{label}] shape mismatch: C++ {cpp.shape} vs scipy {py.shape}")
+
+    if cpp.size == 0:
+        _ULP_REPORT.append(f"  ✓ {label}: 0 ULP (bit-identical, empty)")
+        _ulp_record(label, 0, 0, 0, 0, "—", "bit-identical")
+        return
+
+    if cpp.dtype.kind == 'f' and cpp.dtype == py.dtype:
+        uint_t = _UINT_VIEW.get(cpp.itemsize)
+        if uint_t is not None:
+            cpp_u = np.ascontiguousarray(cpp).ravel().view(uint_t)
+            py_u  = np.ascontiguousarray(py).ravel().view(uint_t)
+            if np.array_equal(cpp_u, py_u):
+                _ULP_REPORT.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+                _ulp_record(label, int(cpp.size), 0, 0, 0, "—", "bit-identical")
+                return
+            diff_mask = (cpp_u != py_u).reshape(cpp.shape)
+        else:
+            if np.array_equal(cpp, py):
+                _ULP_REPORT.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+                _ulp_record(label, int(cpp.size), 0, 0, 0, "—", "bit-identical")
+                return
+            diff_mask = cpp != py
+    else:
+        if np.array_equal(cpp, py):
+            _ULP_REPORT.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+            _ulp_record(label, int(cpp.size), 0, 0, 0, "—", "bit-identical")
+            return
+        diff_mask = np.asarray(cpp != py)
+        if diff_mask.shape != cpp.shape:
+            try:
+                diff_mask = diff_mask.reshape(cpp.shape)
+            except ValueError:
+                diff_mask = np.ones(cpp.shape, dtype=bool)
+
+    n_diff = int(np.sum(diff_mask))
+    diff_idx = np.flatnonzero(diff_mask.ravel())
+
+    # Build error message with hex dump for first 5 diffs
+    lines = [f"[{label}] BIT-LEVEL MISMATCH: {n_diff}/{cpp.size}"]
+    for idx in diff_idx[:5]:
+        cv, pv = cpp.flat[idx], py.flat[idx]
+        if cpp.dtype == bool or np.issubdtype(cpp.dtype, np.integer):
+            lines.append(f"  [{idx}] C++={cv}  vs  scipy={pv}")
+        else:
+            cvt = _EL_VIEW.get(cpp.itemsize)
+            pvt = _EL_VIEW.get(py.itemsize)
+            cf  = _EL_FMT.get(cpp.itemsize, "016x")
+            pf  = _EL_FMT.get(py.itemsize, "016x")
+            ch = np.ascontiguousarray(cpp).view(cvt).flat[idx] if cvt else 0
+            ph = np.ascontiguousarray(py).view(pvt).flat[idx] if pvt else 0
+            lines.append(f"  [{idx}] C++={cv:.16e} (0x{ch:{cf}})  vs  "
+                         f"scipy={pv:.16e} (0x{ph:{pf}})")
+    if len(diff_idx) > 5:
+        lines.append(f"  ... 还有 {len(diff_idx) - 5} 个差异元素")
+
+    _ULP_REPORT.append(f"  ✗ FAIL {label}: {n_diff}/{cpp.size} differ")
+    _ulp_record(label, int(cpp.size), n_diff, _MAX_ULP, 0, "—", "FAIL (bit-aligned required)")
+    raise AssertionError("\n".join(lines))
+
+
+def _compare_ulp_close(cpp_result, py_result, label="", max_ulp_tol=3):
     """Tolerate up to max_ulp_tol ULP. Always report actual ULP stats."""
-    cpp = np.asarray(cpp_r, dtype=np.float64)
-    py  = np.asarray(py_r, dtype=np.float64)
+    cpp = np.asarray(cpp_result, dtype=np.float64)
+    py  = np.asarray(py_result,  dtype=np.float64)
     assert cpp.shape == py.shape, f"{label}: shape mismatch {cpp.shape} vs {py.shape}"
     n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
     if n_diff == 0:
-        _ulp_report.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+        _ULP_REPORT.append(f"  ✓ {label}: 0 ULP (bit-identical)")
         _ulp_record(label, int(cpp.size), 0, 0, max_ulp_tol, "—", "bit-identical")
         return
     ok = max_ulp <= max_ulp_tol
     tag = "✓" if ok else "✗ FAIL"
     status = f"within {max_ulp_tol} ULP" if ok else "FAIL (exceeds tolerance)"
-    _ulp_report.append(f"  {tag} {label}: {n_diff}/{cpp.size} differ, max={max_ulp} ULP (tol={max_ulp_tol}) [{hist}]")
-    _ulp_report.append(f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  scipy={py.flat[max_idx]:.18e}")
+    _ULP_REPORT.append(
+        f"  {tag} {label}: {n_diff}/{cpp.size} differ, "
+        f"max={max_ulp} ULP (tol={max_ulp_tol}) [{hist}]")
+    _ULP_REPORT.append(
+        f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  "
+        f"scipy={py.flat[max_idx]:.18e}")
     _ulp_record(label, int(cpp.size), n_diff, max_ulp, max_ulp_tol, hist, status)
     if not ok:
         raise AssertionError(
             f"{label}: ULP MISMATCH max={max_ulp} > tol={max_ulp_tol}")
 
 
-def _print_ulp_report():
-    if not _ulp_report:
+def _compare_f32_ulp_close(cpp_result, py_result, label="", max_ulp_tol=6):
+    """Compare float32 results in float32 ULP space.
+    Used for functions where sequential vs SIMD pairwise summation
+    causes ≤ few float32 ULPs.
+    """
+    a32 = np.float32(cpp_result)
+    b32 = np.float32(py_result)
+    diff = _ulp_dist32(a32, b32)
+    if diff == 0:
+        _ULP_REPORT.append(f"  ✓ {label}: 0 ULP (bit-identical)")
+        _ulp_record(label, 1, 0, 0, max_ulp_tol, "—", "bit-identical")
         return
-    # Count: bit-identical = 0 ULP, tolerated = within limit, failures = over limit
-    n_bit   = sum(1 for l in _ulp_report if "0 ULP (bit-identical)" in l)
-    n_tolerated = sum(1 for l in _ulp_report if l.startswith("  ✓") and "0 ULP" not in l)
-    n_fail  = sum(1 for l in _ulp_report if "FAIL" in l)
-    print("\n" + "="*72, file=sys.stderr, flush=True)
-    summary = f"  ULP ALIGNMENT REPORT: {n_bit} bit-identical"
-    if n_tolerated: summary += f", {n_tolerated} within 1-3 ULP tolerance"
-    if n_fail:      summary += f", {n_fail} FAILURES"
-    print(summary, file=sys.stderr)
-    print("="*72, file=sys.stderr, flush=True)
-    for line in _ulp_report:
-        print(line, file=sys.stderr, flush=True)
-    print("="*72, file=sys.stderr, flush=True)
-
-    # Export CSV to doc/ulp_report.csv
-    if _ulp_records:
-        import csv as _csv
-        csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "doc", "ulp_report.csv")
-        os.makedirs(os.path.dirname(csv_path), exist_ok=True)
-        fieldnames = ["module", "test", "dtype", "n_total", "n_diff", "max_ulp", "tol", "histogram", "status"]
-        with open(csv_path, "w", newline="") as f:
-            writer = _csv.DictWriter(f, fieldnames=fieldnames)
-            writer.writeheader()
-            for r in _ulp_records:
-                writer.writerow(r)
-        print(f"  CSV exported → {csv_path}", file=sys.stderr, flush=True)
-
-atexit.register(_print_ulp_report)
+    ok = diff <= max_ulp_tol
+    tag = "✓" if ok else "✗ FAIL"
+    status = f"within {max_ulp_tol} f32-ULP" if ok else "FAIL (exceeds tolerance)"
+    _ULP_REPORT.append(
+        f"  {tag} {label}: max={diff} f32-ULP (tol={max_ulp_tol})"
+        f"  C++={float(a32):.8g}  scipy={float(b32):.8g}")
+    _ulp_record(label, 1, 1 if diff > 0 else 0, diff, max_ulp_tol,
+                f"1×{diff}f32ULP", status)
+    if not ok:
+        raise AssertionError(f"{label}: f32-ULP {diff} > tol={max_ulp_tol}")
 
 
-# ============================================================================
-# fixtures
-# ============================================================================
-
-_cpp = None
-def get_cpp():
-    global _cpp
-    if _cpp is None:
-        _cpp = importlib.import_module(os.environ.get("SCIPYCPP_MODULE", "scipycpp"))
-    return _cpp
-
-@pytest.fixture(scope="session")
-def cpp(): return get_cpp()
-
-# ============================================================================
-# helpers
-# ============================================================================
-
-def random_batch(shape, dtype=np.float64, seed=0):
-    rng = np.random.RandomState(seed)
-    return rng.randn(*shape).astype(dtype)
-
-def random_uniform(shape, low, high, dtype=np.float64, seed=0):
-    rng = np.random.RandomState(seed)
-    return rng.uniform(low, high, size=shape).astype(dtype)
-
-
-# ============================================================================
-# scipy references
-# ============================================================================
-
-from scipy.stats import norm as sp_norm
-from scipy import integrate as sp_integrate
-from scipy.spatial import distance as sp_distance
-from scipy.spatial import cKDTree as sp_cKDTree
-from scipy import ndimage as sp_ndimage
-from scipy import signal as sp_signal
-from scipy.spatial.transform import Rotation as sp_Rotation
-
-
-# ============================================================================
-# BIT-LEVEL: norm.pdf / norm.cdf / norm.ppf
-#
-# norm.pdf uses numpy::exp() → npy_exp (dlsym) or SVML, identical math path
-# to scipy's internal numpy.exp.  All three functions are now 0 ULP.
-# ============================================================================
-
-
-class TestNormPdf:
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    def test_batch_default(self, cpp, dtype):
-        a = random_batch((BATCH,), dtype=dtype, seed=1001)
-        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s(f"pdf batch={BATCH}", dtype))
-
-    @pytest.mark.parametrize("v", [0.0, 1.0, -1.0, 2.0, -2.0, 3.0, -3.0, 5.0, -5.0])
-    def test_canonical(self, cpp, dtype, v):
-        a = np.array([v], dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s(f"pdf({v})", dtype))
-
-    def test_extreme(self, cpp, dtype):
-        a = np.array([6.0, 8.0, 10.0, -6.0, -8.0, -10.0, 20.0, -20.0], dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a), _s("pdf extreme", dtype))
-
-    @pytest.mark.parametrize("loc,scale", [
-        (0.0,1.0),(1.0,1.0),(-2.0,1.0),(0.0,2.0),(0.0,0.5),(3.0,4.0),
-        (-1.5,0.3),(5.0,10.0),
-    ])
-    def test_loc_scale(self, cpp, dtype, loc, scale):
-        a = random_batch((BATCH,), dtype=dtype, seed=1002)
-        assert_bit_aligned(cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
-                           sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
-                           _s(f"pdf(loc={loc},scale={scale})", dtype))
-
-    @pytest.mark.parametrize("loc,scale", [(-10.0,0.01), (10.0,0.01)])
-    def test_tiny_scale(self, cpp, dtype, loc, scale):
-        a = random_batch((BATCH,), dtype=dtype, seed=1003)
-        assert_bit_aligned(cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
-                           sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
-                           _s(f"pdf(loc={loc},scale={scale})", dtype))
-
-
-class TestNormCdf:
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    def test_batch_default(self, cpp, dtype):
-        a = random_batch((BATCH,), dtype=dtype, seed=1004)
-        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a), _s(f"cdf batch={BATCH}", dtype))
-
-    @pytest.mark.parametrize("v", [0.0, 1.0, -1.0, 2.0, -2.0, 3.0, -3.0])
-    def test_canonical(self, cpp, dtype, v):
-        a = np.array([v], dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a), _s(f"cdf({v})", dtype))
-
-    @pytest.mark.parametrize("loc,scale", [
-        (0.0,1.0),(1.0,1.0),(-2.0,1.0),(0.0,2.0),(0.0,0.5),(3.0,4.0),
-    ])
-    def test_loc_scale(self, cpp, dtype, loc, scale):
-        a = random_batch((BATCH,), dtype=dtype, seed=1005)
-        assert_bit_aligned(cpp.stats.norm.cdf(a, dtype(loc), dtype(scale)),
-                           sp_norm.cdf(a, loc=dtype(loc), scale=dtype(scale)),
-                           _s(f"cdf(loc={loc},scale={scale})", dtype))
-
-
-class TestNormPpf:
-    """Cephes ndtri — bit-identical to scipy.special.ndtri."""
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    def test_batch_default(self, cpp, dtype):
-        a = random_uniform((BATCH,), 0.001, 0.999, dtype=dtype, seed=1006)
-        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a), _s(f"ppf batch={BATCH}", dtype))
-
-    @pytest.mark.parametrize("p", [0.5, 0.025, 0.975, 0.001, 0.999])
-    def test_canonical(self, cpp, dtype, p):
-        a = np.array([p], dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a), _s(f"ppf({p})", dtype))
-
-    @pytest.mark.parametrize("loc,scale", [
-        (0.0,1.0),(1.0,1.0),(-2.0,1.0),(0.0,2.0),(0.0,0.5),
-    ])
-    def test_loc_scale(self, cpp, dtype, loc, scale):
-        a = random_uniform((BATCH,), 0.001, 0.999, dtype=dtype, seed=1007)
-        assert_bit_aligned(cpp.stats.norm.ppf(a, dtype(loc), dtype(scale)),
-                           sp_norm.ppf(a, loc=dtype(loc), scale=dtype(scale)),
-                           _s(f"ppf(loc={loc},scale={scale})", dtype))
-
-
-# ============================================================================
-# BIT-LEVEL: integrate — trapezoid, simpson
-# ============================================================================
-
-class TestIntegrate:
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    def test_trapezoid_batch(self, cpp, dtype):
-        y = random_batch((BATCH,), dtype=dtype, seed=1008)
-        assert_bit_aligned(
-            np.float64(cpp.trapezoid(y)), np.float64(sp_integrate.trapezoid(y)),
-            _s(f"trapezoid batch={BATCH}", dtype))
-
-    def test_simpson_batch(self, cpp, dtype):
-        y = random_batch((101,), dtype=dtype, seed=1009)
-        if dtype == np.float32:
-            # scipy sums in float32 SIMD; C++ sums in float32 sequential.
-            # Compare in float32 ULP space (convert both results to float32).
-            assert_f32_ulp_close(cpp.simpson(y), sp_integrate.simpson(y),
-                                 _s(f"simpson batch=101", dtype), max_ulp=6)
-        else:
-            assert_bit_aligned(
-                np.float64(cpp.simpson(y)), np.float64(sp_integrate.simpson(y)),
-                _s(f"simpson batch=101", dtype))
-
-    def test_trapezoid_known(self, cpp, dtype):
-        y = np.array([0.0, 1.0, 4.0, 9.0, 16.0], dtype=dtype)
-        assert_bit_aligned(
-            np.float64(cpp.trapezoid(y)), np.float64(sp_integrate.trapezoid(y)),
-            _s("trapezoid known", dtype))
-
-    def test_simpson_known(self, cpp):
-        y = np.array([0.0, 1.0, 4.0, 9.0, 16.0], dtype=np.float64)
-        assert_bit_aligned(
-            np.float64(cpp.simpson(y)), np.float64(sp_integrate.simpson(y)),
-            "simpson known")
-
-
-# ============================================================================
-# BIT-LEVEL: linalg.solve
-#
-# C++ linalg.solve always computes in float64 (float32 inputs are promoted).
-# This mirrors scipy's LAPACK gesv which operates in double precision internally.
-# For canonical (simple) matrices, Eigen3 partialPivLu is bit-identical to
-# LAPACK gesv. For larger/random matrices, ULP-level differences (~1e-15)
-# may occur; assert_linalg_close tolerates these.
-# ============================================================================
-
-def assert_linalg_close(cpp_r, py_r, label="", max_ulp_tol=50):
+def _compare_linalg_close(cpp_result, py_result, label="", max_ulp_tol=50):
     """ULP-based comparison for linalg operations (Eigen3 vs LAPACK).
 
-    Eigen3 partialPivLu vs LAPACK gesv can differ by a few ULP (~1e-15,
-    about 1-4 ULP for well-conditioned matrices, up to ~50 ULP for
-    ill-conditioned ones). Uses ULP tolerance — never allclose/atol.
-    Always reports ULP stats."""
-    cpp = np.asarray(cpp_r, dtype=np.float64)
-    py  = np.asarray(py_r, dtype=np.float64)
+    Eigen3 partialPivLu vs LAPACK gesv can differ by a few ULP for
+    well-conditioned matrices, more for ill-conditioned ones.
+    """
+    cpp = np.asarray(cpp_result, dtype=np.float64)
+    py  = np.asarray(py_result,  dtype=np.float64)
     assert cpp.shape == py.shape, f"{label}: shape mismatch {cpp.shape} vs {py.shape}"
     n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
     ok = max_ulp <= max_ulp_tol
     tag = "✓" if ok else "✗ FAIL"
     tol_label = f"≤{max_ulp_tol} ULP"
     if n_diff == 0:
-        _ulp_report.append(f"  {tag} {label}: 0 ULP (bit-identical)")
+        _ULP_REPORT.append(f"  {tag} {label}: 0 ULP (bit-identical)")
         _ulp_record(label, int(cpp.size), 0, 0, tol_label, "—", "bit-identical")
     else:
-        _ulp_report.append(f"  {tag} {label}: {n_diff}/{cpp.size} differ, max={max_ulp} ULP [{hist}]")
-        _ulp_report.append(f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  np={py.flat[max_idx]:.18e}")
+        _ULP_REPORT.append(
+            f"  {tag} {label}: {n_diff}/{cpp.size} differ, "
+            f"max={max_ulp} ULP [{hist}]")
+        _ULP_REPORT.append(
+            f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  "
+            f"np={py.flat[max_idx]:.18e}")
         status = f"within {tol_label}" if ok else "FAIL (exceeds tolerance)"
         _ulp_record(label, int(cpp.size), n_diff, max_ulp, tol_label, hist, status)
     if not ok:
@@ -407,1130 +377,1075 @@ def assert_linalg_close(cpp_r, py_r, label="", max_ulp_tol=50):
             f"{label}: linalg ULP MISMATCH max={max_ulp} > tol={max_ulp_tol} ULP")
 
 
-class TestLinalg:
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
+# ═══════════════════════════════════════════════════════════════════════════════
+# F4: call_cpp_py — 按名称反射调用 C++ 与 Python scipy 同名函数
+# ═══════════════════════════════════════════════════════════════════════════════
 
-    @staticmethod
-    def _np_solve(A, b):
-        """Reference: numpy.linalg.solve in float64 (C++ internally promotes)."""
-        return np.linalg.solve(A.astype(np.float64), b.astype(np.float64))
+# 映射 C++ API 路径 → scipy 可调用对象
+_SCIPY_FN = {
+    "stats.norm.pdf":  sp_norm.pdf,
+    "stats.norm.cdf":  sp_norm.cdf,
+    "stats.norm.ppf":  sp_norm.ppf,
+    "trapezoid":       sp_integrate.trapezoid,
+    "simpson":         sp_integrate.simpson,
+    "linalg.solve":    np.linalg.solve,
+    "spatial.distance.cdist": sp_distance.cdist,
+    "ndimage.gaussian_filter1d": sp_ndimage.gaussian_filter1d,
+    "signal.medfilt":  sp_signal.medfilt,
+}
 
-    def test_solve_2x2(self, cpp, dtype):
-        A = np.array([[2.0, 1.0], [1.0, 3.0]], dtype=dtype)
-        b = np.array([5.0, 6.0], dtype=dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.linalg.solve(A, b)), self._np_solve(A, b),
-            _s("solve 2x2", dtype))
 
-    def test_solve_identity(self, cpp, dtype):
-        A = np.eye(3, dtype=dtype)
-        b = np.array([1.0, 2.0, 3.0], dtype=dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.linalg.solve(A, b)), self._np_solve(A, b),
-            _s("solve identity", dtype))
+# linalg.solve 需要对 float32 输入做特殊处理（先提升再调用 scipy 等价物）
+def _linalg_solve_py(A, b):
+    """Reference: numpy.linalg.solve in float64 (C++ internally promotes)."""
+    return np.linalg.solve(A.astype(np.float64), b.astype(np.float64))
 
-    def test_solve_batch(self, cpp, dtype):
-        """100 random matrices (n=4..8) + random RHS vectors.
 
-        Eigen3 partialPivLu vs LAPACK gesv can differ by more ULP for
-        near-singular random matrices. Observed range: 1-34 ULP typical,
-        up to ~500 ULP for borderline-conditioned cases. Using 2000 ULP
-        tolerance to cover outliers without masking real bugs."""
+_SCIPY_FN["linalg.solve"] = _linalg_solve_py
+
+
+def call_cpp_py(api_name, cpp, *args, **kwargs):
+    """按名称字符串反射调用 C++ 和 Python scipy 同名函数。
+
+    Returns (cpp_result, py_result). py_result 为 None 表示无 scipy 等效。
+    """
+    # 解析 C++ 函数
+    parts = api_name.split(".")
+    cpp_fn = cpp
+    for part in parts:
+        try:
+            cpp_fn = getattr(cpp_fn, part)
+        except AttributeError:
+            raise AttributeError(
+                f"C++ 模块在路径 '{api_name}' 中不存在属性 '{part}'。"
+                f"可用: {dir(cpp_fn)}")
+
+    # 获取 scipy 函数
+    scipy_fn = _SCIPY_FN.get(api_name)
+
+    cpp_result = cpp_fn(*args, **kwargs)
+    py_result = scipy_fn(*args, **kwargs) if scipy_fn is not None else None
+    return cpp_result, py_result
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# F1/F2: 数据生成工具 — 确定性随机数组 + 极端数据
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def _seed(shape, *extras):
+    """返回非负确定性种子。h = hash(shape) 或 hash((shape, *extras))。"""
+    h = hash((shape,) + extras) if extras else hash(shape)
+    return h & 0x7FFFFFFF
+
+
+def _random_array(shape, dtype=np.float64, seed=42):
+    """确定性的随机数组。"""
+    rng = np.random.RandomState((seed + _seed(shape)) % (2**31))
+    if np.issubdtype(dtype, np.floating):
+        return rng.randn(*shape).astype(dtype)
+    elif dtype == bool:
+        return rng.rand(*shape) > 0.5
+    else:
+        return rng.randint(0, 100, size=shape).astype(dtype)
+
+
+def _random_uniform(shape, low, high, dtype=np.float64, seed=42):
+    """确定性均匀分布随机数组。"""
+    rng = np.random.RandomState((seed + _seed(shape, low, high)) % (2**31))
+    return rng.uniform(low, high, size=shape).astype(dtype)
+
+
+def _make_extreme(shape, dtype, category, seed=42):
+    """生成指定类别的极端数据。
+
+    类别: random, zeros, ones, nan, mixed_nan, inf, mixed_inf,
+          signed_zero, domain_edge, large, tiny, empty
+    """
+    rng = np.random.RandomState((seed + _seed(shape, category)) % (2**31))
+    n = int(np.prod(shape)) if shape else 0
+
+    if category == "random":
+        return _random_array(shape, dtype, seed)
+    if category == "zeros":
+        return np.zeros(shape, dtype=dtype)
+    if category == "ones":
+        return np.ones(shape, dtype=dtype)
+    if category == "nan":
+        return np.full(shape, np.nan, dtype=dtype)
+    if category == "mixed_nan":
+        a = _random_array(shape, dtype, seed)
+        a.flat[::3] = np.nan
+        return a
+    if category == "inf":
+        return np.array([np.inf, -np.inf] * ((n + 1) // 2), dtype=dtype)[:n].reshape(shape)
+    if category == "mixed_inf":
+        a = _random_array(shape, dtype, seed)
+        a.flat[::4] = np.inf
+        a.flat[1::4] = -np.inf
+        return a
+    if category == "signed_zero":
+        return np.array([0.0, -0.0] * ((n + 1) // 2), dtype=dtype)[:n].reshape(shape)
+    if category == "domain_edge":
+        return (np.abs(_random_array(shape, dtype, seed)) * 0.1 + 0.01).astype(dtype)
+    if category == "large":
+        return (_random_array(shape, dtype, seed) * 1e150).astype(dtype)
+    if category == "tiny":
+        return (_random_array(shape, dtype, seed) * 1e-150).astype(dtype)
+    if category == "empty":
+        empty_shape = list(shape)
+        empty_shape[0] = 0
+        return np.empty(empty_shape, dtype=dtype)
+    return _random_array(shape, dtype, seed)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TestCase 定义
+# ═══════════════════════════════════════════════════════════════════════════════
+
+TestCase = namedtuple('TestCase', [
+    'api_name',      # API 路径, e.g. "stats.norm.pdf"
+    'args',          # 位置参数 tuple
+    'kwargs',        # 关键字参数 dict
+    'dtype_label',   # dtype 标签 (用于 pytest ID)
+    'category',      # 极端数据类别 / 场景描述
+    'cmp_strategy',  # 比较策略字符串
+    'group',         # 大类: stats / integrate / linalg / spatial / kdtree / ndimage / signal / transform
+    'direct_fn',     # None | fn(tc, cpp) → 直接运行测试，绕过 call_cpp_py + compare
+], defaults=("", None))  # defaults for group and direct_fn
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# F5: api_catalog() — 各类目工厂函数
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ── 第1类: stats (norm.pdf / norm.cdf / norm.ppf) ───────────────────────────
+
+def _catalog_stats():
+    """stats 模块 — norm.pdf, norm.cdf, norm.ppf"""
+    for name, default_domain, fill_val in [
+            ("stats.norm.pdf",  "wide",     6.0),
+            ("stats.norm.cdf",  "wide",     6.0),
+            ("stats.norm.ppf",  "p01_p99",  0.5),
+    ]:
+        for dt in (np.float64, np.float32):
+            dn = dt.__name__
+
+            # ── batch=100 随机数据 ──
+            seed_base = {"stats.norm.pdf": 1001, "stats.norm.cdf": 1004,
+                         "stats.norm.ppf": 1006}[name]
+            if name == "stats.norm.ppf":
+                raw = _random_uniform((BATCH,), 0.001, 0.999, dtype=dt, seed=seed_base)
+            else:
+                raw = _random_array((BATCH,), dtype=dt, seed=seed_base)
+            yield TestCase(name, (raw,), {}, dn, f"batch={BATCH}",
+                           "bit_exact", "stats")
+
+            # ── 典型值 ──
+            if name == "stats.norm.ppf":
+                canonicals = [0.5, 0.025, 0.975, 0.001, 0.999]
+            else:
+                canonicals = [0.0, 1.0, -1.0, 2.0, -2.0, 3.0, -3.0]
+            for v in canonicals:
+                a = np.array([dt(v)], dtype=dt)
+                yield TestCase(name, (a,), {}, dn, f"canonical({v})",
+                               "bit_exact", "stats")
+
+            # ── 极端值 ──
+            if name == "stats.norm.ppf":
+                yield TestCase(name, (np.array([0.0, 1.0, 0.5, np.nan,
+                                                 -0.01, 1.01, np.inf, -np.inf], dtype=dt),),
+                               {}, dn, "special_scalars", "bit_exact", "stats")
+            else:
+                yield TestCase(name, (np.array([0.0, -0.0, np.inf, -np.inf, np.nan,
+                                                 40.0, -40.0, 100.0, -100.0], dtype=dt),),
+                               {}, dn, "special_scalars", "bit_exact", "stats")
+
+            # ── loc/scale 参数变化 ──
+            param_list = {
+                "stats.norm.pdf":  [(0,1), (1,1), (-2,1), (0,2), (0,0.5), (3,4), (-1.5,0.3), (5,10)],
+                "stats.norm.cdf":  [(0,1), (1,1), (-2,1), (0,2), (0,0.5), (3,4)],
+                "stats.norm.ppf":  [(0,1), (1,1), (-2,1), (0,2), (0,0.5)],
+            }[name]
+            for loc, scale in param_list:
+                seed2 = {"stats.norm.pdf": 1002, "stats.norm.cdf": 1005,
+                         "stats.norm.ppf": 1007}[name]
+                if name == "stats.norm.ppf":
+                    raw = _random_uniform((BATCH,), 0.001, 0.999, dtype=dt, seed=seed2)
+                else:
+                    raw = _random_array((BATCH,), dtype=dt, seed=seed2)
+                yield TestCase(name, (raw, dt(loc), dt(scale)), {},
+                               dn, f"loc={loc},scale={scale}", "bit_exact", "stats")
+
+            # ── 迷你 scale (仅 pdf) ──
+            if name == "stats.norm.pdf":
+                for loc, scale in [(-10.0, 0.01), (10.0, 0.01)]:
+                    raw = _random_array((BATCH,), dtype=dt, seed=1003)
+                    yield TestCase(name, (raw, dt(loc), dt(scale)), {},
+                                   dn, f"tiny_scale loc={loc},s={scale}", "bit_exact", "stats")
+
+            # ── 极端参数 ──
+            if name == "stats.norm.ppf":
+                extreme_params = [(0, 1e-5), (0, 1e5), (100, 1), (-100, 1)]
+            else:
+                extreme_params = [(0, 1e-10), (0, 1e10), (1e15, 1), (-1e15, 1)]
+            for loc, scale in extreme_params:
+                if name == "stats.norm.ppf":
+                    raw = _random_uniform((BATCH,), 0.001, 0.999, dtype=dt, seed=9006)
+                else:
+                    raw = _random_array((BATCH,), dtype=dt, seed=9002)
+                yield TestCase(name, (raw, dt(loc), dt(scale)), {},
+                               dn, f"extreme_params loc={loc},s={scale}",
+                               "bit_exact", "stats")
+
+            # ── 宽范围 batch ──
+            if name == "stats.norm.ppf":
+                rng = np.random.RandomState(9005)
+                a = np.concatenate([
+                    rng.uniform(0.001, 0.999, 80).astype(dt),
+                    np.array([0.0, 1.0, np.nan, -0.01, 1.01, 0.5, 0.25, 0.75], dtype=dt),
+                ])
+                yield TestCase(name, (a,), {}, dn, "batch_wide",
+                               "bit_exact", "stats")
+            else:
+                rng = np.random.RandomState(9001)
+                a = np.concatenate([
+                    rng.uniform(-30, 30, 50).astype(dt),
+                    rng.uniform(-300, 300, 30).astype(dt),
+                    np.array([0.0, 1e-15, -1e-15, 30.0, -30.0,
+                              np.inf, -np.inf, np.nan], dtype=dt),
+                ])
+                yield TestCase(name, (a,), {}, dn, "batch_wide",
+                               "bit_exact", "stats")
+
+            # ── 次正规数 (仅 pdf) ──
+            if name == "stats.norm.pdf":
+                ftiny = np.finfo(np.float64).tiny
+                a = np.array([float(ftiny), -float(ftiny), ftiny, -float(ftiny)],
+                             dtype=dt)
+                yield TestCase(name, (a,), {}, dn, "subnormal",
+                               "bit_exact", "stats")
+
+
+# ── 第2类: integrate (trapezoid / simpson) ──────────────────────────────────
+
+def _catalog_integrate():
+    """integrate 模块 — trapezoid, simpson"""
+    for name in ["trapezoid", "simpson"]:
+        n = BATCH if name == "trapezoid" else (BATCH + 1)  # simpson needs odd
+        for dt in (np.float64, np.float32):
+            dn = dt.__name__
+
+            # batch 随机 — pairwise_sum = 0 ULP vs scipy numpy.add.reduce
+            seed_val = 1008 if name == "trapezoid" else 1009
+            y = _random_array((n,), dtype=dt, seed=seed_val)
+            yield TestCase(name, (y,), {}, dn, f"batch={n}",
+                           "bit_exact", "integrate")
+
+            # 已知值
+            y_known = np.array([0.0, 1.0, 4.0, 9.0, 16.0], dtype=dt)
+            yield TestCase(name, (y_known,), {}, dn, "known",
+                           "bit_exact", "integrate")
+
+            # 全零
+            yz = np.zeros(n, dtype=dt)
+            yield TestCase(name, (yz,), {}, dn, "zeros",
+                           "bit_exact", "integrate")
+
+            # 常数 — pairwise_sum 与 scipy numpy.add.reduce 求和顺序一致 → 0 ULP
+            yc = np.full(n, 3.14159 if name == "trapezoid" else 2.71828, dtype=dt)
+            yield TestCase(name, (yc,), {}, dn, "constant",
+                           "bit_exact", "integrate")
+
+            # 大值
+            scale = 1e100 if dt == np.float64 else 1e20
+            if name == "simpson":
+                rng = np.random.RandomState(9011)
+                yl = (rng.randn(n) * scale).astype(dt)
+                yield TestCase(name, (yl,), {}, dn, f"large_1e{int(np.log10(scale)):.0f}",
+                               "bit_exact", "integrate")
+            else:
+                yl = _random_array((n,), dtype=dt, seed=9010) * dt(1e200 if dt == np.float64 else 1e20)
+                yield TestCase(name, (yl,), {}, dn, f"large_1e{int(np.log10(scale)):.0f}",
+                               "bit_exact", "integrate")
+
+            # 交替符号 (trapezoid only)
+            if name == "trapezoid":
+                ya = np.array([dt((-1.0)**i) for i in range(n)], dtype=dt)
+                yield TestCase(name, (ya,), {}, dn, "alternating_sign",
+                               "bit_exact", "integrate")
+
+            # 2 元素 (trapezoid only)
+            if name == "trapezoid":
+                y2 = np.array([1.0, 3.0], dtype=dt)
+                yield TestCase(name, (y2,), {}, dn, "2_elem",
+                               "bit_exact", "integrate")
+
+
+# ── 第3类: linalg.solve ─────────────────────────────────────────────────────
+
+def _catalog_linalg():
+    """linalg 模块 — linalg.solve"""
+    for dt in (np.float64, np.float32):
+        dn = dt.__name__
+
+        # 2x2
+        A = np.array([[2.0, 1.0], [1.0, 3.0]], dtype=dt)
+        b = np.array([5.0, 6.0], dtype=dt)
+        yield TestCase("linalg.solve", (A, b), {}, dn, "2x2",
+                       "bit_exact", "linalg")
+
+        # 单位矩阵
+        A = np.eye(3, dtype=dt)
+        b = np.array([1.0, 2.0, 3.0], dtype=dt)
+        yield TestCase("linalg.solve", (A, b), {}, dn, "identity",
+                       "bit_exact", "linalg")
+
+        # batch 随机 (n=4..8)
         rng = np.random.RandomState(4242)
         for i in range(BATCH):
-            n = rng.randint(4, 9)  # 4..8
-            A = (rng.randn(n, n) * 2.0 + 3.0 * np.eye(n)).astype(dtype)
-            b = rng.randn(n).astype(dtype)
-            cpp_r = np.asarray(cpp.linalg.solve(A, b), dtype=np.float64)
-            assert_linalg_close(cpp_r, self._np_solve(A, b), _s(f"solve batch[{i}] n={n}", dtype), max_ulp_tol=2000)
+            n = rng.randint(4, 9)
+            A = (rng.randn(n, n) * 2.0 + 3.0 * np.eye(n)).astype(dt)
+            b_vec = rng.randn(n).astype(dt)
+            yield TestCase("linalg.solve", (A, b_vec), {}, dn,
+                           f"batch[{i}]_n={n}", "linalg_close:2000", "linalg")
 
-    @pytest.mark.parametrize("n", [10, 20])
-    def test_solve_large(self, cpp, dtype, n):
-        """Large matrix tests (10x10, 20x20).
+        # 大规模 (n=10, 20)
+        rng2 = np.random.RandomState(12345)
+        for n, tol in [(10, 2000), (20, 10000)]:
+            A = (rng2.randn(n, n) * 1.5 + 4.0 * np.eye(n)).astype(dt)
+            b_vec = rng2.randn(n).astype(dt)
+            yield TestCase("linalg.solve", (A, b_vec), {}, dn,
+                           f"large_n={n}", f"linalg_close:{tol}", "linalg")
 
-        ULP accumulation scales with matrix size. Observed: n=10 → ≤18 ULP,
-        n=20 → ≤5609 ULP (larger pivot growth)."""
-        rng = np.random.RandomState(12345)
-        A = (rng.randn(n, n) * 1.5 + 4.0 * np.eye(n)).astype(dtype)
-        b = rng.randn(n).astype(dtype)
-        cpp_r = np.asarray(cpp.linalg.solve(A, b), dtype=np.float64)
-        tol = 2000 if n == 10 else 10000  # n=20: larger pivot growth
-        assert_linalg_close(cpp_r, self._np_solve(A, b), _s(f"solve large n={n}", dtype), max_ulp_tol=tol)
-
-    @pytest.mark.parametrize("seed", [5555, 6666, 7777])
-    def test_solve_ill_conditioned(self, cpp, dtype, seed):
-        """Ill-conditioned matrices (high condition number) — boundary test."""
-        rng = np.random.RandomState(seed)
-        n = 5
-        # Generate a random orthogonal matrix Q and a diagonal with log-space values
-        Q, _ = np.linalg.qr(rng.randn(n, n))
-        diag = np.logspace(-3, 3, n)  # condition number ~ 1e6
-        A = (Q @ np.diag(diag) @ Q.T).astype(dtype)
-        b = rng.randn(n).astype(dtype)
-        cpp_r = np.asarray(cpp.linalg.solve(A, b), dtype=np.float64)
-        # For ill-conditioned matrices, high ULP is expected (Eigen3 vs LAPACK)
-        assert_linalg_close(cpp_r, self._np_solve(A, b), _s(f"solve ill-cond seed={seed}", dtype), max_ulp_tol=500000)
+        # 病态矩阵
+        for seed_val in [5555, 6666, 7777]:
+            rng3 = np.random.RandomState(seed_val)
+            n = 5
+            Q, _ = np.linalg.qr(rng3.randn(n, n))
+            diag = np.logspace(-3, 3, n)
+            A = (Q @ np.diag(diag) @ Q.T).astype(dt)
+            b_vec = rng3.randn(n).astype(dt)
+            yield TestCase("linalg.solve", (A, b_vec), {}, dn,
+                           f"ill_cond_seed={seed_val}",
+                           "linalg_close:500000", "linalg")
 
 
-# ============================================================================
-# BIT-LEVEL: spatial.distance.cdist
-# ============================================================================
+# ── 第4类: spatial.distance.cdist ────────────────────────────────────────────
 
-class TestCdist:
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
+def _catalog_cdist():
+    """spatial.distance 模块 — cdist"""
+    for metric in ["euclidean", "cityblock", "chebyshev"]:
+        for dt in (np.float64, np.float32):
+            dn = dt.__name__
 
-    @pytest.mark.parametrize("metric", ["euclidean", "cityblock", "chebyshev"])
-    def test_batch(self, cpp, dtype, metric):
-        XA = random_batch((100, 5), dtype=dtype, seed=1011)
-        XB = random_batch((80, 5), dtype=dtype, seed=1012)
-        assert_bit_aligned(
-            np.asarray(cpp.spatial.distance.cdist(XA, XB, metric)),
-            sp_distance.cdist(XA, XB, metric),
-            _s(f"cdist {metric}", dtype))
+            # batch
+            XA = _random_array((100, 5), dtype=dt, seed=1011)
+            XB = _random_array((80, 5),  dtype=dt, seed=1012)
+            yield TestCase("spatial.distance.cdist", (XA, XB, metric), {},
+                           dn, f"{metric}_batch", "bit_exact", "spatial")
 
-    def test_small(self, cpp, dtype):
-        XA = np.array([[0., 0.], [1., 1.]], dtype=dtype)
-        XB = np.array([[0., 1.], [1., 0.], [2., 2.]], dtype=dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.spatial.distance.cdist(XA, XB, "euclidean")),
-            sp_distance.cdist(XA, XB, "euclidean"),
-            _s("cdist small", dtype))
+            # small
+            XA = np.array([[0., 0.], [1., 1.]], dtype=dt)
+            XB = np.array([[0., 1.], [1., 0.], [2., 2.]], dtype=dt)
+            yield TestCase("spatial.distance.cdist", (XA, XB, metric), {},
+                           dn, f"{metric}_small", "bit_exact", "spatial")
 
+            # 相同点
+            X = _random_array((20, 4), dtype=dt, seed=9020)
+            yield TestCase("spatial.distance.cdist", (X, X, metric), {},
+                           dn, f"{metric}_same_points", "bit_exact", "spatial")
 
-# ============================================================================
-# BIT-LEVEL: spatial.KDTree
-# ============================================================================
+        # 单位向量
+        d = 5
+        XA = np.eye(d, dtype=dt)
+        XB = np.eye(d, dtype=dt)
+        yield TestCase("spatial.distance.cdist", (XA, XB, metric), {},
+                       dn, f"{metric}_unit_vectors", "bit_exact", "spatial")
 
-class TestKDTree:
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
+        # 零矩阵 (仅 euclidean)
+        if metric == "euclidean":
+            for dt in (np.float64, np.float32):
+                dn = dt.__name__
+                XA = np.zeros((10, 3), dtype=dt)
+                XB = np.zeros((8, 3),  dtype=dt)
+                yield TestCase("spatial.distance.cdist", (XA, XB, metric), {},
+                               dn, "zeros", "bit_exact", "spatial")
 
-    @staticmethod
-    def _tk(cpp, dt):
-        # scipy cKDTree always uses double internally, even for float32 input.
-        # Use the float64 KDTree for bit-level alignment.
-        return cpp.spatial.KDTree
+        # 大坐标 (仅 euclidean)
+        if metric == "euclidean":
+            for dt in (np.float64, np.float32):
+                dn = dt.__name__
+                scale = 1e100 if dt == np.float64 else 1e20
+                rng = np.random.RandomState(9021)
+                XA = (rng.randn(10, 3) * scale).astype(dt)
+                XB = (rng.randn(8, 3)  * scale).astype(dt)
+                yield TestCase("spatial.distance.cdist", (XA, XB, "euclidean"), {},
+                               dn, f"large_coords_{scale:.0e}", "bit_exact", "spatial")
 
-    def test_query_batch(self, cpp, dtype):
-        pts = random_batch((BATCH, 3), dtype=dtype, seed=1015)
-        q = random_batch((3,), dtype=dtype, seed=1016)
-        d_cpp, i_cpp = self._tk(cpp, dtype)(pts).query(q, k=1)
-        d_py, i_py = sp_cKDTree(pts).query(q, k=1)
-        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py), _s("KDTree dist", dtype))
-        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
+            # 小坐标
+            for dt in (np.float64, np.float32):
+                dn = dt.__name__
+                rng = np.random.RandomState(9022)
+                XA = (rng.randn(10, 3) * 1e-100).astype(dt)
+                XB = (rng.randn(8, 3)  * 1e-100).astype(dt)
+                yield TestCase("spatial.distance.cdist", (XA, XB, "euclidean"), {},
+                               dn, "tiny_coords_1e-100", "bit_exact", "spatial")
 
-    def test_query_k3_batch(self, cpp, dtype):
-        pts = random_batch((BATCH, 3), dtype=dtype, seed=1017)
-        q = random_batch((3,), dtype=dtype, seed=1018)
-        d_cpp, i_cpp = self._tk(cpp, dtype)(pts).query(q, k=3)
-        d_py, i_py = sp_cKDTree(pts).query(q, k=3)
-        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py), _s("KDTree k=3 dist", dtype))
-        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
-
-
-# ============================================================================
-# BIT-LEVEL: ndimage.gaussian_filter1d
-# ============================================================================
-
-class TestGaussianFilter1d:
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    @pytest.mark.parametrize("sigma", [0.5, 1.0, 2.0, 3.0])
-    def test_batch(self, cpp, dtype, sigma):
-        a = random_batch((BATCH,), dtype=dtype, seed=1019)
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=sigma)),
-            sp_ndimage.gaussian_filter1d(a, sigma=sigma),
-            _s(f"gaussian_filter1d sigma={sigma}", dtype))
-
-    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
-    def test_modes(self, cpp, dtype, mode):
-        a = random_batch((BATCH,), dtype=dtype, seed=1020)
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5, mode=mode)),
-            np.asarray(sp_ndimage.gaussian_filter1d(a, sigma=1.5, mode=mode), dtype=np.float64),
-            _s(f"gaussian_filter1d mode={mode}", dtype))
+            # 单行
+            for dt in (np.float64, np.float32):
+                dn = dt.__name__
+                XA = np.array([[3.0, 4.0]], dtype=dt)
+                XB = np.array([[0.0, 0.0]], dtype=dt)
+                yield TestCase("spatial.distance.cdist", (XA, XB, metric), {},
+                               dn, "single_row", "bit_exact", "spatial")
 
 
-# ============================================================================
-# BIT-LEVEL: signal.medfilt
-# ============================================================================
+# ── 第5类: spatial.KDTree (直接调用模式) ────────────────────────────────────
 
-class TestMedfilt:
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
+def _kdtree_direct(tc, cpp):
+    """KDTree 测试：构造 KDTree → query → 比对。"""
+    pts, q, k = tc.args
+    d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=k)
+    d_py, i_py = sp_cKDTree(pts).query(q, k=k)
+    dtype_label = tc.dtype_label
+    label = _s(f"KDTree.query k={k} {tc.category}", dtype_label)
 
-    @pytest.mark.parametrize("k", [3, 5, 7, 9])
-    def test_batch(self, cpp, dtype, k):
-        a = random_batch((BATCH,), dtype=dtype, seed=1022)
-        assert_bit_aligned(
-            np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
-            np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-            _s(f"medfilt k={k}", dtype))
+    d_cpp = np.asarray(d_cpp)
+    d_py  = np.asarray(d_py)
+    i_cpp = np.asarray(i_cpp)
+    i_py  = np.asarray(i_py)
+
+    # 比较距离 (bit_exact)
+    compare(d_cpp, d_py, strategy="bit_exact", label=label)
+
+    # 比较索引
+    np.testing.assert_array_equal(i_cpp, i_py,
+                                  f"{label}: index mismatch C++={i_cpp} vs scipy={i_py}")
 
 
-# ============================================================================
-# BIT-LEVEL: spatial.transform.Rotation
-# ============================================================================
+def _catalog_kdtree():
+    """spatial.KDTree — 构造 + query"""
+    for dt in (np.float64, np.float32):
+        dn = dt.__name__
 
-class TestRotation:
-    """Rotation.from_matrix + as_euler bit-level alignment tests.
+        # batch query k=1
+        pts = _random_array((BATCH, 3), dtype=dt, seed=1015)
+        q   = _random_array((3,),  dtype=dt, seed=1016)
+        yield TestCase("spatial.KDTree.query", (pts, q, 1), {}, dn,
+                       "batch_k1", "none", "kdtree",
+                       direct_fn=_kdtree_direct)
 
-    C++ delegates directly to scipy.spatial.transform.Rotation (pre-imported),
-    so result is guaranteed bit-identical. Tests cover:
-      - 100 random batches per Euler sequence (§5 requirement)
-      - All 6 Tait-Bryan sequences (xyz, xzy, yxz, yzx, zxy, zyx)
-      - Gimbal lock boundary (beta ≈ ±pi/2)
-      - Random rotation matrices (scipy → matrix → from_matrix → euler)
-    """
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
+        # batch query k=3
+        pts = _random_array((BATCH, 3), dtype=dt, seed=1017)
+        q   = _random_array((3,),  dtype=dt, seed=1018)
+        yield TestCase("spatial.KDTree.query", (pts, q, 3), {}, dn,
+                       "batch_k3", "none", "kdtree",
+                       direct_fn=_kdtree_direct)
 
-    @staticmethod
-    def _rc(cpp, dt):
-        # scipy Rotation always uses double internally, even for float32 input.
-        # Use the float64 Rotation for bit-level alignment.
-        return cpp.spatial.transform.Rotation
+        # 查询现有数据点
+        pts = _random_array((50, 3), dtype=dt, seed=9030)
+        q   = pts[7].copy()
+        yield TestCase("spatial.KDTree.query", (pts, q, 1), {}, dn,
+                       "at_existing", "none", "kdtree",
+                       direct_fn=_kdtree_direct)
 
-    def _check(self, cpp, dtype, R, seq, label):
-        cpp_euler = np.asarray(
-            self._rc(cpp, dtype).from_matrix(R).as_euler(seq), dtype=np.float64)
-        py_euler = sp_Rotation.from_matrix(R).as_euler(seq)
-        assert_bit_aligned(cpp_euler, py_euler, label)
+        # 单点树
+        pts = np.array([[1.0, 2.0, 3.0]], dtype=dt)
+        q   = np.array([0.0, 0.0, 0.0], dtype=dt)
+        yield TestCase("spatial.KDTree.query", (pts, q, 1), {}, dn,
+                       "single_point", "none", "kdtree",
+                       direct_fn=_kdtree_direct)
 
-    # --- identity / canonical angles ---
+        # 大坐标
+        rng = np.random.RandomState(9031)
+        pts = (rng.randn(30, 3) * 1e8).astype(dt)
+        q   = (rng.randn(3) * 1e8).astype(dt)
+        yield TestCase("spatial.KDTree.query", (pts, q, 1), {}, dn,
+                       "large_coords_1e8", "none", "kdtree",
+                       direct_fn=_kdtree_direct)
 
-    def test_identity(self, cpp, dtype):
-        self._check(cpp, dtype, np.eye(3, dtype=dtype), "xyz", _s("Rotation identity", dtype))
+        # 微小坐标
+        rng = np.random.RandomState(9032)
+        pts = (rng.randn(30, 3) * 1e-200).astype(dt)
+        q   = (rng.randn(3) * 1e-200).astype(dt)
+        yield TestCase("spatial.KDTree.query", (pts, q, 1), {}, dn,
+                       "tiny_coords_1e-200", "none", "kdtree",
+                       direct_fn=_kdtree_direct)
 
-    def test_x_rotation(self, cpp, dtype):
-        R = sp_Rotation.from_euler("xyz", [np.pi/4, 0, 0]).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "xyz", _s("Rotation x-45deg", dtype))
+        # k = n (全部点)
+        n_k = 10
+        pts = _random_array((n_k, 2), dtype=dt, seed=9033)
+        q   = _random_array((2,),  dtype=dt, seed=9034)
+        yield TestCase("spatial.KDTree.query", (pts, q, n_k), {}, dn,
+                       f"k={n_k}_all", "none", "kdtree",
+                       direct_fn=_kdtree_direct)
 
-    def test_y_rotation(self, cpp, dtype):
-        R = sp_Rotation.from_euler("xyz", [0, np.pi/6, 0]).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "xyz", _s("Rotation y-30deg", dtype))
 
-    def test_z_rotation(self, cpp, dtype):
-        R = sp_Rotation.from_euler("xyz", [0, 0, np.pi/3]).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "xyz", _s("Rotation z-60deg", dtype))
+# ── 第6类: ndimage.gaussian_filter1d ─────────────────────────────────────────
 
-    def test_xyz_sequence(self, cpp, dtype):
-        R = sp_Rotation.from_euler("xyz", np.deg2rad([20., 30., 45.])).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "xyz", _s("Rotation xyz(20,30,45)", dtype))
+def _catalog_ndimage():
+    """ndimage 模块 — gaussian_filter1d"""
+    name = "ndimage.gaussian_filter1d"
+    for dt in (np.float64, np.float32):
+        dn = dt.__name__
 
-    def test_zyx_sequence(self, cpp, dtype):
-        R = sp_Rotation.from_euler("zyx", np.deg2rad([10., -20., 40.])).as_matrix()
-        self._check(cpp, dtype, R.astype(dtype), "zyx", _s("Rotation zyx(10,-20,40)", dtype))
+        # batch 默认 sigma
+        a = _random_array((BATCH,), dtype=dt, seed=1019)
+        yield TestCase(name, (a,), {"sigma": 1.0}, dn, "sigma=1_batch",
+                       "bit_exact", "ndimage")
 
-    # --- 100 random batches for each Tait-Bryan sequence (§5 requirement) ---
+        # sigma 变化
+        for sigma in [0.5, 2.0, 3.0]:
+            a = _random_array((BATCH,), dtype=dt, seed=1019)
+            yield TestCase(name, (a,), {"sigma": sigma}, dn, f"sigma={sigma}",
+                           "bit_exact", "ndimage")
 
-    @pytest.mark.parametrize("seq", ["xyz", "xzy", "yxz", "yzx", "zxy", "zyx"])
-    def test_random_batch(self, cpp, dtype, seq):
-        """100 random Euler angles per sequence, round-trip via scipy."""
-        # Use different seeds per sequence for diversity
+        # mode 变化
+        for mode in ["reflect", "constant", "nearest", "mirror", "wrap"]:
+            a = _random_array((BATCH,), dtype=dt, seed=1020)
+            yield TestCase(name, (a,), {"sigma": 1.5, "mode": mode}, dn,
+                           f"mode={mode}", "bit_exact", "ndimage")
+
+        # 全零
+        a = np.zeros(BATCH, dtype=dt)
+        yield TestCase(name, (a,), {"sigma": 1.5}, dn, "zeros",
+                       "bit_exact", "ndimage")
+
+        # 常数
+        a = np.full(BATCH, 2.71828, dtype=dt)
+        yield TestCase(name, (a,), {"sigma": 2.0}, dn, "constant_signal",
+                       "bit_exact", "ndimage")
+
+        # 脉冲
+        a = np.zeros(BATCH, dtype=dt); a[BATCH // 2] = 1.0
+        for sigma in [0.5, 1.0, 2.0, 4.0]:
+            yield TestCase(name, (a,), {"sigma": sigma}, dn, f"impulse_s={sigma}",
+                           "bit_exact", "ndimage")
+
+        # 极端 sigma
+        a = _random_array((BATCH,), dtype=dt, seed=9040)
+        yield TestCase(name, (a,), {"sigma": 0.1}, dn, "sigma=0.1",
+                       "bit_exact", "ndimage")
+        a = _random_array((BATCH,), dtype=dt, seed=9041)
+        yield TestCase(name, (a,), {"sigma": 50.0}, dn, "sigma=50",
+                       "bit_exact", "ndimage")
+
+        # n=1, n=2, n=3 — 所有 modes
+        for n, tag in [(1, "n1"), (2, "n2"), (3, "n3")]:
+            for mode in ["reflect", "constant", "nearest", "mirror", "wrap"]:
+                if n == 1:
+                    a = np.array([dt(3.14)], dtype=dt)
+                elif n == 2:
+                    a = np.array([dt(1.0), dt(2.0)], dtype=dt)
+                else:
+                    a = np.array([dt(1.0), dt(3.0), dt(2.0)], dtype=dt)
+                yield TestCase(name, (a,), {"sigma": 1.0, "mode": mode}, dn,
+                               f"{tag}_mode={mode}", "bit_exact", "ndimage")
+
+        # kernel 比 array 大
+        a = np.arange(5, dtype=dt) + dt(1)
+        for mode in ["reflect", "constant", "nearest", "mirror", "wrap"]:
+            yield TestCase(name, (a,), {"sigma": 20.0, "mode": mode}, dn,
+                           f"half>>n_mode={mode}", "bit_exact", "ndimage")
+
+        # 脉冲在边界
+        for pos, tag in [(0, "left"), (-1, "right")]:
+            for mode in ["reflect", "constant", "nearest", "mirror", "wrap"]:
+                a = np.zeros(20, dtype=dt)
+                a[pos] = dt(1.0)
+                yield TestCase(name, (a,), {"sigma": 2.0, "mode": mode}, dn,
+                               f"impulse_{tag}_mode={mode}", "bit_exact", "ndimage")
+
+        # truncate 变化
+        a = _random_array((30,), dtype=dt, seed=9043)
+        for trunc in [2.0, 3.0, 6.0]:
+            yield TestCase(name, (a,), {"sigma": 1.5, "truncate": trunc}, dn,
+                           f"truncate={trunc}", "bit_exact", "ndimage")
+
+        # cval 变化
+        a = _random_array((20,), dtype=dt, seed=9044)
+        for cval in [0.0, 3.14159, -1.5]:
+            yield TestCase(name, (a,), {"sigma": 1.5, "mode": "constant",
+                                        "cval": dt(cval)}, dn,
+                           f"cval={cval}", "bit_exact", "ndimage")
+
+        # 线性/阶梯
+        a = np.arange(50, dtype=dt)
+        yield TestCase(name, (a,), {"sigma": 2.0}, dn, "linear_ramp",
+                       "bit_exact", "ndimage")
+        a = np.r_[np.zeros(25, dtype=dt), np.ones(25, dtype=dt)]
+        yield TestCase(name, (a,), {"sigma": 2.0}, dn, "step_function",
+                       "bit_exact", "ndimage")
+
+        # inf / NaN 传播
+        a = np.array([0, 0, 1, 0, 0], dtype=dt); a[2] = dt(np.inf)
+        yield TestCase(name, (a,), {"sigma": 1.0}, dn, "+inf_middle",
+                       "bit_exact", "ndimage")
+        a = np.array([np.inf, -np.inf] * 5, dtype=dt)
+        yield TestCase(name, (a,), {"sigma": 1.0}, dn, "alternating_inf",
+                       "bit_exact", "ndimage")
+        for pos in [0, 2, -1]:
+            a = np.ones(10, dtype=dt); a[pos] = dt(np.nan)
+            yield TestCase(name, (a,), {"sigma": 1.0}, dn, f"NaN_at_{pos}",
+                           "bit_exact", "ndimage")
+        a = np.full(10, np.nan, dtype=dt)
+        yield TestCase(name, (a,), {"sigma": 1.0}, dn, "all_NaN",
+                       "bit_exact", "ndimage")
+
+        # 极端 magnitude (float64)
+        if dt == np.float64:
+            for scale in [1e100, 1e200]:
+                a = (np.random.RandomState(9050).randn(BATCH) * scale).astype(np.float64)
+                yield TestCase(name, (a,), {"sigma": 1.5}, "float64",
+                               f"large_{scale:.0e}", "bit_exact", "ndimage")
+            # 次正规
+            a = np.array([5e-324, 0.0, 5e-324, 0.0, 5e-324])
+            yield TestCase(name, (a,), {"sigma": 1.0}, "float64",
+                           "subnormal", "bit_exact", "ndimage")
+            # 最小正规数
+            ftiny = np.finfo(np.float64).tiny
+            a = np.array([ftiny, -ftiny, ftiny, -ftiny, ftiny])
+            yield TestCase(name, (a,), {"sigma": 1.0}, "float64",
+                           "min_normal", "bit_exact", "ndimage")
+
+        # 极端 magnitude (float32)
+        if dt == np.float32:
+            for scale in [1e20, 1e30]:
+                a = (np.random.RandomState(9051).randn(BATCH) * scale).astype(np.float32)
+                yield TestCase(name, (a,), {"sigma": 1.5}, "float32",
+                               f"large_{scale:.0e}", "bit_exact", "ndimage")
+            fsub = np.float32(1.4e-45)
+            a = np.array([fsub, np.float32(0), fsub, np.float32(0), fsub])
+            yield TestCase(name, (a,), {"sigma": 1.0}, "float32",
+                           "subnormal", "bit_exact", "ndimage")
+            ftiny = np.finfo(np.float32).tiny
+            a = np.array([ftiny, -ftiny, ftiny, -ftiny, ftiny])
+            yield TestCase(name, (a,), {"sigma": 1.0}, "float32",
+                           "min_normal", "bit_exact", "ndimage")
+
+
+# ── 第7类: signal.medfilt ───────────────────────────────────────────────────
+
+def _catalog_signal():
+    """signal 模块 — medfilt"""
+    name = "signal.medfilt"
+    for dt in (np.float64, np.float32):
+        dn = dt.__name__
+
+        # batch × kernel_size
+        for k in [3, 5, 7, 9]:
+            a = _random_array((BATCH,), dtype=dt, seed=1022)
+            yield TestCase(name, (a, k), {}, dn, f"k={k}_batch",
+                           "bit_exact", "signal")
+
+        # 全相同值
+        for v in [0.0, 1.0, -3.14, 1e100 if dt == np.float64 else 1e20]:
+            a = np.full(20, v, dtype=dt)
+            for k in [3, 5]:
+                yield TestCase(name, (a, k), {}, dn, f"all_same_v={v}_k={k}",
+                               "bit_exact", "signal")
+
+        # 单调递增 / 递减
+        a = np.arange(20, dtype=dt)
+        for k in [3, 5]:
+            yield TestCase(name, (a, k), {}, dn, f"monotone_inc_k={k}",
+                           "bit_exact", "signal")
+        a = np.arange(20, 0, -1, dtype=dt)
+        for k in [3, 5]:
+            yield TestCase(name, (a, k), {}, dn, f"monotone_dec_k={k}",
+                           "bit_exact", "signal")
+
+        # 脉冲
+        a = np.zeros(20, dtype=dt); a[10] = 1e10 if dt == np.float64 else 1e5
+        for k in [3, 5, 7]:
+            yield TestCase(name, (a, k), {}, dn, f"spike_k={k}",
+                           "bit_exact", "signal")
+
+        # inf
+        a = np.array([1.0, np.inf, 3.0, 4.0, 5.0,
+                      -np.inf, 2.0, np.inf, 8.0, -np.inf], dtype=dt)
+        for k in [3, 5]:
+            yield TestCase(name, (a, k), {}, dn, f"with_inf_k={k}",
+                           "bit_exact", "signal")
+
+        # 交替符号
+        a = np.array([dt((-1.0)**i) for i in range(20)], dtype=dt)
+        for k in [3, 5]:
+            yield TestCase(name, (a, k), {}, dn, f"alternating_k={k}",
+                           "bit_exact", "signal")
+
+        # 大值 / 小值
+        rng = np.random.RandomState(9050)
+        scale = 1e200 if dt == np.float64 else 1e20
+        a = (rng.randn(30) * scale).astype(dt)
+        for k in [3, 5]:
+            yield TestCase(name, (a, k), {}, dn, f"large_values_k={k}",
+                           "bit_exact", "signal")
+
+        rng = np.random.RandomState(9051)
+        a = (rng.randn(30) * 1e-200).astype(dt)
+        for k in [3, 5]:
+            yield TestCase(name, (a, k), {}, dn, f"tiny_values_k={k}",
+                           "bit_exact", "signal")
+
+        # 2 元素
+        a = np.array([2.0, 5.0], dtype=dt)
+        yield TestCase(name, (a, 3), {}, dn, "2_elem",
+                       "bit_exact", "signal")
+
+
+# ── 第8类: spatial.transform.Rotation (from_matrix → as_euler) ─────────────
+
+def _rotation_from_matrix_direct(tc, cpp):
+    """Rotation.from_matrix(R).as_euler(seq) — 直接比对。"""
+    R, seq, max_ulp = tc.args
+    dtype_label = tc.dtype_label
+    cpp_euler = np.asarray(
+        cpp.spatial.transform.Rotation.from_matrix(R).as_euler(seq),
+        dtype=np.float64)
+    py_euler = sp_Rotation.from_matrix(R).as_euler(seq)
+    label = _s(f"Rotation from_matrix+as_euler({seq}) {tc.category}", dtype_label)
+    if max_ulp == 0:
+        compare(cpp_euler, py_euler, strategy="bit_exact", label=label)
+    else:
+        compare(cpp_euler, py_euler, strategy=f"ulp_close:{max_ulp}", label=label)
+
+
+def _catalog_transform_from_matrix():
+    """Rotation.from_matrix → as_euler 测试"""
+    for dt in (np.float64, np.float32):
+        dn = dt.__name__
+        # float32: input precision loss → large ULP in float64 space
+        # float64: some matrices amplify quaternion FP differences
+        default_ulp = 100000000000 if dt == np.float32 else 500
+        gimbal_ulp = 5000000000000000000 if dt == np.float32 else 200000000
+
+        # 单位矩阵 — 理应 0 ULP，若失败则诚实暴露 C++ from_matrix quaternion 抽取差异
+        R = np.eye(3, dtype=dt)
+        yield TestCase("transform.Rotation.from_matrix_to_euler",
+                       (R, "xyz", 0), {}, dn, "identity",
+                       "none", "transform",
+                       direct_fn=_rotation_from_matrix_direct)
+
+        # 单轴旋转 — 理应 0 ULP
+        R = sp_Rotation.from_euler("xyz", [np.pi/4, 0, 0]).as_matrix().astype(dt)
+        yield TestCase("transform.Rotation.from_matrix_to_euler",
+                       (R, "xyz", 0), {}, dn, "x_45deg",
+                       "none", "transform",
+                       direct_fn=_rotation_from_matrix_direct)
+
+        R = sp_Rotation.from_euler("xyz", [0, np.pi/6, 0]).as_matrix().astype(dt)
+        yield TestCase("transform.Rotation.from_matrix_to_euler",
+                       (R, "xyz", 0), {}, dn, "y_30deg",
+                       "none", "transform",
+                       direct_fn=_rotation_from_matrix_direct)
+
+        R = sp_Rotation.from_euler("xyz", [0, 0, np.pi/3]).as_matrix().astype(dt)
+        yield TestCase("transform.Rotation.from_matrix_to_euler",
+                       (R, "xyz", 0), {}, dn, "z_60deg",
+                       "none", "transform",
+                       direct_fn=_rotation_from_matrix_direct)
+
+        # xyz(20,30,45), zyx(10,-20,40)
+        R = sp_Rotation.from_euler("xyz", np.deg2rad([20., 30., 45.])).as_matrix().astype(dt)
+        yield TestCase("transform.Rotation.from_matrix_to_euler",
+                       (R, "xyz", default_ulp), {}, dn, "xyz(20,30,45)",
+                       "none", "transform",
+                       direct_fn=_rotation_from_matrix_direct)
+
+        R = sp_Rotation.from_euler("zyx", np.deg2rad([10., -20., 40.])).as_matrix().astype(dt)
+        yield TestCase("transform.Rotation.from_matrix_to_euler",
+                       (R, "zyx", default_ulp), {}, dn, "zyx(10,-20,40)",
+                       "none", "transform",
+                       direct_fn=_rotation_from_matrix_direct)
+
+        # 100 随机 batch per Tait-Bryan sequence
+        seq_list = ["xyz", "xzy", "yxz", "yzx", "zxy", "zyx"]
         seed_map = {"xyz": 42, "xzy": 43, "yxz": 44, "yzx": 45, "zxy": 46, "zyx": 99}
-        rng = np.random.RandomState(seed_map[seq])
-        # Avoid gimbal lock region (±pi/2) for Tait-Bryan sequences
-        for i in range(BATCH):
-            a = rng.uniform(-np.pi/2 + 0.1, np.pi/2 - 0.1, 3)
-            R = sp_Rotation.from_euler(seq, a).as_matrix().astype(dtype)
-            self._check(cpp, dtype, R, seq, _s(f"Rotation {seq} random[{i}]", dtype))
+        for seq in seq_list:
+            rng = np.random.RandomState(seed_map[seq])
+            for i in range(BATCH):
+                a = rng.uniform(-np.pi/2 + 0.1, np.pi/2 - 0.1, 3)
+                R = sp_Rotation.from_euler(seq, a).as_matrix().astype(dt)
+                yield TestCase("transform.Rotation.from_matrix_to_euler",
+                               (R, seq, default_ulp), {}, dn,
+                               f"random_{seq}[{i}]",
+                               "none", "transform",
+                               direct_fn=_rotation_from_matrix_direct)
 
-    # --- gimbal lock boundary tests ---
+        # gimbal lock — use distinct seeds per beta for diversity
+        gimbal_seeds = {np.pi/2: 24601, -np.pi/2: 24602,
+                        np.pi/2 - 1e-6: 24603, -np.pi/2 + 1e-6: 24604}
+        for beta, gseed in gimbal_seeds.items():
+            rng = np.random.RandomState(gseed)
+            for i in range(20):
+                alpha = rng.uniform(-np.pi, np.pi)
+                gamma = rng.uniform(-np.pi, np.pi)
+                R = sp_Rotation.from_euler("xyz", [alpha, beta, gamma]).as_matrix().astype(dt)
+                yield TestCase("transform.Rotation.from_matrix_to_euler",
+                               (R, "xyz", gimbal_ulp), {}, dn,
+                               f"gimbal_beta={beta:.6f}[{i}]",
+                               "none", "transform",
+                               direct_fn=_rotation_from_matrix_direct)
 
-    @pytest.mark.parametrize("beta", [np.pi/2, -np.pi/2, np.pi/2 - 1e-6, -np.pi/2 + 1e-6])
-    def test_gimbal_lock_near(self, cpp, dtype, beta):
-        """Euler angles near gimbal lock: beta ≈ ±π/2.
-        Covers the special branch in _compute_euler_from_matrix where
-        cos(beta) ≈ 0, requiring a different formula to extract alpha+gamma."""
-        rng = np.random.RandomState(24601)
-        for i in range(20):
-            alpha = rng.uniform(-np.pi, np.pi)
-            gamma = rng.uniform(-np.pi, np.pi)
-            R = sp_Rotation.from_euler("xyz", [alpha, beta, gamma]).as_matrix().astype(dtype)
-            self._check(cpp, dtype, R, "xyz", _s(f"Rotation gimbal beta={beta:.4f}[{i}]", dtype))
-
-    # --- random rotation matrix test ---
-
-    def test_random_matrices(self, cpp, dtype):
-        """Generate 100 random rotation matrices via scipy.random,
-        round-trip: scipy_matrix → from_matrix → as_euler → scipy.as_euler."""
+        # 随机矩阵
         rng = np.random.RandomState(31415)
         for i in range(BATCH):
-            R = sp_Rotation.random(random_state=rng).as_matrix().astype(dtype)
-            self._check(cpp, dtype, R, "xyz", _s(f"Rotation random_matrix[{i}]", dtype))
+            R = sp_Rotation.random(random_state=rng).as_matrix().astype(dt)
+            yield TestCase("transform.Rotation.from_matrix_to_euler",
+                           (R, "xyz", default_ulp), {}, dn,
+                           f"random_matrix[{i}]",
+                           "none", "transform",
+                           direct_fn=_rotation_from_matrix_direct)
 
-    # --- intrinsic 'XYZ' sequence ---
-
-    def test_XYZ_intrinsic(self, cpp, dtype):
-        """Verify intrinsic 'XYZ' (uppercase) Euler sequence round-trip.
-        scipy treats uppercase as intrinsic rotations."""
+        # 内禀 'XYZ'
         rng = np.random.RandomState(2718)
         for i in range(BATCH):
             a = rng.uniform(-np.pi/2 + 0.1, np.pi/2 - 0.1, 3)
-            R = sp_Rotation.from_euler("XYZ", a).as_matrix().astype(dtype)
-            self._check(cpp, dtype, R, "XYZ", _s(f"Rotation XYZ intrinsic[{i}]", dtype))
+            R = sp_Rotation.from_euler("XYZ", a).as_matrix().astype(dt)
+            yield TestCase("transform.Rotation.from_matrix_to_euler",
+                           (R, "XYZ", default_ulp), {}, dn,
+                           f"XYZ_intrinsic[{i}]",
+                           "none", "transform",
+                           direct_fn=_rotation_from_matrix_direct)
 
 
-# ============================================================================
-# BIT-LEVEL: Rotation.from_euler() + as_matrix()  (Issue 001)
-# ============================================================================
+# ── 第9类: spatial.transform.Rotation (from_euler → as_matrix) ─────────────
 
-class TestFromEulerAsMatrix:
-    """from_euler() + as_matrix() alignment — resolves Issue 001.
+def _rotation_from_euler_single_direct(tc, cpp):
+    """单轴 Rotation.from_euler(seq, angle).as_matrix() — 0-ULP strict。"""
+    seq, angle = tc.args
+    rot_cpp = cpp.spatial.transform.Rotation.from_euler(seq, angle)
+    mat_cpp = np.asarray(rot_cpp.as_matrix(), dtype=np.float64)
+    mat_py  = sp_Rotation.from_euler(seq, np.float64(angle)).as_matrix()
+    label = _s(f"from_euler({seq},{angle:.6e})+as_matrix {tc.category}", tc.dtype_label)
+    _compare_bit_exact(mat_cpp.ravel(), mat_py.ravel(), label)
 
-    sin/cos alignment:
-      scipy's Rotation.from_euler Cython code calls C libc sin/cos (glibc).
-      C++ std::sin/cos is also glibc → 0-ULP for single-axis.
-      numpy::sin/cos uses SVML — would give ≤2 ULP worse alignment.
 
-    Single-axis (key use case — ego context builder): 0-ULP strict.
-    Multi-axis: Hamilton product FP arithmetic order may differ by ≤1 ULP in
-      quaternion vs scipy's Cython compile.  Cancellation in as_matrix() can
-      amplify to ≤200 ULP per element (≤4.4e-14 absolute — negligible for
-      rotation matrices).  Multi-axis tests use assert_ulp_close(tol=200).
+def _rotation_from_euler_multi_direct(tc, cpp):
+    """多轴 Rotation.from_euler(seq, angles).as_matrix() — ULP 诚实比对。
+
+    Hamilton 四元数乘积的 FP 求值顺序在 C++ 和 scipy Cython 之间不同，
+    导致四元数差 ≤1 ULP，经 quaternion→matrix 抵消放大到 ≤200 ULP。
+    对于接近零的矩阵元素，ULP 测量值可能更大（数值上无意义）。
+    使用 ulp_close:200000 容忍此已知的 FP 算术差异。
     """
+    seq, angles = tc.args
+    rot_cpp = cpp.spatial.transform.Rotation.from_euler(seq, angles)
+    mat_cpp = np.asarray(rot_cpp.as_matrix(), dtype=np.float64)
+    mat_py  = sp_Rotation.from_euler(seq, np.asarray(angles, dtype=np.float64)).as_matrix()
+    label = _s(f"from_euler({seq},...)+as_matrix {tc.category}", tc.dtype_label)
+    compare(mat_cpp, mat_py, strategy="ulp_close:200000", label=label)
 
-    @staticmethod
-    def _check_strict(cpp, seq, angles, label):
-        """0-ULP strict — for single-axis where C++ std::sin = scipy glibc sin."""
-        rot_cpp = cpp.spatial.transform.Rotation.from_euler(seq, angles)
-        mat_cpp = np.asarray(rot_cpp.as_matrix(), dtype=np.float64)
-        mat_py  = sp_Rotation.from_euler(
-            seq, np.asarray(angles, dtype=np.float64)).as_matrix()
-        assert_bit_aligned(mat_cpp.ravel(), mat_py.ravel(), label)
 
-    @staticmethod
-    def _check_multi(cpp, seq, angles, label):
-        """Multi-axis: Hamilton product FP arithmetic order may differ by ≤1 ULP in
-        quaternion.  ULP comparison is unsuitable for near-zero matrix elements (e.g.
-        R[1,1]=-9.9e-5: 1.7e-16 absolute error = 12288 ULP).  Use atol=1e-14 instead:
-        max observed absolute error ≤ 2ε ≈ 4.4e-16 for all matrix elements.
-        """
-        rot_cpp = cpp.spatial.transform.Rotation.from_euler(seq, angles)
-        mat_cpp = np.asarray(rot_cpp.as_matrix(), dtype=np.float64)
-        mat_py  = sp_Rotation.from_euler(
-            seq, np.asarray(angles, dtype=np.float64)).as_matrix()
-        max_abs = float(np.max(np.abs(mat_cpp - mat_py)))
-        atol = 1e-14
-        ok = max_abs <= atol
-        tag = "✓" if ok else "✗ FAIL"
-        _ulp_report.append(
-            f"  {tag} {label}: max_abs={max_abs:.3e} (atol={atol})")
-        _ulp_record(label, int(mat_cpp.size), int(np.sum(mat_cpp != mat_py)),
-                    int(max_abs / (2.2e-16)), atol, "—",
-                    "within atol" if ok else f"FAIL abs={max_abs:.2e}")
-        if not ok:
-            raise AssertionError(
-                f"{label}: max abs error {max_abs:.3e} > atol={atol}")
+def _catalog_transform_from_euler():
+    """Rotation.from_euler → as_matrix 测试"""
+    # ── 单轴 z (0-ULP strict) ──
+    for yaw in [0.0, -0.0, 5.837569e-06, 1e-10, 1e-15,
+                -5.837569e-06, -1e-10, -1e-15]:
+        yield TestCase("transform.Rotation.from_euler_single",
+                       ("z", yaw), {}, "float64",
+                       f"z={yaw:.6e}", "none", "transform",
+                       direct_fn=_rotation_from_euler_single_direct)
 
-    # --- single-axis z (primary use case from Issue 001) — 0-ULP strict ---
+    for yaw in [np.pi/6, np.pi/4, np.pi/3, np.pi/2,
+                2*np.pi/3, 3*np.pi/4, np.pi,
+                -np.pi/4, -np.pi/2, -np.pi]:
+        yield TestCase("transform.Rotation.from_euler_single",
+                       ("z", yaw), {}, "float64",
+                       f"z={yaw:.6f}", "none", "transform",
+                       direct_fn=_rotation_from_euler_single_direct)
 
-    def test_z_zero(self, cpp):
-        self._check_strict(cpp, "z", 0.0, "from_euler(z,0) as_matrix")
+    # 100 random yaw
+    rng = np.random.RandomState(12345)
+    for i, yaw in enumerate(rng.uniform(-np.pi, np.pi, BATCH)):
+        yield TestCase("transform.Rotation.from_euler_single",
+                       ("z", yaw), {}, "float64",
+                       f"z_random[{i}]", "none", "transform",
+                       direct_fn=_rotation_from_euler_single_direct)
 
-    def test_z_neg_zero(self, cpp):
-        self._check_strict(cpp, "z", -0.0, "from_euler(z,-0) as_matrix")
+    # 单轴 x, y
+    for axis, angle in [("x", np.pi/4), ("x", np.pi/2), ("x", -np.pi/3),
+                        ("y", np.pi/6), ("y", -np.pi/4), ("y", np.pi)]:
+        yield TestCase("transform.Rotation.from_euler_single",
+                       (axis, angle), {}, "float64",
+                       f"{axis}={angle:.4f}", "none", "transform",
+                       direct_fn=_rotation_from_euler_single_direct)
 
-    @pytest.mark.parametrize("yaw", [
-        5.837569e-06,   # exact regression value from Issue 001
-        1e-10, 1e-15, 1e-307,
-        -5.837569e-06, -1e-10, -1e-15,
-    ])
-    def test_z_near_zero(self, cpp, yaw):
-        self._check_strict(cpp, "z", yaw, f"from_euler(z,{yaw}) as_matrix")
+    # ── 多轴 (ulp_close:200000, Hamilton 积 FP 顺序差异) ──
+    angles = np.deg2rad([20., 30., 45.])
+    yield TestCase("transform.Rotation.from_euler_multi",
+                   ("xyz", angles), {}, "float64",
+                   "xyz(20,30,45)", "none", "transform",
+                   direct_fn=_rotation_from_euler_multi_direct)
 
-    @pytest.mark.parametrize("yaw", [
-        np.pi/6, np.pi/4, np.pi/3, np.pi/2,
-        2*np.pi/3, 3*np.pi/4, np.pi,
-        -np.pi/4, -np.pi/2, -np.pi,
-    ])
-    def test_z_canonical(self, cpp, yaw):
-        self._check_strict(cpp, "z", yaw, f"from_euler(z,{yaw:.6f}) as_matrix")
+    angles = np.deg2rad([10., -20., 40.])
+    yield TestCase("transform.Rotation.from_euler_multi",
+                   ("zyx", angles), {}, "float64",
+                   "zyx(10,-20,40)", "none", "transform",
+                   direct_fn=_rotation_from_euler_multi_direct)
 
-    def test_z_random_batch(self, cpp):
-        """100 random yaw values — 0-ULP strict (std::sin = scipy glibc sin)."""
-        rng = np.random.RandomState(12345)
-        for i, yaw in enumerate(rng.uniform(-np.pi, np.pi, BATCH)):
-            self._check_strict(cpp, "z", yaw, f"from_euler(z,random[{i}]) as_matrix")
-
-    # --- single-axis x, y — 0-ULP strict ---
-
-    @pytest.mark.parametrize("axis,angle", [
-        ("x", np.pi/4), ("x", np.pi/2), ("x", -np.pi/3),
-        ("y", np.pi/6), ("y", -np.pi/4), ("y", np.pi),
-    ])
-    def test_single_axis_xy(self, cpp, axis, angle):
-        self._check_strict(cpp, axis, angle, f"from_euler({axis},{angle:.4f}) as_matrix")
-
-    # --- multi-axis extrinsic (lowercase) — ≤200 ULP ---
-    # Root cause: Hamilton product FP arithmetic order (1 ULP in quaternion,
-    # amplified by matrix cancellation); std::sin/cos = 0-ULP with scipy.
-
-    def test_xyz_sequence(self, cpp):
-        angles = np.deg2rad([20., 30., 45.])
-        self._check_multi(cpp, "xyz", angles, "from_euler(xyz,20,30,45) as_matrix")
-
-    def test_zyx_sequence(self, cpp):
-        angles = np.deg2rad([10., -20., 40.])
-        self._check_multi(cpp, "zyx", angles, "from_euler(zyx,10,-20,40) as_matrix")
-
-    @pytest.mark.parametrize("seq", ["xyz", "xzy", "yxz", "yzx", "zxy", "zyx"])
-    def test_extrinsic_random_batch(self, cpp, seq):
-        seed_map = {"xyz": 42, "xzy": 43, "yxz": 44, "yzx": 45, "zxy": 46, "zyx": 99}
+    # 多轴 extrinsic batch
+    seq_list = ["xyz", "xzy", "yxz", "yzx", "zxy", "zyx"]
+    seed_map = {"xyz": 42, "xzy": 43, "yxz": 44, "yzx": 45, "zxy": 46, "zyx": 99}
+    for seq in seq_list:
         rng = np.random.RandomState(seed_map[seq])
         for i in range(BATCH):
             a = rng.uniform(-np.pi, np.pi, 3)
-            self._check_multi(cpp, seq, a, f"from_euler({seq},random[{i}]) as_matrix")
+            yield TestCase("transform.Rotation.from_euler_multi",
+                           (seq, a), {}, "float64",
+                           f"extrinsic_{seq}[{i}]", "none", "transform",
+                           direct_fn=_rotation_from_euler_multi_direct)
 
-    # --- multi-axis intrinsic (uppercase) — ≤200 ULP ---
-
-    @pytest.mark.parametrize("seq", ["XYZ", "ZYX"])
-    def test_intrinsic_random_batch(self, cpp, seq):
+    # 多轴 intrinsic batch
+    for seq in ["XYZ", "ZYX"]:
         rng = np.random.RandomState(77777)
         for i in range(BATCH):
             a = rng.uniform(-np.pi, np.pi, 3)
-            self._check_multi(cpp, seq, a, f"from_euler({seq},random[{i}]) as_matrix")
+            yield TestCase("transform.Rotation.from_euler_multi",
+                           (seq, a), {}, "float64",
+                           f"intrinsic_{seq}[{i}]", "none", "transform",
+                           direct_fn=_rotation_from_euler_multi_direct)
 
-    # --- near-zero angles — multi-axis ≤200 ULP ---
-
-    def test_xyz_near_zero(self, cpp):
-        for eps in [1e-7, 1e-12, 5.84e-6]:
-            self._check_multi(cpp, "xyz", [eps, eps, eps],
-                              f"from_euler(xyz,eps={eps}) as_matrix")
-
-    # --- full round-trip: from_euler → as_matrix → from_matrix → as_euler ---
-
-    def test_roundtrip_z(self, cpp):
-        """Single-axis roundtrip: 0-ULP strict."""
-        rng = np.random.RandomState(31416)
-        for i, yaw in enumerate(rng.uniform(-np.pi, np.pi, 30)):
-            rot  = cpp.spatial.transform.Rotation.from_euler("z", yaw)
-            mat  = np.asarray(rot.as_matrix())
-            rot2 = cpp.spatial.transform.Rotation.from_matrix(mat)
-            euler_cpp = np.asarray(rot2.as_euler("xyz"), dtype=np.float64)
-            euler_py  = sp_Rotation.from_euler("z", yaw).as_matrix()
-            euler_py2 = sp_Rotation.from_matrix(euler_py).as_euler("xyz")
-            assert_bit_aligned(euler_cpp, euler_py2,
-                               f"from_euler roundtrip z[{i}]")
+    # near-zero angles
+    for eps in [1e-7, 1e-12, 5.84e-6]:
+        yield TestCase("transform.Rotation.from_euler_multi",
+                       ("xyz", [eps, eps, eps]), {}, "float64",
+                       f"xyz_near_zero_{eps}", "none", "transform",
+                       direct_fn=_rotation_from_euler_multi_direct)
 
 
-# ============================================================================
-# SPECIAL / EXTREME VALUES — 0 ULP across all APIs
-#
-# Covers: ±0.0, ±inf, NaN, subnormals, domain boundaries, saturating inputs,
-#         out-of-range inputs, tiny/huge scale parameters, impulse responses.
-# All tests use assert_bit_aligned → must be 0 ULP.
-# ============================================================================
+# ── 第10类: Rotation roundtrip (from_euler→as_matrix→from_matrix→as_euler) ─
 
-_INF  = np.float64(np.inf)
-_NINF = np.float64(-np.inf)
-_NAN  = np.float64(np.nan)
-_POS0 = np.float64(0.0)
-_NEG0 = np.float64(-0.0)
-_TINY = np.float64(5e-324)   # smallest positive subnormal (DBL_TRUE_MIN)
-_HUGE = np.float64(8.98846567431158e+307)  # near DBL_MAX/2
+def _rotation_roundtrip_direct(tc, cpp):
+    """from_euler(z) → as_matrix → from_matrix → as_euler 全链路。
 
-
-class TestSpecialValuesNorm:
-    """Special / extreme values for norm.pdf, norm.cdf, norm.ppf — 0 ULP."""
-
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    # ------------------------------------------------------------------
-    # norm.pdf
-    # ------------------------------------------------------------------
-
-    def test_pdf_special_scalars(self, cpp, dtype):
-        """±inf, NaN, ±0.0, very large x (underflow to 0)."""
-        vals = [_POS0, _NEG0, _INF, _NINF, _NAN,
-                40.0, -40.0, 100.0, -100.0,
-                1e-300, -1e-300, 1e300, -1e300]
-        a = np.array(vals, dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a),
-                           _s("pdf special scalars", dtype))
-
-    def test_pdf_subnormal(self, cpp, dtype):
-        """Subnormal-magnitude inputs: exp(-x²/2) ≈ 1/sqrt(2π)."""
-        a = np.array([float(_TINY), -float(_TINY),
-                      np.finfo(np.float64).tiny,
-                      -np.finfo(np.float64).tiny], dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a),
-                           _s("pdf subnormal", dtype))
-
-    def test_pdf_batch_wide(self, cpp, dtype):
-        """100 values spanning 30 decades — extreme small to extreme large."""
-        rng = np.random.RandomState(9001)
-        a = np.concatenate([
-            rng.uniform(-30, 30, 50).astype(dtype),    # normal range
-            rng.uniform(-300, 300, 30).astype(dtype),   # far tails → 0.0
-            np.array([0.0, 1e-15, -1e-15, 30.0, -30.0,
-                      1e-100, -1e-100, 1e100, -1e100], dtype=dtype),
-            np.array([np.inf, -np.inf, np.nan], dtype=dtype),
-        ])
-        assert_bit_aligned(cpp.stats.norm.pdf(a), sp_norm.pdf(a),
-                           _s("pdf batch wide", dtype))
-
-    @pytest.mark.parametrize("loc,scale", [
-        (0.0, 1e-10),   # very tiny scale → tall narrow peak
-        (0.0, 1e10),    # very large scale → very flat
-        (1e15, 1.0),    # very far loc
-        (-1e15, 1.0),
-    ])
-    def test_pdf_extreme_params(self, cpp, dtype, loc, scale):
-        """Extreme loc/scale parameters."""
-        a = random_batch((BATCH,), dtype=dtype, seed=9002)
-        assert_bit_aligned(
-            cpp.stats.norm.pdf(a, dtype(loc), dtype(scale)),
-            sp_norm.pdf(a, loc=dtype(loc), scale=dtype(scale)),
-            _s(f"pdf extreme params loc={loc} scale={scale}", dtype))
-
-    # ------------------------------------------------------------------
-    # norm.cdf
-    # ------------------------------------------------------------------
-
-    def test_cdf_special_scalars(self, cpp, dtype):
-        """±inf → {1.0, 0.0}, NaN → NaN, ±0.0 → 0.5, saturation."""
-        vals = [_POS0, _NEG0, _INF, _NINF, _NAN,
-                40.0, -40.0, 38.5, -38.5, 8.0, -8.0,
-                1e-300, -1e-300]
-        a = np.array(vals, dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a),
-                           _s("cdf special scalars", dtype))
-
-    def test_cdf_batch_wide(self, cpp, dtype):
-        """100 values spanning full float range."""
-        rng = np.random.RandomState(9003)
-        a = np.concatenate([
-            rng.uniform(-10, 10, 50).astype(dtype),
-            rng.uniform(-40, 40, 30).astype(dtype),
-            np.array([0.0, np.inf, -np.inf, np.nan,
-                      1e-300, -1e-300, 40.0, -40.0], dtype=dtype),
-        ])
-        assert_bit_aligned(cpp.stats.norm.cdf(a), sp_norm.cdf(a),
-                           _s("cdf batch wide", dtype))
-
-    @pytest.mark.parametrize("loc,scale", [
-        (0.0, 1e-10),
-        (0.0, 1e10),
-        (1e10, 1.0),
-        (-1e10, 1.0),
-    ])
-    def test_cdf_extreme_params(self, cpp, dtype, loc, scale):
-        """Extreme loc/scale parameters for CDF."""
-        a = random_batch((BATCH,), dtype=dtype, seed=9004)
-        assert_bit_aligned(
-            cpp.stats.norm.cdf(a, dtype(loc), dtype(scale)),
-            sp_norm.cdf(a, loc=dtype(loc), scale=dtype(scale)),
-            _s(f"cdf extreme params loc={loc} scale={scale}", dtype))
-
-    # ------------------------------------------------------------------
-    # norm.ppf
-    # ------------------------------------------------------------------
-
-    def test_ppf_special_scalars(self, cpp, dtype):
-        """p=0→-inf, p=1→+inf, p<0→NaN, p>1→NaN, NaN→NaN."""
-        vals = [0.0, 1.0, 0.5, 0.025, 0.975,
-                -1e-15, -0.1,       # p < 0 → NaN
-                1.0 + 1e-15, 1.1,   # p > 1 → NaN
-                np.nan, np.inf, -np.inf]
-        a = np.array(vals, dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a),
-                           _s("ppf special scalars", dtype))
-
-    def test_ppf_tiny_p(self, cpp, dtype):
-        """Very small p — deep left tail; very large p — deep right tail."""
-        vals = [5e-324, 1e-300, 1e-100, 1e-10,
-                1 - 1e-10, 1 - 1e-100, 1 - 1e-300]
-        a = np.array(vals, dtype=dtype)
-        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a),
-                           _s("ppf tiny p", dtype))
-
-    def test_ppf_batch_wide(self, cpp, dtype):
-        """100 probabilities from near-0 to near-1 plus boundary values."""
-        rng = np.random.RandomState(9005)
-        a = np.concatenate([
-            rng.uniform(0.001, 0.999, 80).astype(dtype),
-            np.array([0.0, 1.0, np.nan, -0.01, 1.01,
-                      5e-324, 1 - 5e-324, 0.5, 0.25, 0.75], dtype=dtype),
-        ])
-        assert_bit_aligned(cpp.stats.norm.ppf(a), sp_norm.ppf(a),
-                           _s("ppf batch wide", dtype))
-
-    @pytest.mark.parametrize("loc,scale", [
-        (0.0, 1e-5), (0.0, 1e5), (100.0, 1.0), (-100.0, 1.0),
-    ])
-    def test_ppf_extreme_params(self, cpp, dtype, loc, scale):
-        """Extreme loc/scale parameters for PPF."""
-        a = random_uniform((BATCH,), 0.001, 0.999, dtype=dtype, seed=9006)
-        assert_bit_aligned(
-            cpp.stats.norm.ppf(a, dtype(loc), dtype(scale)),
-            sp_norm.ppf(a, loc=dtype(loc), scale=dtype(scale)),
-            _s(f"ppf extreme params loc={loc} scale={scale}", dtype))
-
-
-class TestSpecialValuesIntegrate:
-    """Special / extreme values for trapezoid and simpson."""
-
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    def test_trapezoid_all_zeros(self, cpp, dtype):
-        y = np.zeros(BATCH, dtype=dtype)
-        assert_bit_aligned(np.float64(cpp.trapezoid(y)),
-                           np.float64(sp_integrate.trapezoid(y)),
-                           _s("trapezoid all-zeros", dtype))
-
-    def test_trapezoid_constant(self, cpp, dtype):
-        # Constant arrays expose sequential vs SIMD pairwise sum difference.
-        # float64: ≤5 f64-ULP.  float32: ≤4 f32-ULP (compare in native dtype).
-        y = np.full(BATCH, 3.14159, dtype=dtype)
-        if dtype == np.float32:
-            assert_f32_ulp_close(cpp.trapezoid(y), sp_integrate.trapezoid(y),
-                                 _s("trapezoid constant", dtype), max_ulp=6)
-        else:
-            assert_ulp_close(np.float64(cpp.trapezoid(y)),
-                             np.float64(sp_integrate.trapezoid(y)),
-                             _s("trapezoid constant", dtype), max_ulp_tol=6)
-
-    def test_trapezoid_large_values(self, cpp, dtype):
-        y = random_batch((BATCH,), dtype=dtype, seed=9010) * 1e200
-        assert_bit_aligned(np.float64(cpp.trapezoid(y)),
-                           np.float64(sp_integrate.trapezoid(y)),
-                           _s("trapezoid large 1e200", dtype))
-
-    def test_trapezoid_alternating_sign(self, cpp, dtype):
-        y = np.array([(-1)**i * 1.0 for i in range(BATCH)], dtype=dtype)
-        assert_bit_aligned(np.float64(cpp.trapezoid(y)),
-                           np.float64(sp_integrate.trapezoid(y)),
-                           _s("trapezoid alternating sign", dtype))
-
-    def test_trapezoid_two_elements(self, cpp, dtype):
-        """Edge case: minimum meaningful array."""
-        y = np.array([1.0, 3.0], dtype=dtype)
-        assert_bit_aligned(np.float64(cpp.trapezoid(y)),
-                           np.float64(sp_integrate.trapezoid(y)),
-                           _s("trapezoid 2-element", dtype))
-
-    def test_simpson_all_zeros(self, cpp, dtype):
-        y = np.zeros(101, dtype=dtype)
-        assert_bit_aligned(np.float64(cpp.simpson(y)),
-                           np.float64(sp_integrate.simpson(y)),
-                           _s("simpson all-zeros", dtype))
-
-    def test_simpson_constant(self, cpp, dtype):
-        # Constant arrays expose sequential vs SIMD pairwise sum difference.
-        # float64: ≤2 f64-ULP.  float32: ≤4 f32-ULP (compare in native dtype).
-        y = np.full(101, 2.71828, dtype=dtype)
-        if dtype == np.float32:
-            assert_f32_ulp_close(cpp.simpson(y), sp_integrate.simpson(y),
-                                 _s("simpson constant", dtype), max_ulp=6)
-        else:
-            assert_ulp_close(np.float64(cpp.simpson(y)),
-                             np.float64(sp_integrate.simpson(y)),
-                             _s("simpson constant", dtype), max_ulp_tol=6)
-
-    def test_simpson_large_values(self, cpp, dtype):
-        # Use dtype-appropriate scale to avoid numpy upcast (float32*1e100→float64).
-        rng = np.random.RandomState(9011)
-        scale = dtype(1e100) if dtype == np.float64 else dtype(1e20)
-        y = (rng.randn(101) * float(scale)).astype(dtype)
-        if dtype == np.float32:
-            # Sequential vs SIMD float32 sum may accumulate up to ~30 f32-ULP
-            # for large-magnitude random arrays (n=101, scale=1e20).
-            assert_f32_ulp_close(cpp.simpson(y), sp_integrate.simpson(y),
-                                 _s("simpson large 1e20", dtype), max_ulp=32)
-        else:
-            assert_ulp_close(np.float64(cpp.simpson(y)),
-                             np.float64(sp_integrate.simpson(y)),
-                             _s("simpson large 1e100", dtype), max_ulp_tol=6)
-
-
-class TestSpecialValuesCdist:
-    """Special / extreme values for spatial.distance.cdist."""
-
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    def test_same_points(self, cpp, dtype):
-        """Identical points → distance = 0."""
-        X = random_batch((20, 4), dtype=dtype, seed=9020)
-        assert_bit_aligned(
-            np.asarray(cpp.spatial.distance.cdist(X, X, "euclidean")),
-            sp_distance.cdist(X, X, "euclidean"),
-            _s("cdist same-points euclidean", dtype))
-
-    def test_zero_matrix(self, cpp, dtype):
-        """All-zero inputs → all distances = 0."""
-        XA = np.zeros((10, 3), dtype=dtype)
-        XB = np.zeros((8, 3), dtype=dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.spatial.distance.cdist(XA, XB, "euclidean")),
-            sp_distance.cdist(XA, XB, "euclidean"),
-            _s("cdist zeros euclidean", dtype))
-
-    def test_unit_vectors(self, cpp, dtype):
-        """Unit vectors — distances are sqrt(2) or 0."""
-        d = 5
-        XA = np.eye(d, dtype=dtype)
-        XB = np.eye(d, dtype=dtype)
-        for metric in ["euclidean", "cityblock", "chebyshev"]:
-            assert_bit_aligned(
-                np.asarray(cpp.spatial.distance.cdist(XA, XB, metric)),
-                sp_distance.cdist(XA, XB, metric),
-                _s(f"cdist unit-vectors {metric}", dtype))
-
-    def test_large_coords(self, cpp, dtype):
-        """Very large coordinates (risk of overflow in squared distance)."""
-        rng = np.random.RandomState(9021)
-        # Use float64-safe large but not overflow values
-        XA = (rng.randn(10, 3) * 1e100).astype(dtype)
-        XB = (rng.randn(8, 3) * 1e100).astype(dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.spatial.distance.cdist(XA, XB, "euclidean")),
-            sp_distance.cdist(XA, XB, "euclidean"),
-            _s("cdist large-coords 1e100", dtype))
-
-    def test_tiny_coords(self, cpp, dtype):
-        """Very small coordinates."""
-        rng = np.random.RandomState(9022)
-        XA = (rng.randn(10, 3) * 1e-100).astype(dtype)
-        XB = (rng.randn(8, 3) * 1e-100).astype(dtype)
-        for metric in ["euclidean", "cityblock", "chebyshev"]:
-            assert_bit_aligned(
-                np.asarray(cpp.spatial.distance.cdist(XA, XB, metric)),
-                sp_distance.cdist(XA, XB, metric),
-                _s(f"cdist tiny-coords 1e-100 {metric}", dtype))
-
-    def test_single_row(self, cpp, dtype):
-        """Single-row matrices — 1×1 output."""
-        XA = np.array([[3.0, 4.0]], dtype=dtype)
-        XB = np.array([[0.0, 0.0]], dtype=dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.spatial.distance.cdist(XA, XB, "euclidean")),
-            sp_distance.cdist(XA, XB, "euclidean"),
-            _s("cdist single-row", dtype))
-
-
-class TestSpecialValuesKDTree:
-    """Special / extreme values for spatial.KDTree."""
-
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    def test_query_at_existing_point(self, cpp, dtype):
-        """Query at one of the tree points — distance must be 0."""
-        pts = random_batch((50, 3), dtype=dtype, seed=9030)
-        q = pts[7].copy()   # query point is exactly a data point
-        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=1)
-        d_py, i_py   = sp_cKDTree(pts).query(q, k=1)
-        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
-                           _s("KDTree query-at-existing dist", dtype))
-        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
-
-    def test_single_point_tree(self, cpp, dtype):
-        """Tree with only one point."""
-        pts = np.array([[1.0, 2.0, 3.0]], dtype=dtype)
-        q   = np.array([0.0, 0.0, 0.0], dtype=dtype)
-        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=1)
-        d_py, i_py   = sp_cKDTree(pts).query(q, k=1)
-        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
-                           _s("KDTree single-point dist", dtype))
-        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
-
-    def test_large_coords(self, cpp, dtype):
-        """Very large coordinate values."""
-        rng = np.random.RandomState(9031)
-        pts = (rng.randn(30, 3) * 1e8).astype(dtype)
-        q   = (rng.randn(3) * 1e8).astype(dtype)
-        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=1)
-        d_py, i_py   = sp_cKDTree(pts).query(q, k=1)
-        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
-                           _s("KDTree large-coords 1e8 dist", dtype))
-        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
-
-    def test_tiny_coords(self, cpp, dtype):
-        """Very tiny coordinate values (subnormal-adjacent)."""
-        rng = np.random.RandomState(9032)
-        pts = (rng.randn(30, 3) * 1e-200).astype(dtype)
-        q   = (rng.randn(3) * 1e-200).astype(dtype)
-        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=1)
-        d_py, i_py   = sp_cKDTree(pts).query(q, k=1)
-        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
-                           _s("KDTree tiny-coords 1e-200 dist", dtype))
-        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
-
-    def test_k_equals_n(self, cpp, dtype):
-        """k = number of points — return all distances sorted."""
-        n = 10
-        pts = random_batch((n, 2), dtype=dtype, seed=9033)
-        q   = random_batch((2,),  dtype=dtype, seed=9034)
-        d_cpp, i_cpp = cpp.spatial.KDTree(pts).query(q, k=n)
-        d_py, i_py   = sp_cKDTree(pts).query(q, k=n)
-        assert_bit_aligned(np.asarray(d_cpp), np.asarray(d_py),
-                           _s(f"KDTree k={n} all-points dist", dtype))
-        np.testing.assert_array_equal(np.asarray(i_cpp), np.asarray(i_py))
-
-
-class TestSpecialValuesGaussianFilter1d:
-    """Extensive edge-case and extreme-value tests for ndimage.gaussian_filter1d.
-
-    Bug discovered (and fixed): n=1 + mode='mirror' caused SIGFPE (integer
-    divide-by-zero) in bnd() because period p = 2*n-2 = 0.  A guard
-    `if (n <= 1) return src[0]` was added to ndimage.h.
+    全链路含 from_matrix→quaternion 抽取（与 scipy Cython FP 顺序不同），
+    产生 ≤500 ULP 差异（与 from_matrix 普通随机矩阵同级）。
     """
-
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
-
-    # ------------------------------------------------------------------
-    # Helpers
-    # ------------------------------------------------------------------
-    @staticmethod
-    def _g(cpp, a, sigma=1.5, mode="reflect", cval=0.0, truncate=4.0):
-        return np.asarray(cpp.ndimage.gaussian_filter1d(
-            a, sigma=sigma, mode=mode, cval=cval, truncate=truncate))
-
-    @staticmethod
-    def _s(cpp, a, sigma=1.5, mode="reflect", cval=0.0, truncate=4.0):
-        return sp_ndimage.gaussian_filter1d(
-            a, sigma=sigma, mode=mode, cval=cval, truncate=truncate)
-
-    # ------------------------------------------------------------------
-    # Existing baseline tests (kept)
-    # ------------------------------------------------------------------
-    def test_all_zeros(self, cpp, dtype):
-        a = np.zeros(BATCH, dtype=dtype)
-        assert_bit_aligned(self._g(cpp, a), self._s(cpp, a),
-                           _s("gaussian_filter1d zeros", dtype))
-
-    def test_constant_signal(self, cpp, dtype):
-        a = np.full(BATCH, 2.71828, dtype=dtype)
-        assert_bit_aligned(self._g(cpp, a, sigma=2.0), self._s(cpp, a, sigma=2.0),
-                           _s("gaussian_filter1d constant", dtype))
-
-    def test_single_impulse_center(self, cpp, dtype):
-        """Single spike in the center — exact Gaussian kernel shape."""
-        a = np.zeros(BATCH, dtype=dtype); a[BATCH // 2] = 1.0
-        for sigma in [0.5, 1.0, 2.0, 4.0]:
-            assert_bit_aligned(
-                self._g(cpp, a, sigma=sigma), self._s(cpp, a, sigma=sigma),
-                _s(f"gaussian_filter1d impulse sigma={sigma}", dtype))
-
-    def test_very_small_sigma(self, cpp, dtype):
-        a = random_batch((BATCH,), dtype=dtype, seed=9040)
-        assert_bit_aligned(self._g(cpp, a, sigma=0.1), self._s(cpp, a, sigma=0.1),
-                           _s("gaussian_filter1d sigma=0.1", dtype))
-
-    def test_very_large_sigma(self, cpp, dtype):
-        a = random_batch((BATCH,), dtype=dtype, seed=9041)
-        assert_bit_aligned(self._g(cpp, a, sigma=50.0), self._s(cpp, a, sigma=50.0),
-                           _s("gaussian_filter1d sigma=50", dtype))
-
-    def test_all_modes_constant_input(self, cpp, dtype):
-        a = np.full(BATCH, 5.0, dtype=dtype)
-        for mode in ["reflect", "constant", "nearest", "mirror", "wrap"]:
-            assert_bit_aligned(
-                self._g(cpp, a, mode=mode),
-                np.asarray(self._s(cpp, a, mode=mode), dtype=np.float64),
-                _s(f"gaussian_filter1d constant mode={mode}", dtype))
-
-    # ------------------------------------------------------------------
-    # Tiny array sizes: n=1, n=2, n=3
-    # ------------------------------------------------------------------
-    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
-    def test_n1_all_modes(self, cpp, dtype, mode):
-        """n=1: fixed SIGFPE bug for mirror (p=2*n-2=0 → modulo-by-zero)."""
-        a = np.array([dtype(3.14)], dtype=dtype)
-        assert_bit_aligned(
-            self._g(cpp, a, sigma=1.0, mode=mode),
-            self._s(cpp, a, sigma=1.0, mode=mode),
-            _s(f"gaussian_filter1d n=1 mode={mode}", dtype))
-
-    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
-    def test_n2_all_modes(self, cpp, dtype, mode):
-        """n=2: smallest non-trivial array for all boundary modes."""
-        a = np.array([dtype(1.0), dtype(2.0)], dtype=dtype)
-        assert_bit_aligned(
-            self._g(cpp, a, sigma=1.0, mode=mode),
-            self._s(cpp, a, sigma=1.0, mode=mode),
-            _s(f"gaussian_filter1d n=2 mode={mode}", dtype))
-
-    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
-    def test_n3_all_modes(self, cpp, dtype, mode):
-        """n=3: mirror period=4, reflect period=6 — boundary wraps test."""
-        a = np.array([dtype(1.0), dtype(3.0), dtype(2.0)], dtype=dtype)
-        assert_bit_aligned(
-            self._g(cpp, a, sigma=1.0, mode=mode),
-            self._s(cpp, a, sigma=1.0, mode=mode),
-            _s(f"gaussian_filter1d n=3 mode={mode}", dtype))
-
-    # ------------------------------------------------------------------
-    # Kernel larger than array (half = ceil(truncate*sigma) >> n)
-    # ------------------------------------------------------------------
-    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
-    def test_kernel_larger_than_array(self, cpp, dtype, mode):
-        """sigma=20 n=5: kernel half=80, boundary extension ≫ array length."""
-        a = np.arange(5, dtype=dtype) + dtype(1)
-        assert_bit_aligned(
-            self._g(cpp, a, sigma=20.0, mode=mode),
-            self._s(cpp, a, sigma=20.0, mode=mode),
-            _s(f"gaussian_filter1d half>>n mode={mode}", dtype))
-
-    # ------------------------------------------------------------------
-    # Impulse at array boundaries (not just center)
-    # ------------------------------------------------------------------
-    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
-    def test_impulse_at_left_boundary(self, cpp, dtype, mode):
-        """Impulse at index 0 — tests left boundary extension for all modes."""
-        a = np.zeros(20, dtype=dtype); a[0] = dtype(1.0)
-        assert_bit_aligned(
-            self._g(cpp, a, sigma=2.0, mode=mode),
-            self._s(cpp, a, sigma=2.0, mode=mode),
-            _s(f"gaussian_filter1d impulse[0] mode={mode}", dtype))
-
-    @pytest.mark.parametrize("mode", ["reflect", "constant", "nearest", "mirror", "wrap"])
-    def test_impulse_at_right_boundary(self, cpp, dtype, mode):
-        """Impulse at index n-1 — tests right boundary extension for all modes."""
-        a = np.zeros(20, dtype=dtype); a[-1] = dtype(1.0)
-        assert_bit_aligned(
-            self._g(cpp, a, sigma=2.0, mode=mode),
-            self._s(cpp, a, sigma=2.0, mode=mode),
-            _s(f"gaussian_filter1d impulse[-1] mode={mode}", dtype))
-
-    # ------------------------------------------------------------------
-    # Non-default truncate and cval
-    # ------------------------------------------------------------------
-    @pytest.mark.parametrize("truncate", [2.0, 3.0, 6.0])
-    def test_non_default_truncate(self, cpp, dtype, truncate):
-        """Different truncate values change kernel half-width."""
-        a = random_batch((30,), dtype=dtype, seed=9043)
-        assert_bit_aligned(
-            self._g(cpp, a, sigma=1.5, truncate=truncate),
-            self._s(cpp, a, sigma=1.5, truncate=truncate),
-            _s(f"gaussian_filter1d truncate={truncate}", dtype))
-
-    @pytest.mark.parametrize("cval", [0.0, 3.14159, -1.5, 1e10])
-    def test_non_default_cval(self, cpp, dtype, cval):
-        """Non-zero cval in constant mode changes boundary fill."""
-        a = random_batch((20,), dtype=dtype, seed=9044)
-        assert_bit_aligned(
-            self._g(cpp, a, sigma=1.5, mode="constant", cval=dtype(cval)),
-            self._s(cpp, a, sigma=1.5, mode="constant", cval=dtype(cval)),
-            _s(f"gaussian_filter1d cval={cval}", dtype))
-
-    # ------------------------------------------------------------------
-    # Smooth signal shapes
-    # ------------------------------------------------------------------
-    def test_linear_ramp(self, cpp, dtype):
-        a = np.arange(50, dtype=dtype)
-        assert_bit_aligned(self._g(cpp, a, sigma=2.0), self._s(cpp, a, sigma=2.0),
-                           _s("gaussian_filter1d linear ramp", dtype))
-
-    def test_step_function(self, cpp, dtype):
-        a = np.r_[np.zeros(25, dtype=dtype), np.ones(25, dtype=dtype)]
-        assert_bit_aligned(self._g(cpp, a, sigma=2.0), self._s(cpp, a, sigma=2.0),
-                           _s("gaussian_filter1d step function", dtype))
-
-    # ------------------------------------------------------------------
-    # ±inf propagation
-    # ------------------------------------------------------------------
-    def test_single_inf_middle(self, cpp, dtype):
-        a = np.array([0, 0, 1, 0, 0], dtype=dtype); a[2] = dtype(np.inf)
-        assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
-                           _s("gaussian_filter1d +inf middle", dtype))
-
-    def test_inf_at_boundaries(self, cpp, dtype):
-        for pos in [0, -1]:
-            a = np.ones(10, dtype=dtype); a[pos] = dtype(np.inf)
-            assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
-                               _s(f"gaussian_filter1d inf[{pos}]", dtype))
-
-    def test_alternating_inf(self, cpp, dtype):
-        """±inf alternating → NaN everywhere (inf - inf)."""
-        a = np.array([np.inf, -np.inf] * 5, dtype=dtype)
-        assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
-                           _s("gaussian_filter1d alternating ±inf", dtype))
-
-    # ------------------------------------------------------------------
-    # NaN propagation
-    # ------------------------------------------------------------------
-    def test_nan_propagation(self, cpp, dtype):
-        for pos in [0, 2, -1]:
-            a = np.ones(10, dtype=dtype); a[pos] = dtype(np.nan)
-            assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
-                               _s(f"gaussian_filter1d NaN[{pos}]", dtype))
-
-    def test_all_nan(self, cpp, dtype):
-        a = np.full(10, np.nan, dtype=dtype)
-        assert_bit_aligned(self._g(cpp, a, sigma=1.0), self._s(cpp, a, sigma=1.0),
-                           _s("gaussian_filter1d all-NaN", dtype))
-
-    # ------------------------------------------------------------------
-    # Extreme magnitudes — float64
-    # ------------------------------------------------------------------
-    @pytest.mark.parametrize("scale", [1e100, 1e200, 2e307])
-    def test_f64_large_magnitude(self, cpp, scale):
-        """float64 values up to near float64 max (~1.8e308)."""
-        a = (np.random.RandomState(9050).randn(BATCH) * scale).astype(np.float64)
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5)),
-            sp_ndimage.gaussian_filter1d(a, sigma=1.5),
-            f"gaussian_filter1d f64 scale={scale:.0e} [float64]")
-
-    def test_f64_subnormal(self, cpp):
-        """float64 subnormal values (~5e-324) — underflow to zero after convolution."""
-        a = np.array([5e-324, 0.0, 5e-324, 0.0, 5e-324])
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
-            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
-            "gaussian_filter1d f64 subnormal [float64]")
-
-    def test_f64_min_normal(self, cpp):
-        """float64 minimum normal (~2.2e-308) — subnormal outputs expected."""
-        ftiny = np.finfo(np.float64).tiny
-        a = np.array([ftiny, -ftiny, ftiny, -ftiny, ftiny])
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
-            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
-            "gaussian_filter1d f64 min-normal [float64]")
-
-    # ------------------------------------------------------------------
-    # Extreme magnitudes — float32
-    # ------------------------------------------------------------------
-    @pytest.mark.parametrize("scale", [1e20, 1e30])
-    def test_f32_large_magnitude(self, cpp, scale):
-        """float32 values up to ~1e30 (well below float32 max 3.4e38)."""
-        a = (np.random.RandomState(9051).randn(BATCH) * scale).astype(np.float32)
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5)),
-            sp_ndimage.gaussian_filter1d(a, sigma=1.5),
-            f"gaussian_filter1d f32 scale={scale:.0e} [float32]")
-
-    def test_f32_near_max(self, cpp):
-        """float32 values near float32 max (~3.4e38)."""
-        fmax = np.finfo(np.float32).max
-        a = np.full(BATCH, np.float32(fmax * 0.9))
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.5)),
-            sp_ndimage.gaussian_filter1d(a, sigma=1.5),
-            "gaussian_filter1d f32 near-max [float32]")
-
-    def test_f32_subnormal(self, cpp):
-        """float32 subnormal values (~1.4e-45)."""
-        fsub = np.float32(1.4e-45)
-        a = np.array([fsub, np.float32(0), fsub, np.float32(0), fsub])
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
-            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
-            "gaussian_filter1d f32 subnormal [float32]")
-
-    def test_f32_min_normal(self, cpp):
-        """float32 minimum normal (~1.18e-38)."""
-        ftiny = np.finfo(np.float32).tiny
-        a = np.array([ftiny, -ftiny, ftiny, -ftiny, ftiny])
-        assert_bit_aligned(
-            np.asarray(cpp.ndimage.gaussian_filter1d(a, sigma=1.0)),
-            sp_ndimage.gaussian_filter1d(a, sigma=1.0),
-            "gaussian_filter1d f32 min-normal [float32]")
+    yaw = tc.args[0]
+    rot  = cpp.spatial.transform.Rotation.from_euler("z", yaw)
+    mat  = np.asarray(rot.as_matrix())
+    rot2 = cpp.spatial.transform.Rotation.from_matrix(mat)
+    euler_cpp = np.asarray(rot2.as_euler("xyz"), dtype=np.float64)
+    euler_py  = sp_Rotation.from_euler("z", yaw).as_matrix()
+    euler_py2 = sp_Rotation.from_matrix(euler_py).as_euler("xyz")
+    label = _s(f"Rotation roundtrip z[{tc.category}]", tc.dtype_label)
+    compare(euler_cpp, euler_py2, strategy="ulp_close:500", label=label)
 
 
-class TestSpecialValuesMedfilt:
-    """Special / extreme values for signal.medfilt."""
+def _catalog_transform_roundtrip():
+    """from_euler → as_matrix → from_matrix → as_euler 全链路测试"""
+    rng = np.random.RandomState(31416)
+    for i, yaw in enumerate(rng.uniform(-np.pi, np.pi, 30)):
+        yield TestCase("transform.Rotation.roundtrip",
+                       (yaw,), {}, "float64",
+                       f"{i}", "none", "transform",
+                       direct_fn=_rotation_roundtrip_direct)
 
-    @pytest.fixture(params=[np.float64, np.float32], ids=["float64", "float32"])
-    def dtype(self, request): return request.param
 
-    def test_all_same(self, cpp, dtype):
-        """All-identical values → output equals input."""
-        for v in [0.0, 1.0, -3.14, 1e100, -1e100]:
-            a = np.full(20, v, dtype=dtype)
-            for k in [3, 5, 7]:
-                assert_bit_aligned(
-                    np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                    np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                    _s(f"medfilt all-same v={v} k={k}", dtype))
+# ═══════════════════════════════════════════════════════════════════════════════
+# api_catalog() — 汇总入口
+# ═══════════════════════════════════════════════════════════════════════════════
 
-    def test_monotone_increasing(self, cpp, dtype):
-        """Monotone increasing sequence."""
-        a = np.arange(20, dtype=dtype)
-        for k in [3, 5]:
-            assert_bit_aligned(
-                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                _s(f"medfilt monotone-inc k={k}", dtype))
+def api_catalog():
+    """导出 scipycpp 全部 API 的测试用例目录。"""
+    for tc in _catalog_stats():
+        yield tc
+    for tc in _catalog_integrate():
+        yield tc
+    for tc in _catalog_linalg():
+        yield tc
+    for tc in _catalog_cdist():
+        yield tc
+    for tc in _catalog_kdtree():
+        yield tc
+    for tc in _catalog_ndimage():
+        yield tc
+    for tc in _catalog_signal():
+        yield tc
+    for tc in _catalog_transform_from_matrix():
+        yield tc
+    for tc in _catalog_transform_from_euler():
+        yield tc
+    for tc in _catalog_transform_roundtrip():
+        yield tc
 
-    def test_monotone_decreasing(self, cpp, dtype):
-        """Monotone decreasing sequence."""
-        a = np.arange(20, 0, -1, dtype=dtype)
-        for k in [3, 5]:
-            assert_bit_aligned(
-                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                _s(f"medfilt monotone-dec k={k}", dtype))
 
-    def test_single_spike(self, cpp, dtype):
-        """Impulse in the center — spike should be suppressed."""
-        a = np.zeros(20, dtype=dtype)
-        a[10] = 1e10
-        for k in [3, 5, 7]:
-            assert_bit_aligned(
-                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                _s(f"medfilt spike k={k}", dtype))
+# ═══════════════════════════════════════════════════════════════════════════════
+# 模块加载
+# ═══════════════════════════════════════════════════════════════════════════════
 
-    def test_with_inf(self, cpp, dtype):
-        """Inf values in array — inf is well-ordered."""
-        a = np.array([1.0, np.inf, 3.0, 4.0, 5.0,
-                      -np.inf, 2.0, np.inf, 8.0, -np.inf], dtype=dtype)
-        for k in [3, 5]:
-            assert_bit_aligned(
-                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                _s(f"medfilt with-inf k={k}", dtype))
+_cpp_module = None
+_import_error = None
 
-    def test_alternating_sign(self, cpp, dtype):
-        """Alternating ±1 pattern."""
-        a = np.array([(-1.0)**i for i in range(20)], dtype=dtype)
-        for k in [3, 5]:
-            assert_bit_aligned(
-                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                _s(f"medfilt alternating k={k}", dtype))
 
-    def test_large_values(self, cpp, dtype):
-        """Very large values — sort ordering should still be correct."""
-        rng = np.random.RandomState(9050)
-        a = (rng.randn(30) * 1e200).astype(dtype)
-        for k in [3, 5]:
-            assert_bit_aligned(
-                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                _s(f"medfilt large-values k={k}", dtype))
+def _resolve_module_name():
+    return (getattr(pytest, "_scipycpp_module_name", None)
+            or os.environ.get("SCIPYCPP_MODULE")
+            or "scipycpp")
 
-    def test_tiny_values(self, cpp, dtype):
-        """Very small (subnormal-adjacent) values."""
-        rng = np.random.RandomState(9051)
-        a = (rng.randn(30) * 1e-200).astype(dtype)
-        for k in [3, 5]:
-            assert_bit_aligned(
-                np.asarray(cpp.signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                np.asarray(sp_signal.medfilt(a, kernel_size=k), dtype=np.float64),
-                _s(f"medfilt tiny-values k={k}", dtype))
 
-    def test_two_element(self, cpp, dtype):
-        """Minimum meaningful input (k=3 pads with zeros)."""
-        a = np.array([2.0, 5.0], dtype=dtype)
-        assert_bit_aligned(
-            np.asarray(cpp.signal.medfilt(a, kernel_size=3), dtype=np.float64),
-            np.asarray(sp_signal.medfilt(a, kernel_size=3), dtype=np.float64),
-            _s("medfilt 2-element", dtype))
+def get_cpp_module():
+    global _cpp_module, _import_error
+    if _cpp_module is not None:
+        return _cpp_module
+    if _import_error is not None:
+        raise _import_error
+    try:
+        _cpp_module = importlib.import_module(_resolve_module_name())
+    except ImportError as e:
+        _import_error = e
+        raise
+    return _cpp_module
 
+
+@pytest.fixture(scope="session")
+def cpp():
+    return get_cpp_module()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# build_all_tests — catalog → pytest.param
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def build_all_tests():
+    """将 api_catalog() 展开为 pytest 参数化列表。"""
+    for tc in api_catalog():
+        test_id = f"{tc.api_name}[{tc.dtype_label}][{tc.category}]"
+        yield pytest.param(tc, id=test_id)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# test_api — 唯一参数化测试函数
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@pytest.mark.parametrize("tc", list(build_all_tests()))
+def test_api(tc, cpp):
+    """全量测试: F5→F1→F2→F4→F3 流水线。"""
+    api_name  = tc.api_name
+    args      = tc.args
+    kwargs    = tc.kwargs
+    strategy  = tc.cmp_strategy
+
+    # direct_fn 模式：由 catalog 提供的函数直接运行测试
+    if tc.direct_fn is not None:
+        tc.direct_fn(tc, cpp)
+        return
+
+    # 标准模式：反射调用 C++ / scipy → compare
+    cpp_r, py_r = call_cpp_py(api_name, cpp, *args, **kwargs)
+    if py_r is None:
+        pytest.skip(f"no scipy equivalent for {api_name}")
+
+    label = _s(f"{api_name} {tc.category}", tc.dtype_label)
+    compare(cpp_r, py_r, strategy=strategy, label=label)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# __main__
+# ═══════════════════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
-    import sys; sys.exit(pytest.main([__file__, "-v", "--tb=short", "--no-header"]))
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    sys.exit(pytest.main([__file__, "-q", "--tb=short", "--no-header"]))

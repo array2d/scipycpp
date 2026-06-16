@@ -13,6 +13,8 @@
 #include <functional>
 #include <limits>
 
+#include "numpycpp/reduce.h"    // numpy::pairwise_sum — bit-exact accumulation
+
 namespace scipy {
 namespace integrate {
 
@@ -24,15 +26,16 @@ namespace integrate {
 template<typename T>
 inline T trapezoid(const T* y, const T* x, size_t n, T dx = T(1)) {
     if (n < 2) return T(0);
-    T sum = T(0);
+    // Collect terms, then pairwise_sum — bit-exact with scipy's numpy.add.reduce
+    std::vector<T> terms(n - 1);
     if (x) {
         for (size_t i = 0; i < n - 1; ++i)
-            sum += (x[i + 1] - x[i]) * (y[i] + y[i + 1]);
+            terms[i] = (x[i + 1] - x[i]) * (y[i] + y[i + 1]);
     } else {
         for (size_t i = 0; i < n - 1; ++i)
-            sum += dx * (y[i] + y[i + 1]);
+            terms[i] = dx * (y[i] + y[i + 1]);
     }
-    return sum * T(0.5);
+    return numpy::pairwise_sum(terms.data(), terms.size()) * T(0.5);
 }
 
 template<typename T>
@@ -51,15 +54,12 @@ inline T trapezoid(const T* y, size_t n, T dx = T(1)) {
 /// float64 regardless of input dtype because the final `* dx/3.0` uses a
 /// Python float64 constant that promotes the result).
 ///
-/// Internal summation is done in T (the input type), matching scipy's
-/// computation path:
+/// Internal summation uses numpy::pairwise_sum — bit-exact with scipy's
+/// numpy.add.reduce (same 3-tier algorithm: sequential for n<8, 8-way
+/// interleaved for 8≤n≤128, recursive split for n>128).
+///
 ///   - float32 input → sum in float32, then double(sum) * (h/3)
 ///   - float64 input → sum in float64, then double(sum) * (h/3)
-///
-/// Summation is sequential (portable C++); scipy uses numpy SIMD.
-/// For typical scientific data: 0 ULP.
-/// For degenerate uniform arrays: ≤few float32 ULPs (in float32 precision)
-/// or ≤6 float64 ULPs (in float64 precision) — sequential vs SIMD reorder.
 template<typename T>
 inline double simpson(const T* y, const T* x, size_t n, T dx = T(1)) {
     if (n < 2) return 0.0;
@@ -80,25 +80,31 @@ inline double simpson(const T* y, const T* x, size_t n, T dx = T(1)) {
     if (n % 2 == 0) {
         // === even N: scipy default even='avg' ===
         // Variant 1: Simpson on [0..n-2], trapezoid on [n-2..n-1]
-        T trap1 = T(0.5) * h_t * (y[n-1] + y[n-2]);  // trapezoid in T
-        T sum1  = T(0);
-        for (size_t i = 0; i + 2 < n - 1; i += 2)     // i: 0,2,...,n-4
-            sum1 += y[i] + T(4)*y[i+1] + y[i+2];
+        T trap1 = T(0.5) * h_t * (y[n-1] + y[n-2]);    // trapezoid in T
+        size_t n1 = (n - 2) / 2;                         // number of Simpson intervals
+        std::vector<T> terms1(n1);
+        for (size_t i = 0; i + 2 < n - 1; i += 2)        // i: 0,2,...,n-4
+            terms1[i/2] = y[i] + T(4)*y[i+1] + y[i+2];
+        T sum1 = numpy::pairwise_sum(terms1.data(), n1);
         double res1 = double(trap1) + h * (1.0/3.0) * double(sum1);
 
         // Variant 2: trapezoid on [0..1], Simpson on [1..n-1]
-        T trap2 = T(0.5) * h_t * (y[1] + y[0]);       // trapezoid in T
-        T sum2  = T(0);
-        for (size_t i = 1; i + 2 < n; i += 2)          // i: 1,3,...,n-3
-            sum2 += y[i] + T(4)*y[i+1] + y[i+2];
+        T trap2 = T(0.5) * h_t * (y[1] + y[0]);         // trapezoid in T
+        size_t n2 = (n - 2) / 2;
+        std::vector<T> terms2(n2);
+        for (size_t i = 1; i + 2 < n; i += 2)            // i: 1,3,...,n-3
+            terms2[i/2] = y[i] + T(4)*y[i+1] + y[i+2];
+        T sum2 = numpy::pairwise_sum(terms2.data(), n2);
         double res2 = double(trap2) + h * (1.0/3.0) * double(sum2);
 
         return (res1 + res2) * 0.5;
     } else {
         // === odd N: pure Simpson on all intervals ===
-        T sum = T(0);
-        for (size_t i = 0; i + 2 < n; i += 2)          // i: 0,2,...,n-3
-            sum += y[i] + T(4)*y[i+1] + y[i+2];
+        size_t n_terms = (n - 1) / 2;                    // number of Simpson intervals
+        std::vector<T> terms(n_terms);
+        for (size_t i = 0; i + 2 < n; i += 2)            // i: 0,2,...,n-3
+            terms[i/2] = y[i] + T(4)*y[i+1] + y[i+2];
+        T sum = numpy::pairwise_sum(terms.data(), n_terms);
         return h * (1.0/3.0) * double(sum);
     }
 }

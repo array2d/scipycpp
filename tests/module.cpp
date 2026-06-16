@@ -7,7 +7,7 @@
 #include "../pycpp/ndimage_py.h"
 #include "../pycpp/signal_py.h"
 #include "../pycpp/transform_py.h"
-#include "numpy/core.h"
+#include "numpycpp/numpy.h"
 
 namespace py = pybind11;
 
@@ -318,10 +318,10 @@ PYBIND11_MODULE(scipycpp, m) {
     // ====================================================================
     // spatial.transform — Rotation
     // ====================================================================
-    // Pre-import scipy Rotation class for bit-level alignment delegation.
-    // py::module_::import() is ONLY in this test module, never in pycpp/ headers.
-    py::object sp_Rotation = py::module_::import("scipy.spatial.transform").attr("Rotation");
+    // Pure C++ implementation — zero scipy delegation (Issue 001 fix).
+    // from_matrix / as_euler / from_euler / as_matrix all use C++ path.
+    // sp_Rotation is no longer needed; passed as py::none().
     py::module_ sp_tf = sp.def_submodule("transform", "scipy.spatial.transform equivalents");
-    scipy_py::transform::bind_rotation<double>(sp_tf, "Rotation", sp_Rotation);
-    scipy_py::transform::bind_rotation<float>(sp_tf, "Rotation_f32", sp_Rotation);
+    scipy_py::transform::bind_rotation<double>(sp_tf, "Rotation", py::none());
+    scipy_py::transform::bind_rotation<float>(sp_tf, "Rotation_f32", py::none());
 }
