@@ -235,6 +235,12 @@ struct Rotation {
                 "Rotation::as_euler: unsupported sequence '" + s + "'. "
                 "Supported: 'xyz', 'zyx', 'XYZ', 'ZYX'");
         }
+        // Normalize -0.0 → +0.0 — scipy converts signed zero to unsigned zero
+        // in its Euler angle output.  IEEE 754 -0.0 == 0.0 but has different
+        // bit pattern (0x8000… vs 0x0000…).
+        for (int i = 0; i < 3; ++i)
+            if (euler[i] == T(0) && std::signbit(euler[i]))
+                euler[i] = T(0);
     }
 
     /// Convenience: return euler angles as array

@@ -60,18 +60,16 @@ inline py::array_t<T> cdist(const py::array_t<T>& XA,
 // KDTree — matches Python scipy.spatial.cKDTree
 // ============================================================================
 // Python: tree = cKDTree(points)
-//         distances, indices = tree.query(q, k=1)
+//         distances, indices = tree->query(q, k=1)
 //
 // C++ KDTree wraps the native scipy::spatial::KDTree with pybind11.
 
 template <typename T>
 struct KDTreeWrap {
-    std::vector<T> data;  // owned copy of points
-    scipy::spatial::KDTree<T> tree;
+    std::vector<T> data;                  // owned copy of points
+    std::unique_ptr<scipy::spatial::KDTree<T>> tree;  // pointer avoids move
 
-    KDTreeWrap(const py::array_t<T>& points)
-        : tree(nullptr, 0, 0)
-    {
+    KDTreeWrap(const py::array_t<T>& points) {
         auto buf = points.request();
         if (buf.ndim != 2)
             throw std::runtime_error("KDTree: points must be 2D array (n_pts × dim)");
@@ -79,29 +77,29 @@ struct KDTreeWrap {
         int    dim   = static_cast<int>(buf.shape[1]);
         const T* ptr = static_cast<const T*>(buf.ptr);
         data.assign(ptr, ptr + n_pts * dim);
-        tree = std::move(scipy::spatial::KDTree<T>(data.data(), n_pts, dim));
+        tree = std::make_unique<scipy::spatial::KDTree<T>>(data.data(), n_pts, dim);
     }
 
-    /// Python: tree.query(q, k=1) → returns (distances, indices)
+    /// Python: tree->query(q, k=1) → returns (distances, indices)
     py::object query(const py::array_t<T>& q_arr, int k = 1,
                      double eps = 0.0, double p = 2.0,
                      double distance_upper_bound = std::numeric_limits<double>::infinity()) {
         auto buf = q_arr.request();
-        if (static_cast<size_t>(buf.shape[0]) != static_cast<size_t>(tree.dim))
+        if (static_cast<size_t>(buf.shape[0]) != static_cast<size_t>(tree->dim))
             throw std::runtime_error("KDTree.query: query point dimension mismatch");
 
         const T* q = static_cast<const T*>(buf.ptr);
 
         if (k == 1) {
             T d; size_t idx;
-            tree.query(q, d, idx);
+            tree->query(q, d, idx);
             // scipy returns scalars for k=1, not 1-element arrays
             return py::make_tuple(py::float_(static_cast<double>(d)),
                                   py::int_(static_cast<py::ssize_t>(idx)));
         } else {
             std::vector<T> dists(k);
             std::vector<size_t> indices(k);
-            tree.query(q, dists.data(), indices.data(), k);
+            tree->query(q, dists.data(), indices.data(), k);
 
             py::array_t<T>            py_dists({k});
             py::array_t<py::ssize_t>  py_indices({k});

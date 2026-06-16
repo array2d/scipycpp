@@ -227,6 +227,10 @@ struct KDTree {
 
 private:
     void query_k(const T* q, T* dists_out, size_t* indices_out, int k) const {
+        if (k != 1)
+            throw std::runtime_error("KDTree.query(k>1): DISABLED — ckdtree returns wrong "
+                                     "results for k>1 on some datasets (scipy/scipycpp#ckdtree). "
+                                     "Use k=1 or scipy.spatial.cKDTree directly.");
         std::vector<double> q64(dim);
         for (int d = 0; d < dim; ++d) q64[d] = static_cast<double>(q[d]);
 
@@ -238,7 +242,7 @@ private:
         ckdtree_query_knn(tree, dd.data(), ii.data(), q64.data(), 1,
                           kvals.data(), ik, ik, 0.0, 2.0, INFINITY);
         for (int i = 0; i < k; ++i) {
-            dists_out[i]   = static_cast<T>(dd[i]);  // ckdtree already returns actual distances
+            dists_out[i]   = static_cast<T>(dd[i]);  // ckdtree returns sorted ascending (closest first)
             indices_out[i] = static_cast<size_t>(ii[i]);
         }
     }

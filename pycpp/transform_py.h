@@ -37,19 +37,18 @@ struct RotationWrap {
     /// as_euler then uses the same matrix scipy started with.
     static py::object from_matrix(py::object /*sp_Rotation*/, const py::array& matrix) {
         auto mbuf = matrix.request();
-        RotationWrap wrap;
-        // Store original matrix directly — bypass quaternion roundtrip
-        wrap.rot.has_matrix = true;
+        // Convert to T array, call Rotation<T>::from_matrix() which computes
+        // quaternion + stores quaternion-derived matrix (matching scipy's pipeline).
+        T mat9[9];
         if (mbuf.format == py::format_descriptor<double>::format()) {
             const double* mdata = static_cast<const double*>(mbuf.ptr);
-            for (int i = 0; i < 9; ++i) wrap.rot.matrix[i] = static_cast<T>(mdata[i]);
+            for (int i = 0; i < 9; ++i) mat9[i] = static_cast<T>(mdata[i]);
         } else {
             const float* mdata = static_cast<const float*>(mbuf.ptr);
-            for (int i = 0; i < 9; ++i) wrap.rot.matrix[i] = static_cast<T>(mdata[i]);
+            for (int i = 0; i < 9; ++i) mat9[i] = static_cast<T>(mdata[i]);
         }
-        // Set identity quaternion (unused since has_matrix=true for as_euler)
-        wrap.rot.quat[0] = T(0); wrap.rot.quat[1] = T(0);
-        wrap.rot.quat[2] = T(0); wrap.rot.quat[3] = T(1);
+        RotationWrap wrap;
+        wrap.rot = scipy::spatial::transform::Rotation<T>::from_matrix(mat9);
         return py::cast(wrap);
     }
 

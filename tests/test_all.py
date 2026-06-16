@@ -134,15 +134,58 @@ def _ulp_record(label, n_total, n_diff, max_ulp, tol, hist, status):
 def _print_ulp_report():
     if not _ULP_REPORT:
         return
-    n_bit   = sum(1 for l in _ULP_REPORT if "0 ULP (bit-identical)" in l)
-    n_tolerated = sum(1 for l in _ULP_REPORT if l.startswith("  ✓") and "0 ULP" not in l)
-    n_fail  = sum(1 for l in _ULP_REPORT if "FAIL" in l)
+    # Per-API alignment summary
+    from collections import defaultdict, OrderedDict
+    api_stats = defaultdict(lambda: {"total": 0, "aligned": 0, "bit_exact": 0,
+                                      "within_tol": 0, "fail": 0, "tol_val": 0})
+    for r in _ULP_RECORDS:
+        mod = r["module"]
+        api_stats[mod]["total"] += 1
+        s = r["status"]
+        if s == "bit-identical" or s.startswith("within "):
+            api_stats[mod]["aligned"] += 1
+            if s == "bit-identical":
+                api_stats[mod]["bit_exact"] += 1
+            else:
+                api_stats[mod]["within_tol"] += 1
+                # capture tolerance value from the status string e.g. "within 2000 ULP"
+                import re
+                m = re.search(r'within\s+([\d.]+)\s', s)
+                if m:
+                    api_stats[mod]["tol_val"] = max(api_stats[mod]["tol_val"], float(m.group(1)))
+        elif "FAIL" in s or "exceeds" in s:
+            api_stats[mod]["fail"] += 1
+        # else: SKIP, disabled, etc. — not counted as aligned
+
     print("\n" + "="*72, file=sys.stderr, flush=True)
-    summary = f"  ULP ALIGNMENT REPORT: {n_bit} bit-identical"
-    if n_tolerated: summary += f", {n_tolerated} within tolerance"
-    if n_fail:      summary += f", {n_fail} FAILURES"
-    print(summary, file=sys.stderr)
+    print("  API 对齐报告 (aligned / total)", file=sys.stderr)
     print("="*72, file=sys.stderr, flush=True)
+
+    total_aligned = 0
+    total_all = 0
+    for mod in sorted(api_stats.keys()):
+        s = api_stats[mod]
+        note = ""
+        if s["within_tol"] == 0 and s["fail"] == 0:
+            note = "全部 0 ULP"
+        elif s["fail"] > 0:
+            tol_str = f"≤{s['tol_val']:.0f} ULP" if s["tol_val"] > 0 else ""
+            note = f"{s['bit_exact']} 0-ULP, {s['within_tol']} {tol_str}, {s['fail']} FAIL"
+        else:
+            tol_str = f"≤{s['tol_val']:.0f} ULP" if s["tol_val"] > 0 else "ULP容忍"
+            note = f"{s['bit_exact']} 0-ULP, {s['within_tol']} {tol_str}"
+        print(f"  {mod:<28s} {s['aligned']:>5d}/{s['total']:<5d}  {note}",
+              file=sys.stderr)
+        total_aligned += s["aligned"]
+        total_all += s["total"]
+
+    print("-"*72, file=sys.stderr)
+    print(f"  {'总计':<28s} {total_aligned:>5d}/{total_all:<5d}  "
+          f"({100*total_aligned/max(1,total_all):.1f}%)",
+          file=sys.stderr)
+    print("="*72, file=sys.stderr, flush=True)
+
+    # Detailed per-test lines
     for line in _ULP_REPORT:
         print(line, file=sys.stderr, flush=True)
     print("="*72, file=sys.stderr, flush=True)
@@ -178,7 +221,6 @@ def compare(cpp_result, py_result, strategy="bit_exact", label=""):
       none               — 跳过比对
       ulp_close:N        — 允许最多 N 个 float64 ULP
       f32_ulp_close:N    — 允许最多 N 个 float32 ULP (convert to float32 first)
-      linalg_close:N     — linalg 专用 ULP 比较 (Eigen3 vs LAPACK)
     """
     if strategy == "none":
         return
@@ -218,11 +260,6 @@ def compare(cpp_result, py_result, strategy="bit_exact", label=""):
     if strategy.startswith("f32_ulp_close:"):
         tol = int(strategy.split(":")[1])
         _compare_f32_ulp_close(cpp_result, py_result, label, tol)
-        return
-
-    if strategy.startswith("linalg_close:"):
-        tol = int(strategy.split(":")[1])
-        _compare_linalg_close(cpp_result, py_result, label, tol)
         return
 
 
@@ -345,36 +382,6 @@ def _compare_f32_ulp_close(cpp_result, py_result, label="", max_ulp_tol=6):
                 f"1×{diff}f32ULP", status)
     if not ok:
         raise AssertionError(f"{label}: f32-ULP {diff} > tol={max_ulp_tol}")
-
-
-def _compare_linalg_close(cpp_result, py_result, label="", max_ulp_tol=50):
-    """ULP-based comparison for linalg operations (Eigen3 vs LAPACK).
-
-    Eigen3 partialPivLu vs LAPACK gesv can differ by a few ULP for
-    well-conditioned matrices, more for ill-conditioned ones.
-    """
-    cpp = np.asarray(cpp_result, dtype=np.float64)
-    py  = np.asarray(py_result,  dtype=np.float64)
-    assert cpp.shape == py.shape, f"{label}: shape mismatch {cpp.shape} vs {py.shape}"
-    n_diff, max_ulp, max_idx, hist = _ulp_stats(cpp, py)
-    ok = max_ulp <= max_ulp_tol
-    tag = "✓" if ok else "✗ FAIL"
-    tol_label = f"≤{max_ulp_tol} ULP"
-    if n_diff == 0:
-        _ULP_REPORT.append(f"  {tag} {label}: 0 ULP (bit-identical)")
-        _ulp_record(label, int(cpp.size), 0, 0, tol_label, "—", "bit-identical")
-    else:
-        _ULP_REPORT.append(
-            f"  {tag} {label}: {n_diff}/{cpp.size} differ, "
-            f"max={max_ulp} ULP [{hist}]")
-        _ULP_REPORT.append(
-            f"    worst[{max_idx}]: C++={cpp.flat[max_idx]:.18e}  "
-            f"np={py.flat[max_idx]:.18e}")
-        status = f"within {tol_label}" if ok else "FAIL (exceeds tolerance)"
-        _ulp_record(label, int(cpp.size), n_diff, max_ulp, tol_label, hist, status)
-    if not ok:
-        raise AssertionError(
-            f"{label}: linalg ULP MISMATCH max={max_ulp} > tol={max_ulp_tol} ULP")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -707,7 +714,7 @@ def _catalog_linalg():
             A = (rng.randn(n, n) * 2.0 + 3.0 * np.eye(n)).astype(dt)
             b_vec = rng.randn(n).astype(dt)
             yield TestCase("linalg.solve", (A, b_vec), {}, dn,
-                           f"batch[{i}]_n={n}", "linalg_close:2000", "linalg")
+                           f"batch[{i}]_n={n}", "bit_exact", "linalg")
 
         # 大规模 (n=10, 20)
         rng2 = np.random.RandomState(12345)
@@ -715,7 +722,7 @@ def _catalog_linalg():
             A = (rng2.randn(n, n) * 1.5 + 4.0 * np.eye(n)).astype(dt)
             b_vec = rng2.randn(n).astype(dt)
             yield TestCase("linalg.solve", (A, b_vec), {}, dn,
-                           f"large_n={n}", f"linalg_close:{tol}", "linalg")
+                           f"large_n={n}", "bit_exact", "linalg")
 
         # 病态矩阵
         for seed_val in [5555, 6666, 7777]:
@@ -727,7 +734,7 @@ def _catalog_linalg():
             b_vec = rng3.randn(n).astype(dt)
             yield TestCase("linalg.solve", (A, b_vec), {}, dn,
                            f"ill_cond_seed={seed_val}",
-                           "linalg_close:500000", "linalg")
+                           "bit_exact", "linalg")
 
 
 # ── 第4类: spatial.distance.cdist ────────────────────────────────────────────
@@ -1097,18 +1104,15 @@ def _catalog_signal():
 # ── 第8类: spatial.transform.Rotation (from_matrix → as_euler) ─────────────
 
 def _rotation_from_matrix_direct(tc, cpp):
-    """Rotation.from_matrix(R).as_euler(seq) — 直接比对。"""
-    R, seq, max_ulp = tc.args
+    """Rotation.from_matrix(R).as_euler(seq) — bit-exact 严格比对。"""
+    R, seq, _ = tc.args  # max_ulp ignored — all tests must be 0 ULP
     dtype_label = tc.dtype_label
     cpp_euler = np.asarray(
         cpp.spatial.transform.Rotation.from_matrix(R).as_euler(seq),
         dtype=np.float64)
     py_euler = sp_Rotation.from_matrix(R).as_euler(seq)
     label = _s(f"Rotation from_matrix+as_euler({seq}) {tc.category}", dtype_label)
-    if max_ulp == 0:
-        compare(cpp_euler, py_euler, strategy="bit_exact", label=label)
-    else:
-        compare(cpp_euler, py_euler, strategy=f"ulp_close:{max_ulp}", label=label)
+    compare(cpp_euler, py_euler, strategy="bit_exact", label=label)
 
 
 def _catalog_transform_from_matrix():
@@ -1223,19 +1227,13 @@ def _rotation_from_euler_single_direct(tc, cpp):
 
 
 def _rotation_from_euler_multi_direct(tc, cpp):
-    """多轴 Rotation.from_euler(seq, angles).as_matrix() — ULP 诚实比对。
-
-    Hamilton 四元数乘积的 FP 求值顺序在 C++ 和 scipy Cython 之间不同，
-    导致四元数差 ≤1 ULP，经 quaternion→matrix 抵消放大到 ≤200 ULP。
-    对于接近零的矩阵元素，ULP 测量值可能更大（数值上无意义）。
-    使用 ulp_close:200000 容忍此已知的 FP 算术差异。
-    """
+    """多轴 Rotation.from_euler(seq, angles).as_matrix() — bit-exact 严格比对。"""
     seq, angles = tc.args
     rot_cpp = cpp.spatial.transform.Rotation.from_euler(seq, angles)
     mat_cpp = np.asarray(rot_cpp.as_matrix(), dtype=np.float64)
     mat_py  = sp_Rotation.from_euler(seq, np.asarray(angles, dtype=np.float64)).as_matrix()
     label = _s(f"from_euler({seq},...)+as_matrix {tc.category}", tc.dtype_label)
-    compare(mat_cpp, mat_py, strategy="ulp_close:200000", label=label)
+    compare(mat_cpp, mat_py, strategy="bit_exact", label=label)
 
 
 def _catalog_transform_from_euler():
@@ -1272,7 +1270,7 @@ def _catalog_transform_from_euler():
                        f"{axis}={angle:.4f}", "none", "transform",
                        direct_fn=_rotation_from_euler_single_direct)
 
-    # ── 多轴 (ulp_close:200000, Hamilton 积 FP 顺序差异) ──
+    # ── 多轴 (bit_exact) ──
     angles = np.deg2rad([20., 30., 45.])
     yield TestCase("transform.Rotation.from_euler_multi",
                    ("xyz", angles), {}, "float64",
@@ -1318,11 +1316,7 @@ def _catalog_transform_from_euler():
 # ── 第10类: Rotation roundtrip (from_euler→as_matrix→from_matrix→as_euler) ─
 
 def _rotation_roundtrip_direct(tc, cpp):
-    """from_euler(z) → as_matrix → from_matrix → as_euler 全链路。
-
-    全链路含 from_matrix→quaternion 抽取（与 scipy Cython FP 顺序不同），
-    产生 ≤500 ULP 差异（与 from_matrix 普通随机矩阵同级）。
-    """
+    """from_euler(z) → as_matrix → from_matrix → as_euler 全链路 bit-exact。"""
     yaw = tc.args[0]
     rot  = cpp.spatial.transform.Rotation.from_euler("z", yaw)
     mat  = np.asarray(rot.as_matrix())
@@ -1331,7 +1325,7 @@ def _rotation_roundtrip_direct(tc, cpp):
     euler_py  = sp_Rotation.from_euler("z", yaw).as_matrix()
     euler_py2 = sp_Rotation.from_matrix(euler_py).as_euler("xyz")
     label = _s(f"Rotation roundtrip z[{tc.category}]", tc.dtype_label)
-    compare(euler_cpp, euler_py2, strategy="ulp_close:500", label=label)
+    compare(euler_cpp, euler_py2, strategy="bit_exact", label=label)
 
 
 def _catalog_transform_roundtrip():
